@@ -1,0 +1,14 @@
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by Dingo (Inc) -->
+<xs:schema version="1.0" targetNamespace="http://purl.org/syndication/history/1.0" xmlns:sy="http://purl.org/syndication/history/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="complete" type="sy:completeType"/>
+	<xs:complexType name="completeType">
+		<xs:annotation>
+			<xs:documentation source="http://www.mnot.net/drafts/draft-nottingham-atompub-feed-history/draft-nottingham-atompub-feed-history-11.txt">This implements an  fh:complete  tag </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="resource" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Gets the value of the value property. This is a null operation since an  fh:complete  tag does not have any definition for it's value</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

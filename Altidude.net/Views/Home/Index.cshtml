@@ -1,0 +1,33 @@
+﻿@model Altidude.net.Models.HomeViewModel
+@{
+    ViewBag.Title = "Create your own altitude profile, elevation profile or stage profile";
+}
+
+<div class="jumbotron">
+    <h1>Create your own altitude profile, elevation profile or stage profile</h1>
+    <p class="lead">Altidude.net is a tool for creating more fun altitude/elevation/stage profiles from your training data.</p>
+    <p class="lead">How it works:</p>
+    <ol>
+        <li>Register, it's free</li>
+        <li>Create profile from your training data (Strava or TCX-file)</li>
+        <li>Select chart type</li>
+        <li>Done, share if you want</li>
+    </ol>
+    <p><a href="/profile/create" class="btn btn-primary btn-lg">Create Profile</a></p>
+</div>
+
+<h2>Latest Profiles</h2>
+<div class="row thumbnail-list">
+    @if (Model != null)
+    {
+        foreach (var profile in Model.Profiles)
+        {
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <a class="thumbnail" href="/profile/detail/@profile.Id">
+                    <img class="img-responsive" src="https://altidude.blob.core.windows.net/chartimages/@(profile.Id).png" alt="@profile.Name">
+                </a>
+            </div>
+        }
+    }
+
+</div>

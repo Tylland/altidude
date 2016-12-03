@@ -1,0 +1,15 @@
+﻿@model Altidude.net.Models.DatabaseViewModel
+
+@{
+    ViewBag.Title = "Database";
+}
+
+<h2>Database</h2>
+
+@using (Html.BeginForm("UpgradeDatabase", "Admin", FormMethod.Post))
+{
+    <input type="submit" name="Submit" id="Submit" value="Upgrade Database" />
+}
+
+
+<pre>@Model.CreateScript</pre>

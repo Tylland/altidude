@@ -1,0 +1,13 @@
+﻿@model Altidude.net.Models.PlaceImportModel
+
+@{
+    ViewBag.Title = "Import";
+}
+
+<h2>Import Places</h2>
+
+@using (Html.BeginForm("Upload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="FileUpload" />
+    <input type="submit" name="Submit" id="Submit" value="Upload" />
+}

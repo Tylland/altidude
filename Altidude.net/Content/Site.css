@@ -1,0 +1,390 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.loading-chart {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 42px;
+    color: #CCCCCC;
+}
+
+#chart-container-outer { overflow: scroll; width: 500px; height: 210px; }
+#chart-container-inner { width: 10000px; }
+
+.chart-scroller {
+    /*width:600px;*/
+    height:130px;
+    margin: 0px;
+    /*background:#A3CBE0;
+border:2px solid #000;*/
+    overflow: auto;
+    /*box-shadow:0 0 10px #000;*/
+}
+
+.chart-scroller ul {
+    float: left;
+    margin-right: -999em;
+    white-space: nowrap;
+    list-style: none;
+    -webkit-padding-start: 0px;
+}
+
+.chart-scroller li {
+    margin: 0px;
+    text-align: center;
+    float: left;
+    display: inline;
+        position: relative; 
+
+}
+
+.chart-scroller img {
+    display: block;
+    width: 200px;
+    height: 100px;
+}
+
+.chart-scroller h2 { 
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #5F5F5F;
+}
+
+/*.chart-scroller a:active img, #scroll a:focus img, #scroll a:hover img { border: 1px solid #000; }
+
+.chart-scroller a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+}*/
+
+/*.chart-scroller a:active, #scroll a:focus, #scroll a:hover {
+color:#FFF;
+}
+
+.chart-scroller span {
+padding:5px 0 0;
+display:block;
+}*/
+
+.selected-chart {
+    padding: 2px;
+	border-color: gray;
+	border-style: solid;
+	border-width: thin;	
+}
+.unselected-chart {
+    padding: 2px;
+	border-color: white;
+	border-style: solid;
+	border-width: thin;	
+}
+
+/* Bootstrap override */
+.navbar-default {
+  background-color: #428bca;
+  border-color: #3276b1;
+}
+.navbar-default .navbar-brand {
+  color: #fefefe;
+}
+
+.navbar-default .navbar-brand small{
+    font-size:10px;
+    font-style:oblique;
+    color: #fefefe;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #ffffff;
+}
+.navbar-default .navbar-text {
+  color: #fefefe;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #fefefe;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #3276b1;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #ffffff;
+  background-color: #3276b1;
+}
+.navbar-default .navbar-toggle {
+  border-color: #3276b1;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #3276b1;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #fefefe;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border-color: #fefefe;
+}
+.navbar-default .navbar-link {
+  color: #fefefe;
+}
+.navbar-default .navbar-link:hover {
+  color: #ffffff;
+}
+
+
+.list-group li:nth-child(odd) {
+    background-color: #f0f0f0;
+}
+
+.thumbnail-list .thumbnail {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+
+.info-box {
+    display: block;
+    min-height: 90px;
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    margin-bottom: 15px
+}
+
+.info-box small { font-size: 14px }
+
+.info-box .progress {
+    background: rgba(0, 0, 0, 0.2);
+    margin: 5px -10px 5px -10px;
+    height: 2px
+}
+
+.info-box .progress, .info-box .progress .progress-bar { border-radius: 0 }
+
+.info-box .progress .progress-bar { background: #fff }
+
+.info-box-icon {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 2px;
+    display: block;
+    float: left;
+    height: 90px;
+    width: 90px;
+    text-align: center;
+    font-size: 45px;
+    line-height: 90px;
+    background: rgba(0, 0, 0, 0.2)
+}
+
+.info-box-icon > img { max-width: 100% }
+
+.info-box-content {
+    padding: 5px 10px;
+    margin-left: 90px
+}
+
+.info-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 24px
+}
+
+.info-box-text { text-transform: uppercase }
+
+.info-box-more { display: block }
+
+.bg-yellow {
+    background-color: #f39c12;
+}
+
+.info-box-container {
+    height: auto;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.level-info-box .progress {
+    height:auto;
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    border-radius: 4px;
+}
+
+.level-box {
+    text-align:center;
+    display: block;
+    min-height: 90px;
+    background: #fff;
+    width: 100%;
+    border-radius: 2px;
+    margin-top: 15px;
+    margin-bottom: 15px
+}
+.level-box-content {
+    padding: 5px;
+}
+.level-box-text { 
+    font-size: 24px;
+    text-transform: uppercase 
+}
+
+.level-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 48px
+}
+.media-name{
+    font-size: 24px;
+    margin:10px 20px 10px 0;
+}
+
+.adminbody {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+
+/** Tango Color Scheme
+ *
+ * Butter              #fce94f, #edd400, #c4a000
+ * Orange              #fcaf3e, #f57900, #ce5c00
+ * Chocolate           #e9b96e, #c17d11, #8f5902
+ * Chameleon           #8ae234, #73d216, #4e9a06
+ * Sky Blue            #729fcf, #3465a4, #204a87
+ * Plum                #ad7fa8, #75507b, #5c3566
+ * Scarlet Red         #ef2929, #cc0000, #a40000
+ *
+ * Aluminium           #eeeeec, #d3d7cf, #babdb6
+ *                     #888a85, #555753, #2e3436
+ */
+
+.tango-butter-l {
+	background: #fce94f;
+}
+.tango-butter-m {
+	background: #edd400;
+}
+.tango-butter-d {
+	background: #c4a000;
+}
+
+.tango-orange-l {
+	background: #fcaf3e;
+}
+.tango-orange-m {
+	background: #f57900;
+}
+.tango-orange-d {
+	background: #ce5c00;
+}
+
+.tango-chocolate-l {
+	background: #e9b96e;
+}
+.tango-chocolate-m {
+	background: #c17d11;
+}
+.tango-chocolate-d {
+	background: #8f5902;
+}
+
+.tango-chameleon-l {
+	background: #8ae234;
+}
+.tango-chameleon-m {
+	background: #73d216;
+}
+.tango-chameleon-d {
+	background: #4e9a06;
+}
+
+.tango-skyblue-l {
+	background: #729fcf;
+}
+.tango-skyblue-m {
+	background: #3465a4;
+}
+.tango-skyblue-d {
+	background: #204a87;
+}
+
+.tango-plum-l {
+	background: #ad7fa8;
+}
+.tango-plum-m {
+	background: #75507b;
+}
+.tango-plum-d {
+	background: #5c3566;
+}
+
+.tango-scarletred-l {
+	background: #ef2929;
+}
+.tango-scarletred-m {
+	background: #cc0000;
+}
+.tango-scarletred-d {
+	background: #a40000;
+}
+
+.tango-aluminium-1 {
+	background: #eeeeec;
+}
+.tango-aluminium-2 {
+	background: #d3d7cf;
+}
+.tango-aluminium-3 {
+	background: #babdb6;
+}
+.tango-aluminium-4 {
+	background: #888a85;
+}
+.tango-aluminium-5 {
+	background: #555753;
+}
+.tango-aluminium-6 {
+	background: #2e3436;
+}

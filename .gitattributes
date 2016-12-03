@@ -1,0 +1,6 @@
+*.ldf filter=lfs diff=lfs merge=lfs -text
+*.mdf filter=lfs diff=lfs merge=lfs -text
+packages/** filter=lfs diff=lfs merge=lfs -text
+packages/**/* filter=lfs diff=lfs merge=lfs -text
+/packages/**/*.dll filter=lfs diff=lfs merge=lfs -text
+/packages/*.dll filter=lfs diff=lfs merge=lfs -text

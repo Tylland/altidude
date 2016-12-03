@@ -1,0 +1,21 @@
+﻿@model Altidude.net.Models.FacebookSharedProfileViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SharedProfile</title>
+</head>
+<body ng-app="altidudeApp" ng-controller="facebookSharedProfileController" ng-init="Init('@Model.ProfileId')>
+    <div class="container">
+        <div class="row col-lg-12">
+            <div id="chartRoot" class="profile-chart" chart="chart" profile="profile" result="result" style="width: 100%;"></div>
+        </div>
+    </div>
+</body>
+</html>

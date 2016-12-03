@@ -1,0 +1,50 @@
+﻿
+@model Altidude.net.Models.ProfileIndexViewModel
+@{
+    ViewBag.Title = "Profiles";
+}
+
+<div class="page-header">
+    <h1>Profiles</h1>
+</div>
+<div class="row thumbnail-list">
+    @if (Model != null)
+    {
+        foreach (var profile in Model.Profiles)
+        {
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <a class="thumbnail" href="/profile/detail/@profile.Id">
+                    <img class="img-responsive" src="https://altidude.blob.core.windows.net/chartimages/@(profile.Id).png" alt="@profile.Name">
+                </a>
+            </div>
+        }
+    }
+
+</div>
+
+@*<div ng-app="altidudeApp" ng-controller="profileController">
+    <h2>Profiles</h2>*@
+
+
+
+
+
+    @*<input type="button" value="Some text" onclick="window.location.href='<%= Url.Action(" actionName", "controllerName" ) %>';" />*@
+
+    @*<div class="btn btn-default" ngf-select="" ng-model="trackFile" name="file" ngf-pattern="'.tcx,.gpx'" required=""><span class="glyphicon glyphicon-folder-open"></span>&nbsp;Open file...</div>
+
+
+        <div id="chartRoot" class="profile-chart" chart="chart" course="course" result="result" style="width: 100%;"></div>
+
+        <a href="api/v1/strava/connect">Connect to Strava</a>
+        <a href="api/v1/strava/disconnect">Disconnect from Strava</a>
+        <a href="api/v1/strava/activities">Get Activities</a>
+
+        <button ng-click="getActivities()">Get Activities</button>
+
+        <table class="table table-striped">
+            <tr ng-repeat="activity in activities"><td>{{activity.name}}</td><td><a href="#" ng-click="importFromActivity(activity.id)">Import</a></td></tr>
+        </table>
+
+    </div>
+    *@

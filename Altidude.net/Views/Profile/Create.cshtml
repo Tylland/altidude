@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Create Profile";
+}
+<div ng-app="altidudeApp" ng-controller="profileImportController as importController" ng-init="importController.init('', '')">
+    <div class="page-header">
+        <h2>Create Profile</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>From file (tcx)</h3>
+        </div>
+        <div class="panel-body">
+            <div class="btn btn-default" ngf-select="" ng-model="importController.trackFile" name="file" ngf-pattern="'.tcx,.gpx'" required="">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;Open file...
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a ng-hide="importController.isConnected" href="/api/v1/strava/connect">
+                <img src="~/Images/Strava/btn_strava_connectwith_light.png" />
+            </a>
+            <a ng-show="importController.isConnected" href="#" ng-click="importController.getActivities()">
+                <img src="~/Images/Strava/btn_strava_connectwith_light.png" />
+            </a>
+
+            <a ng-show="importController.isConnected" href="#" ng-click="importController.disconnect()" class="pull-right">Remove connection</a>
+        </div>
+        <div class="panel-body">
+
+            <ul class="list-group">
+                <li class="list-group-item row" ng-repeat="activity in importController.activities">
+                    <div class="col-md-6"><strong>{{activity.name}}</strong></div>
+                    <div class="col-md-2">{{importController.convertDate(activity.startDate) | date: 'medium'}}</div>
+                    <div class="col-md-1">{{activity.type}}</div>
+                    <div class="col-md-2"><a target="strava" style="color:#FC4C02" href="https://www.strava.com/activities/{{activity.id}}">View on Strava</a></div>
+                    <div class="col-md-1">
+                        <button ng-hide="activity.creating" class="btn btn-primary" ng-click="importController.createFromActivity(activity)">Create</button>
+                        <div ng-show="activity.creating" class="btn btn-success"><span class="glyphicon glyphicon-refresh spinning"></span>&nbsp;Creating</div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <img src="~/Images/Strava/api_logo_cptblWith_strava_horiz_gray.png" width="200" height="32" />
+</div>

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Altidude.net is a tool for creating more fun altitude/elevation/stage profiles from your training data">
+    <meta name="keywords" content="elevation profile,altitude profile,stage profile,strava,tcx,training data">
+    @RenderSection("MetaTags", required: false)
+    <title>@ViewBag.Title - Altidude.net</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body class="adminbody">
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Altidude.net</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @Scripts.Render("~/Scripts/snap.svg.js")
+    @Scripts.Render("~/Scripts/angular.min.js")
+    @Scripts.Render("~/Scripts/ui-bootstrap-tpls-2.1.4.min.js");
+    @Scripts.Render("~/Scripts/canvg.js");
+    @Scripts.Render("~/Scripts/svg_todataurl.js");
+
+
+    @Scripts.Render("~/Scripts/ng-file-upload.js")
+    @Scripts.Render("~/Scripts/altidude.js")
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

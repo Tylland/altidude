@@ -1,0 +1,21 @@
+﻿@model Altidude.net.Models.UsersViewModel
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+<ul class="list-group">
+
+@foreach (var user in Model.Users)
+{
+    <li class="list-group-item row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6"><strong>@user.DisplayName</strong></div>
+        <div class="col-md-1">@user.ExperiencePoints</div>
+        <div class="col-md-1">@user.Level</div>
+        <div class="col-md-1">@user.AcceptsEmails</div>
+    </li>
+}
+</ul>
+

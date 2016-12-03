@@ -1,0 +1,51 @@
+﻿@model Altidude.net.Models.AdminViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<section class="info-box-container tango-aluminium-1">
+    <div class="row">
+        <div >
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-butter-m"><i class="glyphicon glyphicon-user"></i></span>
+
+                    <div class="info-box-content">
+                        <a href="/admin/users">
+                            <span class="info-box-text">Users</span>
+                            <span class="info-box-number">@Model.TotalNrOfUsers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><i class="glyphicon glyphicon-picture"></i></span>
+
+                    <div class="info-box-content">
+                        <a href="/admin/profiles">
+                            <span class="info-box-text">Profiles</span>
+                            <span class="info-box-number">@Model.TotalNrOfProfiles</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-scarletred-l"><i class="glyphicon glyphicon-map-marker"></i></span>
+
+                    <div class="info-box-content">
+                        <a href="/admin/places">
+                            <span class="info-box-text">Places</span>
+                            <span class="info-box-number">@Model.TotalNrOfPlaces</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <a href="/api/v1/profiles/gpx" download="profiles.gpx">Profiles (gpx)</a>
+    </div>
+</section>

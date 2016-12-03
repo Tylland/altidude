@@ -1,0 +1,13 @@
+﻿<svg id="testChart">
+  <defs>
+    <filter id="chalk" height="2" width="1.6" color-interpolation-filters="sRGB" y="-0.5" x="-0.3">
+      <feTurbulence baseFrequency="0.32065" seed="115" result="result1" numOctaves="1" type="turbulence"/>
+      <feOffset result="result2" dx="-5" dy="-5"/>
+      <feDisplacementMap scale="10" yChannelSelector="G" in2="result1" xChannelSelector="R" in="SourceGraphic"/>
+      <feGaussianBlur stdDeviation="1.1169"/>
+    </filter>  
+  </defs>
+	
+  <circle cx="50" cy="50" r="20" stroke="black" stroke-width="3" fill="red" />
+	<text x="0" y="15" fill="red">{{chartData.name}} Test Chart</text>
+</svg>

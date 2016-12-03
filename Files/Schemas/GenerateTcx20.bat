@@ -1,0 +1,1 @@
+﻿"xsd.exe" Tcx20.xsd /classes /n:Banprofil.Files.Tcx20

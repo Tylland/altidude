@@ -1,0 +1,1 @@
+﻿xsd Tcx10.xsd /classes  /n:Banprofil.Files.Tcx10

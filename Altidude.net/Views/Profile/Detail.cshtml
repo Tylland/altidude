@@ -1,0 +1,89 @@
+﻿@model Altidude.net.Models.ProfileDetailViewModel
+
+@{
+    ViewBag.Title = @Model.Title;
+}
+@section MetaTags
+{
+    <meta property="fb:app_id" content="700488523437920"/>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="http://www.altidude.net" />
+    <meta name="twitter:creator" content="Altidude" />
+    <meta property="og:url" content="http://www.altidude.net/profile/detail/@Model.ProfileId" />
+    <meta property="og:type" content="fitness.course" />
+    <meta property="og:title" content="@Model.Title" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:image" content="@Model.ChartImageUrl" />
+    <meta property="og:image:width" content="1140" />
+    <meta property="og:image:height" content="600" />
+}
+
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '700488523437920',
+            xfbml: true,
+            version: 'v2.7'
+        });
+
+        FB.ui({
+            method: 'share_open_graph',
+            action_type: 'og.likes',
+            action_properties: JSON.stringify({
+                object: 'https://developers.facebook.com/docs/',
+            })
+        }, function (response) {
+            // Debug response (optional)
+            console.log(response);
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+
+
+    // Include the Twitter Library
+    window.twttr = (function (d, s, id) {
+        var t, js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return; js = d.createElement(s); js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+        return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+    }(document, "script", "twitter-wjs"));
+
+    // On ready, register the callback...
+    twttr.ready(function (twttr) {
+        twttr.events.bind('tweet', function (event) {
+        });
+    });
+</script>
+
+
+<div id="detailControllerID" ng-app="altidudeApp" ng-controller="profileDetailController as detailController" ng-init="detailController.init('@Model.ProfileId', '@Model.UserId')">
+    <div class="page-header">
+        <div class='btn-toolbar pull-right'>
+            <a class='btn btn-primary' href="/profile/edit/@Model.ProfileId" ng-disabled="!detailController.isOwner"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>
+            @*<a class='btn btn-social btn-facebook'>&nbsp;Share on facebook</a>*@
+        </div>
+
+        <h2>@Model.Title</h2>
+    </div>
+
+    <div id="chartRoot" class="profile-chart" chart="detailController.chart" profile="detailController.profile" result="detailController.result" style="width: 100%;"></div>
+
+
+    <div class="fb-like"
+         data-share="true"
+         data-width="450"
+         data-show-faces="true">
+    </div>
+
+    <a class="twitter-share-button" target="twitter" href="https://twitter.com/intent/tweet?url=http://www.altidude.net/profile/detail/@Model.ProfileId&hashtags=ElevationProfile">Share on Twitter</a>
+
+    @*<div class="btn btn-primary" ng-click="detailController.shareOnFacebook()">Share on Facebook</div>*@
+</div>

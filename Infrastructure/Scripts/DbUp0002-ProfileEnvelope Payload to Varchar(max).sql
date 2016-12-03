@@ -1,0 +1,1 @@
+﻿ALTER TABLE ProfileEnvelope ALTER COLUMN Payload VARCHAR(MAX)

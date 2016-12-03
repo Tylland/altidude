@@ -1,0 +1,1 @@
+﻿xsd.exe Kml22.xsd /classes /n:Qrunchtime.Files.Kml22

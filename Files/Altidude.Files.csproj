@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{33C052EB-B8AA-41E0-B546-1D386823809B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Altidude.Files</RootNamespace>
+    <AssemblyName>Altidude.Files</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Gpx10Reader.cs" />
+    <Compile Include="Gpx10\gpx10.cs" />
+    <Compile Include="Gpx11Writer.cs" />
+    <Compile Include="Gpx11Reader.cs" />
+    <Compile Include="Gpx11\gpx11.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shp\BoundingBox.cs" />
+    <Compile Include="Shp\ByteHolder.cs" />
+    <Compile Include="Shp\FileHeader.cs" />
+    <Compile Include="Shp\IndexRecord.cs" />
+    <Compile Include="Shp\Point.cs" />
+    <Compile Include="Shp\Polygon.cs" />
+    <Compile Include="Shp\Shape.cs" />
+    <Compile Include="Shp\ShapeHeader.cs" />
+    <Compile Include="Shp\ShapeType.cs" />
+    <Compile Include="Shp\ShpFile.cs" />
+    <Compile Include="Shp\ShpIO.cs" />
+    <Compile Include="Shp\ShpReader.cs" />
+    <Compile Include="Shp\ShpWriter.cs" />
+    <Compile Include="Tcx10\Tcx10.cs" />
+    <Compile Include="Tcx20Reader.cs" />
+    <Compile Include="Tcx20\Tcx20.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Kml22\kml22.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\atom-author-link.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\GenerateKml22.bat" />
+    <None Include="Schemas\GenerateTcx10.bat" />
+    <None Include="Schemas\GenerateTcx20.bat" />
+    <None Include="Schemas\Gpx10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\Gpx11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\Kml22.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\sy.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\Tcx10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\Tcx20.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\xAL.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

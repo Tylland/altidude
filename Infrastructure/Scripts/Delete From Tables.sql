@@ -1,0 +1,9 @@
+﻿DELETE FROM AspNetUsers
+DELETE FROM AspNetUserClaims
+DELETE FROM AspNetUserLogins
+DELETE FROM AspNetUserRoles
+DELETE FROM Commits
+DELETE FROM ProfileEnvelope
+DELETE FROM Snapshots
+DELETE FROM TrackBoundaryView
+DELETE FROM UserView

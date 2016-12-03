@@ -1,0 +1,27 @@
+﻿@model Altidude.net.Models.ProfileEditViewModel
+
+@{
+    ViewBag.Title = "Edit Profile";
+}
+
+
+<div ng-app="altidudeApp" ng-controller="profileEditController as editController" ng-init="editController.init('@Model.ProfileId')">
+    <div class="page-header">
+        <a href="/profile/detail/{{editController.profileId}}" class="btn btn-primary pull-right">Finish &raquo;</a>
+        <h1>Edit Profile</h1>
+    </div>
+
+    <div id="chartRoot" class="profile-chart" chart="editController.chart" profile="editController.profile" result="editController.result" createBitmap="{{true}}" on-bitmap-created="editController.onBitmapCreated(base64Image)" style="width: 100%;"></div>
+
+    <hr />
+    <div class="chart-scroller">
+        <ul>
+            <li ng-repeat="chart in editController.charts">
+                <img class="img-rounded" ng-class="editController.chart.id === chart.id ? 'selected-chart' : 'unselected-chart'" src="~/Images/Charts/{{chart.name}}.png" alt="{{chart.name}}" ng-click="editController.selectChart(chart)">
+                <h2>{{chart.name}}</h2>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
