@@ -902,7 +902,6 @@ module ProfileChart {
             // paper.circle(400, 200, 3);  
             // paper.el("use", { "xlink:href": "#finishPen", x: 400, y: 200 });
         }
-                
         constructor() {
             super("57B271BD-CA75-42BD-B7FD-A5A0EBEC887F", "Connecting dots", "/App/ProfileChart/Templates/connecting_dots.svg");
         }
@@ -915,61 +914,63 @@ module ProfileChart {
         }
 
         renderBackground(paper: Snap.Paper, surfaceArea: Rectangle): void {
-            var g = paper.gradient("r(0.5, 0.5, 1)#fff:0-#FBFDFF:30-#EEF8FD:43-#D9F0FB:57-#BBE4F9:71-#fff:25-#95D5F5:86-#67C3F1");
+            var g: any = paper.gradient("r(0.5, 0.5, 1)#fff:0-#FBFDFF:30-#EEF8FD:43-#D9F0FB:57-#BBE4F9:71-#fff:25-#95D5F5:86-#67C3F1");
 
             paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
         }
 
-        renderGrid(paper: Snap.Paper, data: ChartData, chartArea: Rectangle) {
+        renderGrid(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
 
             var source: Rectangle = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
 
-            var transform = new TransformProcessor(source, chartArea);
+            var transform: TransformProcessor = new TransformProcessor(source, chartArea);
 
             paper.rect(chartArea.x, chartArea.y, chartArea.width, chartArea.height).attr({ stroke: "#A4A3A3", fill: "none"});
 
-            for (var altitude = data.altitudeAxis.min; altitude <= data.altitudeAxis.max; altitude = altitude + data.altitudeAxis.gridMinor) {
-                var altitudePoint = transform.processPoint(new Point(0, altitude));
+            for (var altitude: number = data.altitudeAxis.min; altitude <= data.altitudeAxis.max; altitude = altitude + data.altitudeAxis.gridMinor) {
+                var altitudePoint: Point = transform.processPoint(new Point(0, altitude));
 
                 paper.line(chartArea.x, altitudePoint.y, chartArea.x + chartArea.width, altitudePoint.y).attr({ stroke: "#A4A3A3" });
 
-                var altitudeMajor = data.altitudeAxis.major(altitude);
+                var altitudeMajor: boolean = data.altitudeAxis.major(altitude);
 
-                var altitudeLine = paper.line(chartArea.x - 35, altitudePoint.y, chartArea.x - 20, altitudePoint.y);
+                var altitudeLine: Snap.Element = paper.line(chartArea.x - 35, altitudePoint.y, chartArea.x - 20, altitudePoint.y);
 
                 if (altitudeMajor) {
                     altitudeLine.attr({ stroke: "#231F20", strokeWidth: 2 });
                     Text.render(paper, data.altitudeAxis.format(altitude, false), new Point(chartArea.x - 45, altitudePoint.y), Alignment.rightMiddle, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
-                } else
+                } else {
                     altitudeLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                }
 
             }
 
-            for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
-                var distancePoint = transform.processPoint(new Point(distance, 0));
+            for (var distance: number = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
+                var distancePoint: Point = transform.processPoint(new Point(distance, 0));
 
                 paper.line(distancePoint.x, chartArea.y, distancePoint.x, chartArea.y + chartArea.height).attr({ stroke: "#A4A3A3" });
 
-                var distanceMajor = data.distanceAxis.major(distance);
+                var distanceMajor: boolean = data.distanceAxis.major(distance);
 
-                var top = chartArea.y + chartArea.height;
+                var top: number = chartArea.y + chartArea.height;
 
-                var distanceLine = paper.line(distancePoint.x, top + 10, distancePoint.x, top + 20);
+                var distanceLine: Snap.Element = paper.line(distancePoint.x, top + 10, distancePoint.x, top + 20);
 
                 if (distanceMajor) {
                     distanceLine.attr({ stroke: "#231F20", strokeWidth: 2 });
                     Text.render(paper, data.distanceAxis.format(distance, distance === data.distanceAxis.min), new Point(distancePoint.x, top + 30), Alignment.centerTop, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
-                } else
+                } else {
                     distanceLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                }
             }
 
 
 
         }
 
-        renderProfile(paper: Snap.Paper, data: ChartData, chartArea: Rectangle) {
-      
-            var reduce = new ReduceToNumberProcessor(1000);
+        renderProfile(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
+
+            var reduce: PointProcessor = new ReduceToNumberProcessor(1000);
 
             var profile: Array<Point> = data.courseProfile;
 
@@ -986,12 +987,9 @@ module ProfileChart {
             profileBody.push(new Point(chartArea.x, chartArea.y + chartArea.height));
             profileBody.push(new Point(chartArea.x, profile[0].y));
 
-            var bodyPathString = super.toPathString(profileBody) + " Z";
+            var bodyPathString: string = super.toPathString(profileBody) + " Z";
 
-            var g = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
-            //var center = chartArea.x + chartArea.width / 2;
-
-            //var g = paper.gradient("L(" + center + ", " + chartArea.y + ", " + center + ", " + (chartArea.y + chartArea.height) + ")#81F5E0:0-#70DCEB:32-#5DBFF7:75-#56B5FB:1");
+            var g: any = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
 
             paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2 });
         }
@@ -1002,12 +1000,13 @@ module ProfileChart {
             var signPadding: number = 5;
 
             var offsetSignY: number = 100;
-            
-            if (index % 2 == 1)
+                                    
+            if (index % 2 === 1) {
                 offsetSignY += height + signPadding;
-             
+            }
+                         
             var signSize: Offset = new Offset(width / 2, height / 2);
-            var signPoint = new Point(location.x, chartArea.y - offsetSignY);
+            var signPoint: Point = new Point(location.x, chartArea.y - offsetSignY);
 
             paper.rect(signPoint.x - signSize.width, signPoint.y - signSize.height + 5, width, height, signSize.height, signSize.height).attr({ fill: "#56C4CC" });
 
@@ -1025,9 +1024,8 @@ module ProfileChart {
             paper.line(signPoint.x, signPoint.y + signSize.height + 14 + 10, location.x, location.y).attr({ fill: "none", stroke: "#000000", strokeWidth: 1, strokeDasharray: "5, 5" });;
         }
 
-        renderPlaces(paper: Snap.Paper, data: ChartData, chartArea: Rectangle) {
-
-            for (let i = 0; i < data.places.length; i++) {
+        renderPlaces(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
+            for (let i: number = 0; i < data.places.length; i++) {
                 this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
             }
         }
@@ -1035,26 +1033,19 @@ module ProfileChart {
         renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle) {
             var source: Rectangle = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
 
-            var transform = new TransformProcessor(source, chartArea);
+            var transform: TransformProcessor = new TransformProcessor(source, chartArea);
 
             var offset: Offset = new Offset(0, -200);
 
-            //if (data.splits.length > 0) {
-            //    var startPlace = data.splits[0];
-            //    var startPoint = transform.processCoordinate(startPlace.distance, 0);
-
-            //    this.renderPlace(paper, chartArea, new Point(startPoint.x, chartArea.y - 120), startPlace.name); 
-            //}
-
-            for(var i = 1; i < data.splits.length; i++) {
+            for(var i: number = 1; i < data.splits.length; i++) {
                 var split = data.splits[i];
 
-                var splitPoint = transform.processCoordinate(split.distance, 0);
+                var splitPoint: Point = transform.processCoordinate(split.distance, 0);
 
                 paper.rect(splitPoint.x - 90, chartArea.y + offset.height - 18 + 5  , 180, 36, 18, 18).attr({ fill: "#E03B3B" });
                 Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
 
-                var splitTimeY = chartArea.y + offset.height - 24;
+                var splitTimeY: number = chartArea.y + offset.height - 24;
 
                 var splitTimeText = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
                 var bbox = splitTimeText.getBBox();
@@ -1666,7 +1657,7 @@ module ProfileChart {
 
             var pipeline = new PointProcessorPipeLine();
 
-            var source = new Rectangle(this.distanceAxis.min, this.altitudeAxis.min, this.distanceAxis.getSpan(), this.altitudeAxis.getSpan());
+            var source: Rectangle = new Rectangle(this.distanceAxis.min, this.altitudeAxis.min, this.distanceAxis.getSpan(), this.altitudeAxis.getSpan());
 
             pipeline.add(new TransformProcessor(source, target));
 
