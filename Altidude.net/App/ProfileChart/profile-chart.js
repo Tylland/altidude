@@ -552,10 +552,10 @@ var ProfileChart;
         };
         MountainSilhouetteChart.prototype.render = function (profile, result, width) {
             var surfaceArea = this.surfaceArea;
-            var widthMargin = surfaceArea.width / 20;
+            // var widthMargin: number = surfaceArea.width / 20;
             var heightMargin = surfaceArea.height / 2;
             var mountainArea = surfaceArea.apply(new Margin(10, heightMargin / 2, 10, 10));
-            var headerArea = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
+            // var headerArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
             var chartArea = surfaceArea.apply(new Margin(10, heightMargin, 10, 10));
             var data = new ChartData(profile, result, chartArea);
             var profileExtent = new Extent(data.courseProfile);
@@ -564,8 +564,8 @@ var ProfileChart;
             paper.attr({ width: width, height: height });
             paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
             this.clearChart();
-            var topMargin = (profileExtent.minY - chartArea.y);
-            var bottomMargin = chartArea.height - (profileExtent.maxY - chartArea.y);
+            // var topMargin: number = (profileExtent.minY - chartArea.y);
+            // var bottomMargin: number = chartArea.height - (profileExtent.maxY - chartArea.y);
             this.renderBackground(paper, surfaceArea);
             this.renderMountain(paper, new Rectangle(mountainArea.x, mountainArea.y, mountainArea.width, mountainArea.height), profileExtent.maxX, "#EEEEEE");
             this.renderMountain(paper, new Rectangle(mountainArea.x, mountainArea.y + 100, mountainArea.width, mountainArea.height / 2), profileExtent.maxX, "#BBBBBB");
@@ -725,8 +725,9 @@ var ProfileChart;
                     altitudeLine.attr({ stroke: "#231F20", strokeWidth: 2 });
                     Text.render(paper, data.altitudeAxis.format(altitude, false), new Point(chartArea.x - 45, altitudePoint.y), Alignment.rightMiddle, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
                 }
-                else
+                else {
                     altitudeLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                }
             }
             for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
                 var distancePoint = transform.processPoint(new Point(distance, 0));
@@ -738,8 +739,9 @@ var ProfileChart;
                     distanceLine.attr({ stroke: "#231F20", strokeWidth: 2 });
                     Text.render(paper, data.distanceAxis.format(distance, distance === data.distanceAxis.min), new Point(distancePoint.x, top + 30), Alignment.centerTop, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
                 }
-                else
+                else {
                     distanceLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                }
             }
         };
         SimplySunshineChart.prototype.renderProfile = function (paper, data, chartArea) {
@@ -755,8 +757,6 @@ var ProfileChart;
             profileBody.push(new Point(chartArea.x, profile[0].y));
             var bodyPathString = _super.prototype.toPathString.call(this, profileBody) + " Z";
             var g = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
-            //var center = chartArea.x + chartArea.width / 2;
-            //var g = paper.gradient("L(" + center + ", " + chartArea.y + ", " + center + ", " + (chartArea.y + chartArea.height) + ")#81F5E0:0-#70DCEB:32-#5DBFF7:75-#56B5FB:1");
             paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2 });
         };
         SimplySunshineChart.prototype.renderPlace = function (paper, chartArea, location, name, index) {
@@ -764,8 +764,9 @@ var ProfileChart;
             var height = 36;
             var signPadding = 5;
             var offsetSignY = 100;
-            if (index % 2 == 1)
+            if (index % 2 === 1) {
                 offsetSignY += height + signPadding;
+            }
             var signSize = new Offset(width / 2, height / 2);
             var signPoint = new Point(location.x, chartArea.y - offsetSignY);
             paper.rect(signPoint.x - signSize.width, signPoint.y - signSize.height + 5, width, height, signSize.height, signSize.height).attr({ fill: "#56C4CC" });
@@ -788,11 +789,6 @@ var ProfileChart;
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var transform = new TransformProcessor(source, chartArea);
             var offset = new Offset(0, -200);
-            //if (data.splits.length > 0) {
-            //    var startPlace = data.splits[0];
-            //    var startPoint = transform.processCoordinate(startPlace.distance, 0);
-            //    this.renderPlace(paper, chartArea, new Point(startPoint.x, chartArea.y - 120), startPlace.name); 
-            //}
             for (var i = 1; i < data.splits.length; i++) {
                 var split = data.splits[i];
                 var splitPoint = transform.processCoordinate(split.distance, 0);
@@ -806,8 +802,9 @@ var ProfileChart;
                 paper.circle(splitPoint.x, chartArea.y + offset.height + 40, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
                 paper.circle(splitPoint.x, chartArea.y + chartArea.height + radius, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
                 paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-                if (i === data.splits.length - 1)
+                if (i === data.splits.length - 1) {
                     paper.el("use", { "xlink:href": "#finish_flag", x: splitPoint.x, y: splitTimeY - 18 });
+                }
             }
         };
         SimplySunshineChart.prototype.renderSunAndClouds = function (paper) {
@@ -828,7 +825,7 @@ var ProfileChart;
             var heightMargin = surfaceArea.height / 2;
             var headerArea = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
             var chartArea = surfaceArea.apply(new Margin(widthMargin * 2, heightMargin, widthMargin, 80));
-            //var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
+            // var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
             var data = new ChartData(profile, result, chartArea);
             var height = (surfaceArea.height / surfaceArea.width) * width;
             var paper = Snap("#simplySunshineChart");
@@ -842,14 +839,14 @@ var ProfileChart;
             this.renderPlaces(paper, data, chartArea);
             this.renderSunAndClouds(paper);
             this.renderHeader(paper, data, headerArea);
-            //paper.circle(100, 200, 3);
-            //paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
-            //paper.circle(200, 200, 3);
-            //paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
-            //paper.circle(300, 200, 3);
-            //paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
-            //paper.circle(400, 200, 3);
-            //paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
+            // paper.circle(100, 200, 3);
+            // paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
+            // paper.circle(200, 200, 3);
+            // paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
+            // paper.circle(300, 200, 3);
+            // paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
+            // paper.circle(400, 200, 3);
+            // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         };
         return SimplySunshineChart;
     }(Chart));
@@ -880,14 +877,14 @@ var ProfileChart;
             Text.render(paper, "+" + data.ascending.toFixed(0) + "m ", topRightPoint.offset(new Vector(0, 40)), Alignment.rightTop, { fontSize: "20px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, "-" + data.descending.toFixed(0) + "m ", topRightPoint.offset(new Vector(0, 60)), Alignment.rightTop, { fontSize: "20px", fill: "#676868", fontFamily: "Arial" });
             var topCenterPoint = new Point(area.x + area.width / 2, area.y);
-            //var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
-            //courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
+            // var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
+            // courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
             var courseNamePoint = topCenterPoint.offset(new Vector(0, 5));
-            //var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
+            // var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             var name = data.athlete.displayName;
             var resultNamePoint = topCenterPoint.offset(new Vector(0, 60));
-            //var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
+            // var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
             Text.render(paper, name, resultNamePoint, Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial" });
             if (this.settings.renderPersonProfile) {
             }
@@ -895,15 +892,15 @@ var ProfileChart;
             Text.render(paper, new ElapsedTime(data.elapsedSeconds).toString(), resultTimePoint, Alignment.centerTop, { fontSize: "64px", fill: "#676868", fontFamily: "Arial" });
         };
         ForestChart.prototype.renderProfile = function (paper, data, surfaceArea, profileArea) {
-            //var reduce = new ReduceProcessor(2, 1);
+            // var reduce = new ReduceProcessor(2, 1);
             var reduce = new ReduceToNumberProcessor(30);
             var profile = data.courseProfile;
             profile = reduce.process(profile);
             var offset = new Vector(5, -15);
             this.renderGround(paper, profile, offset, surfaceArea);
             // paper.path(super.toPathString(profile)).attr({ fill: "none", stroke: color, strokeWidth: 1 });
-            //paper.path(super.toPathString(courseProfile)).attr({ fill: "none", stroke: "#FF0000", strokeWidth: 1 });        
-            //from #bfdbf2 to #0294d8
+            // paper.path(super.toPathString(courseProfile)).attr({ fill: "none", stroke: "#FF0000", strokeWidth: 1 });        
+            // from #bfdbf2 to #0294d8
             var profileBody = [];
             profileBody.push(new Point(surfaceArea.x, profile[0].y));
             profileBody.push.apply(profileBody, profile);
@@ -915,17 +912,19 @@ var ProfileChart;
             var g = paper.gradient("l(0, 0.5, 1, 0.5)#bfdbf2-#0294d8");
             paper.path(bodyPathString).attr({ fill: g });
             var totalLength = 0.0;
-            for (var i = 1; i < profile.length; i++)
+            for (var i = 1; i < profile.length; i++) {
                 totalLength += Vector.create(profile[i - 1], profile[i]).getLength();
+            }
             for (var i = 1; i < profile.length; i++) {
                 var length = Vector.create(profile[i - 1], profile[i]).getLength();
                 this.renderTrees(paper, profile[i - 1], profile[i], offset, Math.floor(length * 60 / totalLength));
             }
             this.renderOwlTree(paper, profile);
-            if (this.settings.renderSkierAndTrack)
+            if (this.settings.renderSkierAndTrack) {
                 this.renderSkierAndTrack(paper, profile);
+            }
             paper.el("use", { "xlink:href": "#finish_flag", x: profile[profile.length - 1].x, y: profile[profile.length - 1].y });
-            //paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill: "none", stroke: "#FF0000" });
+            // paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill: "none", stroke: "#FF0000" });
         };
         ForestChart.prototype.renderSkierAndTrack = function (paper, profile) {
             var trackReduce = new ReduceToNumberProcessor(10);
@@ -958,10 +957,12 @@ var ProfileChart;
                 points.push(profile[i].offset(offset));
                 points.push(profile[i]);
                 points.push(profile[i - 1]);
-                if (profile[i - 1].y > profile[i].y)
+                if (profile[i - 1].y > profile[i].y) {
                     color = ascendingColor;
-                else
+                }
+                else {
                     color = descandingColor;
+                }
                 var pathString = _super.prototype.toPathString.call(this, points) + " Z";
                 paper.path(pathString).attr({ fill: color });
             }
@@ -1003,6 +1004,17 @@ var ProfileChart;
             var vector = firstvector.add(secondvector);
             return from.offset(vector);
         };
+        ForestChart.prototype.showEventHandler = function (event) {
+            return function () {
+                // var el = <Snap.Element>event.srcElement;
+                // el.attr({ opacity: "1" });
+            };
+        };
+        ForestChart.prototype.hideEventHandler = function (event) {
+            return function () {
+                // el.animate({ opacity: "0" }, 1000);
+            };
+        };
         ForestChart.prototype.show = function (el) {
             return function () {
                 el.attr({ opacity: "1" });
@@ -1014,8 +1026,8 @@ var ProfileChart;
             };
         };
         ForestChart.prototype.renderSplits = function (paper, data, chartArea) {
-            //var start = new Point(data.splits[0].point.x, chartArea.y + chartArea.height);
-            //var finish = new Point(data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height)
+            // var start = new Point(data.splits[0].point.x, chartArea.y + chartArea.height);
+            // var finish = new Point(data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height)
             paper.line(data.splits[0].point.x, chartArea.y + chartArea.height, data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height).attr({ stroke: "#555555", strokeWidth: 1 });
             var rigthBottom = new Vector(6, 0);
             var top = new Vector(0, -10);
@@ -1025,8 +1037,9 @@ var ProfileChart;
                 var split = data.splits[i];
                 paper.line(data.splits[i].point.x, data.splits[i].point.y, data.splits[i].point.x, chartArea.y + chartArea.height).attr({ stroke: "#555555", strokeWidth: 1, opacity: 0.65 });
                 var circle = null;
-                if (i > 0)
+                if (i > 0) {
                     circle = paper.circle(data.splits[i].point.x, data.splits[i].point.y, 6).attr({ fill: "#FFFFFF", stroke: "#000000", strokeWidth: 1 });
+                }
                 var points = [];
                 var centerBottom = new Point(data.splits[i].point.x, chartArea.y + chartArea.height);
                 points.push(centerBottom);
@@ -1043,8 +1056,8 @@ var ProfileChart;
                     var splitResultTimePoint = data.splits[i].point.offset(this.splitResultTimeOffset);
                     var splitTime = paper.text(splitResultTimePoint.x, splitResultTimePoint.y, data.splits[i].getTime()).attr({ fill: "#F9F4F4", fontSize: 28, fontFamily: "Arial", fontStyle: "italic" });
                     this.align(splitTime, Alignment.leftMiddle, splitResultTimePoint);
-                    //var splitTimeBox = splitTime.getBBox();
-                    //splitTime.attr({ y: splitResultTimePoint.y + splitTimeBox.height / 2 });
+                    // var splitTimeBox = splitTime.getBBox();
+                    // splitTime.attr({ y: splitResultTimePoint.y + splitTimeBox.height / 2 });
                     var splitResultPositionPoint = data.splits[i].point.offset(this.splitResultPositionOffset);
                     var splitPosition = paper.text(splitResultPositionPoint.x, splitResultPositionPoint.y, data.splits[i].position.toString()).attr({ fill: "#676868", textAnchor: "middle", fontSize: "48px", fontFamily: "Arial", fontStyle: "bold" });
                     var splitPositionBox = splitPosition.getBBox();
@@ -1056,7 +1069,7 @@ var ProfileChart;
                     var hide = data.splits.length > this.maxVisibleSplitResults;
                     if (hide) {
                         splitResultGroup.attr({ opacity: "0" });
-                        circle.hover(this.show(splitResultGroup), this.hide(splitResultGroup));
+                        circle.hover(this.showEventHandler, this.hideEventHandler);
                     }
                 }
                 if (i === data.splits.length - 1) {

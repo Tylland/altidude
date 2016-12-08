@@ -684,12 +684,12 @@ module ProfileChart {
         render(profile: IProfile, result: IResult, width: number): void {
             var surfaceArea: Rectangle = this.surfaceArea;
 
-            var widthMargin: number = surfaceArea.width / 20;
+            // var widthMargin: number = surfaceArea.width / 20;
             var heightMargin: number = surfaceArea.height / 2;
 
             var mountainArea: Rectangle = surfaceArea.apply(new Margin(10, heightMargin / 2, 10, 10));
 
-            var headerArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
+            // var headerArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
             var chartArea: Rectangle = surfaceArea.apply(new Margin(10, heightMargin, 10, 10));
 
             var data: ChartData = new ChartData(profile, result, chartArea);
@@ -705,8 +705,8 @@ module ProfileChart {
             this.clearChart();
 
 
-            var topMargin: number = (profileExtent.minY - chartArea.y);
-            var bottomMargin: number = chartArea.height - (profileExtent.maxY - chartArea.y);
+            // var topMargin: number = (profileExtent.minY - chartArea.y);
+            // var bottomMargin: number = chartArea.height - (profileExtent.maxY - chartArea.y);
 
             this.renderBackground(paper, surfaceArea);
             this.renderMountain(paper, new Rectangle(mountainArea.x, mountainArea.y, mountainArea.width, mountainArea.height), profileExtent.maxX, "#EEEEEE");
@@ -994,17 +994,17 @@ module ProfileChart {
             paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2 });
         }
 
-        renderPlace(paper: Snap.Paper, chartArea: Rectangle, location: Point, name: string, index: number) {
+        renderPlace(paper: Snap.Paper, chartArea: Rectangle, location: Point, name: string, index: number): void {
             var width: number = 180;
             var height: number = 36;
             var signPadding: number = 5;
 
             var offsetSignY: number = 100;
-                                    
+
             if (index % 2 === 1) {
                 offsetSignY += height + signPadding;
             }
-                         
+
             var signSize: Offset = new Offset(width / 2, height / 2);
             var signPoint: Point = new Point(location.x, chartArea.y - offsetSignY);
 
@@ -1030,15 +1030,15 @@ module ProfileChart {
             }
         }
 
-        renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle) {
+        renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
             var source: Rectangle = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
 
             var transform: TransformProcessor = new TransformProcessor(source, chartArea);
 
             var offset: Offset = new Offset(0, -200);
 
-            for(var i: number = 1; i < data.splits.length; i++) {
-                var split = data.splits[i];
+            for (var i: number = 1; i < data.splits.length; i++) {
+                var split: ChartSplit = data.splits[i];
 
                 var splitPoint: Point = transform.processCoordinate(split.distance, 0);
 
@@ -1047,8 +1047,8 @@ module ProfileChart {
 
                 var splitTimeY: number = chartArea.y + offset.height - 24;
 
-                var splitTimeText = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
-                var bbox = splitTimeText.getBBox();
+                var splitTimeText: Snap.Element = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
+                var bbox: Snap.BBox = splitTimeText.getBBox();
 
                 paper.el("use", { "xlink:href": "#stopwatch", x: bbox.x, y: splitTimeY + 12 });
 
@@ -1058,45 +1058,46 @@ module ProfileChart {
 
                 paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
 
-                if (i === data.splits.length - 1)
+                if (i === data.splits.length - 1) {
                     paper.el("use", { "xlink:href": "#finish_flag", x: splitPoint.x, y: splitTimeY - 18 });
-            }    
+                }
+            }
         }
 
-        renderSunAndClouds(paper: Snap.Paper) {
+        renderSunAndClouds(paper: Snap.Paper): void {
             paper.el("use", { "xlink:href": "#sun", x: 240, y: 100 });
             paper.el("use", { "xlink:href": "#clouds", x: 280, y: 130});
         }
 
-        renderHeader(paper: Snap.Paper, data: ChartData, headerArea: Rectangle) {
-            var topCenterPoint = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
+        renderHeader(paper: Snap.Paper, data: ChartData, headerArea: Rectangle): void {
+            var topCenterPoint: Point = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
 
-            var courseNamePoint = topCenterPoint.offset(new Vector(0, 80));
+            var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 80));
 
-            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
-            var bbox = courseNameText.getBBox();
+            var courseNameText: Snap.Element = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            var bbox: Snap.BBox = courseNameText.getBBox();
 
             paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
 
             Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#E03B3B", fontSize: "64px", fontFamily: "Arial" });
         }
 
-        render(profile: IProfile, result: IResult, width: number) {
+        render(profile: IProfile, result: IResult, width: number): void {
 
-            var surfaceArea = this.surfaceArea;
+            var surfaceArea: Rectangle = this.surfaceArea;
 
-            var widthMargin = surfaceArea.width / 20;
-            var heightMargin = surfaceArea.height / 2;
+            var widthMargin: number = surfaceArea.width / 20;
+            var heightMargin: number = surfaceArea.height / 2;
 
             var headerArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
             var chartArea: Rectangle = surfaceArea.apply(new Margin(widthMargin * 2, heightMargin, widthMargin, 80));
-            //var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
+            // var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
 
-            var data = new ChartData(profile, result, chartArea);
+            var data: ChartData = new ChartData(profile, result, chartArea);
 
-            var height = (surfaceArea.height / surfaceArea.width) * width;
+            var height: number = (surfaceArea.height / surfaceArea.width) * width;
 
-            var paper = Snap("#simplySunshineChart");
+            var paper: Snap.Paper = Snap("#simplySunshineChart");
             paper.attr({ width: width, height: height });
             paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
 
@@ -1110,14 +1111,14 @@ module ProfileChart {
             this.renderSunAndClouds(paper);
             this.renderHeader(paper, data, headerArea);
 
-            //paper.circle(100, 200, 3);
-            //paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
-            //paper.circle(200, 200, 3);
-            //paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
-            //paper.circle(300, 200, 3);
-            //paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
-            //paper.circle(400, 200, 3);
-            //paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
+            // paper.circle(100, 200, 3);
+            // paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
+            // paper.circle(200, 200, 3);
+            // paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
+            // paper.circle(300, 200, 3);
+            // paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
+            // paper.circle(400, 200, 3);
+            // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         }
     }
 
@@ -1135,13 +1136,13 @@ module ProfileChart {
         private trackOffset: Vector = new Vector(0, 150);
         private stopwatchWidth: number = 20;
 
-        renderBackground(paper: Snap.Paper, surfaceArea: Rectangle) {
-            var g = paper.gradient("l(0, 1, 1, 0)#29ABE2-#FFFFFF");
+        renderBackground(paper: Snap.Paper, surfaceArea: Rectangle): void {
+            var g: any = paper.gradient("l(0, 1, 1, 0)#29ABE2-#FFFFFF");
 
             paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
         }
 
-        renderHeader(paper: Snap.Paper, data: ChartData, area: Rectangle) {
+        renderHeader(paper: Snap.Paper, data: ChartData, area: Rectangle): void {
 
             var topLeftPoint: Point = new Point(data.getFirstSplit().point.x, area.y);
             var topRightPoint: Point = new Point(data.getLastSplit().point.x, area.y);
@@ -1152,38 +1153,37 @@ module ProfileChart {
             Text.render(paper, "+" + data.ascending.toFixed(0) + "m ", topRightPoint.offset(new Vector(0, 40)), Alignment.rightTop, { fontSize: "20px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, "-" + data.descending.toFixed(0) + "m ", topRightPoint.offset(new Vector(0, 60)), Alignment.rightTop, { fontSize: "20px", fill: "#676868", fontFamily: "Arial" });
 
-            var topCenterPoint = new Point(area.x + area.width / 2, area.y);
+            var topCenterPoint: Point = new Point(area.x + area.width / 2, area.y);
 
-            //var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
-            //courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
+            // var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
+            // courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
 
-            var courseNamePoint = topCenterPoint.offset(new Vector(0, 5));
-            //var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
+            var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 5));
+            // var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
 
-            var name = data.athlete.displayName;
-            var resultNamePoint = topCenterPoint.offset(new Vector(0, 60));
-            //var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
+            var name: string = data.athlete.displayName;
+            var resultNamePoint: Point = topCenterPoint.offset(new Vector(0, 60));
+            // var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
             Text.render(paper, name, resultNamePoint, Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial" });
 
             if (this.settings.renderPersonProfile) {
-                //var offsetLeftPersonName = this.calcAlignmentVector(personName, HorizontalAlignment.Center, VerticalAlignment.Top);
-                //var resultPositionPoint = resultNamePoint.offset(offsetLeftPersonName).offset(marginLeft);
-                //var resultPosition = this.renderText(paper, data.person.startNumber, resultPositionPoint, Alignment.rightBottom, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
+                // var offsetLeftPersonName = this.calcAlignmentVector(personName, HorizontalAlignment.Center, VerticalAlignment.Top);
+                // var resultPositionPoint = resultNamePoint.offset(offsetLeftPersonName).offset(marginLeft);
+                // var resultPosition = this.renderText(paper, data.person.startNumber, resultPositionPoint, Alignment.rightBottom, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
 
-                //var offsetRightPersonName = offsetLeftPersonName.scale(-1, 1);
-                //var resultClubPoint = resultNamePoint.offset(offsetRightPersonName).offset(marginRight);
-                //var resultClub = this.renderText(paper, data.person.club, resultClubPoint, Alignment.leftBottom, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
+                // var offsetRightPersonName = offsetLeftPersonName.scale(-1, 1);
+                // var resultClubPoint = resultNamePoint.offset(offsetRightPersonName).offset(marginRight);
+                // var resultClub = this.renderText(paper, data.person.club, resultClubPoint, Alignment.leftBottom, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
             }
 
-            var resultTimePoint = topCenterPoint.offset(new Vector(0, 120));
+            var resultTimePoint: Point = topCenterPoint.offset(new Vector(0, 120));
             Text.render(paper, new ElapsedTime(data.elapsedSeconds).toString(), resultTimePoint, Alignment.centerTop, { fontSize: "64px", fill: "#676868", fontFamily: "Arial" });
         }
 
-        renderProfile(paper: Snap.Paper, data: ChartData, surfaceArea: Rectangle, profileArea: Rectangle) {
-            
-            //var reduce = new ReduceProcessor(2, 1);
-            var reduce = new ReduceToNumberProcessor(30);
+        renderProfile(paper: Snap.Paper, data: ChartData, surfaceArea: Rectangle, profileArea: Rectangle): void {
+            // var reduce = new ReduceProcessor(2, 1);
+            var reduce: PointProcessor = new ReduceToNumberProcessor(30);
 
             var profile: Array<Point> = data.courseProfile;
 
@@ -1194,9 +1194,8 @@ module ProfileChart {
             this.renderGround(paper, profile, offset, surfaceArea);
 
             // paper.path(super.toPathString(profile)).attr({ fill: "none", stroke: color, strokeWidth: 1 });
-            //paper.path(super.toPathString(courseProfile)).attr({ fill: "none", stroke: "#FF0000", strokeWidth: 1 });        
-            //from #bfdbf2 to #0294d8
-
+            // paper.path(super.toPathString(courseProfile)).attr({ fill: "none", stroke: "#FF0000", strokeWidth: 1 });        
+            // from #bfdbf2 to #0294d8
 
             var profileBody: Point[] = [];
 
@@ -1209,44 +1208,43 @@ module ProfileChart {
             profileBody.push(new Point(surfaceArea.x, surfaceArea.y + surfaceArea.height));
             profileBody.push(new Point(surfaceArea.x, profile[0].y));
 
-            var bodyPathString = super.toPathString(profileBody) + " Z";
+            var bodyPathString: string = super.toPathString(profileBody) + " Z";
 
-            var g = paper.gradient("l(0, 0.5, 1, 0.5)#bfdbf2-#0294d8");
+            var g: any = paper.gradient("l(0, 0.5, 1, 0.5)#bfdbf2-#0294d8");
 
             paper.path(bodyPathString).attr({ fill: g });
 
             var totalLength: number = 0.0;
 
-            for (let i = 1; i < profile.length; i++)
+            for (let i: number = 1; i < profile.length; i++) {
                 totalLength += Vector.create(profile[i - 1], profile[i]).getLength();
+            }
 
-
-            for (let i = 1; i < profile.length; i++) {
-                var length = Vector.create(profile[i - 1], profile[i]).getLength();
+            for (let i: any = 1; i < profile.length; i++) {
+                var length: number = Vector.create(profile[i - 1], profile[i]).getLength();
 
                 this.renderTrees(paper, profile[i - 1], profile[i], offset, Math.floor(length * 60 / totalLength));
             }
 
             this.renderOwlTree(paper, profile);
 
-            if(this.settings.renderSkierAndTrack)
+            if (this.settings.renderSkierAndTrack) {
                 this.renderSkierAndTrack(paper, profile);
+            }
 
             paper.el("use", { "xlink:href": "#finish_flag", x: profile[profile.length - 1].x, y: profile[profile.length - 1].y });
 
-            //paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill: "none", stroke: "#FF0000" });
-
+            // paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill: "none", stroke: "#FF0000" });
         }
 
         renderSkierAndTrack(paper: Snap.Paper, profile: Point[]): void {
-            var trackReduce = new ReduceToNumberProcessor(10);
-            var offseter = new OffsetProcessor(this.trackOffset);
+            var trackReduce: PointProcessor = new ReduceToNumberProcessor(10);
+            var offseter: OffsetProcessor = new OffsetProcessor(this.trackOffset);
 
-            var trackPoints = offseter.process(trackReduce.process(profile));
+            var trackPoints: Point[] = offseter.process(trackReduce.process(profile));
 
             trackPoints.unshift(offseter.processPoint(profile[0]));
             trackPoints.push(offseter.processPoint(profile[profile.length - 1]));
-
 
             // paper.path(super.toPathString(trackPoints)).attr({ fill: "none", stroke: "#000000", strokeWidth: 1 });
             paper.path(super.createCurveThroughPath(trackPoints)).attr({ fill: "none", stroke: "#000000", strokeWidth: 1 });
@@ -1261,8 +1259,8 @@ module ProfileChart {
 
         renderGround(paper: Snap.Paper, profile: Point[], offset: Vector, surfaceArea: Rectangle): void {
             var color: string = "#666666";
-            var ascendingColor = "#808080";
-            var descandingColor = "#999999";
+            var ascendingColor: string = "#808080";
+            var descandingColor: string = "#999999";
 
             var points: Point[] = [];
 
@@ -1274,7 +1272,7 @@ module ProfileChart {
 
             paper.path(super.toPathString(points) + " Z").attr({ fill: descandingColor });
 
-            for (var i = 1; i < profile.length; i++) {
+            for (var i: number = 1; i < profile.length; i++) {
 
                 points = [];
 
@@ -1284,12 +1282,13 @@ module ProfileChart {
                 points.push(profile[i]);
                 points.push(profile[i - 1]);
 
-                if (profile[i - 1].y > profile[i].y)
+                if (profile[i - 1].y > profile[i].y) {
                     color = ascendingColor;
-                else
+                } else {
                     color = descandingColor;
+                }
 
-                var pathString = super.toPathString(points) + " Z";
+                var pathString: string = super.toPathString(points) + " Z";
                 paper.path(pathString).attr({ fill: color });
             }
 
@@ -1305,63 +1304,76 @@ module ProfileChart {
         renderOwlTree(paper: Snap.Paper, profile: Point[]): void {
             var colors: string[] = ["#588427", "#6a992f", "#48711e", "#31550e", "#3d6317", "#1f4100", "#395f15", "#3a6015", "#32560f", "#77a935", "#365f16", "#173900"];
 
-            var segment = Math.floor(Math.random() * (profile.length - 1));
+            var segment: number = Math.floor(Math.random() * (profile.length - 1));
             var from: Point = profile[segment];
             var to: Point = profile[segment];
 
-            var point = this.getRandomTreePoint(from, to, new Vector(0, 0));
-            var color = colors[Math.floor(Math.random() * colors.length)];
+            var point: Point = this.getRandomTreePoint(from, to, new Vector(0, 0));
+            var color: string = colors[Math.floor(Math.random() * colors.length)];
 
 
             paper.el("use", { "xlink:href": "#tree4", x: point.x, y: point.y, fill: color });
-            var owl = paper.el("use", { "xlink:href": "#owl", x: point.x, y: point.y, opacity: 0 });
-            var eyes = paper.el("use", { "xlink:href": "#owl_eyes", x: point.x, y: point.y });
+            var owl: Snap.Element = paper.el("use", { "xlink:href": "#owl", x: point.x, y: point.y, opacity: 0 });
+            var eyes: Snap.Element = paper.el("use", { "xlink:href": "#owl_eyes", x: point.x, y: point.y });
 
-            eyes.hover((event: MouseEvent) => { this.show(owl) }, (event: MouseEvent) => { this.hide(owl) });
+            eyes.hover((event: MouseEvent) => { this.show(owl); }, (event: MouseEvent) => { this.hide(owl); });
         }
 
         renderTrees(paper: Snap.Paper, from: Point, to: Point, offset: Vector, nrOfTrees: number): void {
             var colors: string[] = ["#588427", "#6a992f", "#48711e", "#31550e", "#3d6317", "#1f4100", "#395f15", "#3a6015", "#32560f", "#77a935", "#365f16", "#173900"];
 
-            for (var i = 0; i < nrOfTrees; i++) {
-                var treeId = "#tree" + (Math.floor(Math.random() * 4) + 1);
-                var point = this.getRandomTreePoint(from, to, offset);
-                var color = colors[Math.floor(Math.random() * colors.length)];
-                var scaleX = 0.6 + Math.random() * 0.4;
-                var scaleY = 0.7 + Math.random() * 0.3;
+            for (var i: number = 0; i < nrOfTrees; i++) {
+                var treeId: string = "#tree" + (Math.floor(Math.random() * 4) + 1);
+                var point: Point = this.getRandomTreePoint(from, to, offset);
+                var color: string = colors[Math.floor(Math.random() * colors.length)];
+                var scaleX: number = 0.6 + Math.random() * 0.4;
+                var scaleY: number = 0.7 + Math.random() * 0.3;
 
-                var transform = "scale(" + scaleX + ", " + scaleY + ", " + point.x + "," + point.y + ")"; // translate(" + (point.x * -1/scaleX) + ", " + (point.y * 1/scaleY) + ")";
+                var transform: string = "scale(" + scaleX + ", " + scaleY + ", " + point.x + "," + point.y + ")"; // translate(" + (point.x * -1/scaleX) + ", " + (point.y * 1/scaleY) + ")";
 
                 paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x / scaleX, y: point.y / scaleY, fill: color });
             }
         }
 
         getRandomTreePoint(from: Point, to: Point, offset: Vector): Point {
-            var firstvector = Vector.create(from, to).scaleTo(Math.random());
+            var firstvector: Vector = Vector.create(from, to).scaleTo(Math.random());
 
-            var secondvector = offset.scaleTo(Math.random());
+            var secondvector: Vector = offset.scaleTo(Math.random());
 
-            var vector = firstvector.add(secondvector);
+            var vector: Vector = firstvector.add(secondvector);
 
             return from.offset(vector);
         }
 
 
+        showEventHandler(event: MouseEvent): Function {
+            return () => {
+                // var el = <Snap.Element>event.srcElement;
+                // el.attr({ opacity: "1" });
+            };
+        }
+
+        hideEventHandler(event: MouseEvent): Function {
+            return () => {
+                // el.animate({ opacity: "0" }, 1000);
+            };
+        }
+
         show(el: Snap.Element): Function {
             return () => {
                 el.attr({ opacity: "1" });
-            }
+            };
         }
 
         hide(el: Snap.Element): Function {
             return () => {
                 el.animate({ opacity: "0" }, 1000);
-            }
+            };
         }
 
         renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
-            //var start = new Point(data.splits[0].point.x, chartArea.y + chartArea.height);
-            //var finish = new Point(data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height)
+            // var start = new Point(data.splits[0].point.x, chartArea.y + chartArea.height);
+            // var finish = new Point(data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height)
 
             paper.line(data.splits[0].point.x, chartArea.y + chartArea.height, data.splits[data.splits.length - 1].point.x, chartArea.y + chartArea.height).attr({ stroke: "#555555", strokeWidth: 1 });
 
@@ -1369,21 +1381,22 @@ module ProfileChart {
             var top: Vector = new Vector(0, -10);
             var leftBottom: Vector = new Vector(-6, 0);
 
-            var distanceFontFalily = "Arial";
+            var distanceFontFalily: string = "Arial";
 
-            for (var i = 0; i < data.splits.length; i++) {
+            for (var i: number = 0; i < data.splits.length; i++) {
                 var split: ChartSplit = data.splits[i];
 
                 paper.line(data.splits[i].point.x, data.splits[i].point.y, data.splits[i].point.x, chartArea.y + chartArea.height).attr({ stroke: "#555555", strokeWidth: 1, opacity: 0.65 });
 
-                var circle = null;
+                var circle: Snap.Element = null;
 
-                if (i > 0)
+                if (i > 0) {
                     circle = paper.circle(data.splits[i].point.x, data.splits[i].point.y, 6).attr({ fill: "#FFFFFF", stroke: "#000000", strokeWidth: 1 });
+                }
 
                 var points: Point[] = [];
 
-                var centerBottom = new Point(data.splits[i].point.x, chartArea.y + chartArea.height);
+                var centerBottom: Point = new Point(data.splits[i].point.x, chartArea.y + chartArea.height);
 
                 points.push(centerBottom);
                 points.push(centerBottom.offset(rigthBottom));
@@ -1393,59 +1406,58 @@ module ProfileChart {
 
                 paper.path(super.toPathString(points) + "Z").attr({ fill: "#FFFFFF", stroke: "#555555", strokeWidth: 1 });
 
-                var s = paper.text(centerBottom.x, centerBottom.y, data.distanceAxis.format(split.distance, i === data.splits.length - 1)).attr({ fontFamily: distanceFontFalily, textAnchor: "middle", fontSize: 26, fontStyle: "bold", fill: "#676868" });
+                var s: Snap.Element = paper.text(centerBottom.x, centerBottom.y, data.distanceAxis.format(split.distance, i === data.splits.length - 1)).attr({ fontFamily: distanceFontFalily, textAnchor: "middle", fontSize: 26, fontStyle: "bold", fill: "#676868" });
 
-                var bbox = s.getBBox();
+                var bbox: Snap.BBox = s.getBBox();
                 s.attr({ y: centerBottom.y + bbox.height });
 
                 if (i > 0 && i < data.splits.length - 1) {
 
-                    var splitResultSymbol = paper.el("use", { id: "split" + i, "xlink:href": "#result_split", x: data.splits[i].point.x, y: data.splits[i].point.y });
+                    var splitResultSymbol: Snap.Element = paper.el("use", { id: "split" + i, "xlink:href": "#result_split", x: data.splits[i].point.x, y: data.splits[i].point.y });
 
+                    var splitResultTimePoint: Point = data.splits[i].point.offset(this.splitResultTimeOffset);
 
-                    var splitResultTimePoint = data.splits[i].point.offset(this.splitResultTimeOffset);
-
-                    var splitTime = paper.text(splitResultTimePoint.x, splitResultTimePoint.y, data.splits[i].getTime()).attr({ fill: "#F9F4F4", fontSize: 28, fontFamily: "Arial", fontStyle: "italic" });
+                    var splitTime: Snap.Element = paper.text(splitResultTimePoint.x, splitResultTimePoint.y, data.splits[i].getTime()).attr({ fill: "#F9F4F4", fontSize: 28, fontFamily: "Arial", fontStyle: "italic" });
                     this.align(splitTime, Alignment.leftMiddle, splitResultTimePoint);
 
-                    //var splitTimeBox = splitTime.getBBox();
-                    //splitTime.attr({ y: splitResultTimePoint.y + splitTimeBox.height / 2 });
+                    // var splitTimeBox = splitTime.getBBox();
+                    // splitTime.attr({ y: splitResultTimePoint.y + splitTimeBox.height / 2 });
 
-                    var splitResultPositionPoint = data.splits[i].point.offset(this.splitResultPositionOffset);
+                    var splitResultPositionPoint: Point = data.splits[i].point.offset(this.splitResultPositionOffset);
 
-                    var splitPosition = paper.text(splitResultPositionPoint.x, splitResultPositionPoint.y, data.splits[i].position.toString()).attr({ fill: "#676868", textAnchor: "middle", fontSize: "48px", fontFamily: "Arial", fontStyle: "bold" });
-                    var splitPositionBox = splitPosition.getBBox();
+                    var splitPosition: Snap.Element = paper.text(splitResultPositionPoint.x, splitResultPositionPoint.y, data.splits[i].position.toString()).attr({ fill: "#676868", textAnchor: "middle", fontSize: "48px", fontFamily: "Arial", fontStyle: "bold" });
+                    var splitPositionBox: Snap.BBox = splitPosition.getBBox();
                     splitPosition.attr({ y: splitResultPositionPoint.y + splitPositionBox.height / 2 });
 
-                    var splitResultLabelPoint = data.splits[i].point.offset(this.splitResultLabelOffset);
-                    var splitLabel = paper.text(splitResultLabelPoint.x, splitResultLabelPoint.y, data.splits[i].name).attr({ fill: "#676868", fontSize: "18px", fontFamily: "Arial" });
+                    var splitResultLabelPoint: Point = data.splits[i].point.offset(this.splitResultLabelOffset);
+                    var splitLabel: Snap.Element = paper.text(splitResultLabelPoint.x, splitResultLabelPoint.y, data.splits[i].name).attr({ fill: "#676868", fontSize: "18px", fontFamily: "Arial" });
                     this.align(splitLabel, Alignment.centerMiddle, splitResultLabelPoint);
 
-                    var splitResultGroup = paper.group(splitResultSymbol, splitTime, splitPosition, splitLabel);
+                    var splitResultGroup: any = paper.group(splitResultSymbol, splitTime, splitPosition, splitLabel);
 
-                    var hide = data.splits.length > this.maxVisibleSplitResults;
+                    var hide: boolean = data.splits.length > this.maxVisibleSplitResults;
 
                     if (hide) {
                         splitResultGroup.attr({ opacity: "0" });
 
-                        circle.hover(this.show(splitResultGroup), this.hide(splitResultGroup));
+                        circle.hover(this.showEventHandler, this.hideEventHandler);
                     }
                 }
 
                 if (i === data.splits.length - 1) {
-                    //var resultFinish = paper.el("use", { "xlink:href": "#result_finish", x: data.splits[i].point.x, y: data.splits[i].point.y });
+                    // var resultFinish = paper.el("use", { "xlink:href": "#result_finish", x: data.splits[i].point.x, y: data.splits[i].point.y });
 
-                    //var finishResultPoint = data.splits[i].point.offset(this.finishResultTimeOffset);
+                    // var finishResultPoint = data.splits[i].point.offset(this.finishResultTimeOffset);
 
-                    //var finishTime = paper.text(finishResultPoint.x, finishResultPoint.y, data.splits[i].getTime()).attr({ fill: "#676868", fontSize: "32px", fontFamily: "Arial", fontStyle: "bold" });
-                    //this.align(finishTime, Alignment.centerBottom, finishResultPoint);
+                    // var finishTime = paper.text(finishResultPoint.x, finishResultPoint.y, data.splits[i].getTime()).attr({ fill: "#676868", fontSize: "32px", fontFamily: "Arial", fontStyle: "bold" });
+                    // this.align(finishTime, Alignment.centerBottom, finishResultPoint);
 
-                    //if (this.settings.renderResultPositios) {
+                    // if (this.settings.renderResultPositios) {
                     //    var finishPosition = paper.text(finishResultPoint.x, finishResultPoint.y, data.splits[i].position.toString()).attr({ fill: "#676868", fontSize: "48px", fontFamily: "Arial", fontStyle: "bold" });
                     //    this.align(finishPosition, Alignment.centerTop, finishResultPoint);
-                    //}
-                    //var bbox = finishPosition.getBBox();
-                    //finishPosition.attr({ y: finishResultPoint.y + bbox.height });
+                    // }
+                    // var bbox = finishPosition.getBBox();
+                    // finishPosition.attr({ y: finishResultPoint.y + bbox.height });
                 }
 
             }
@@ -1459,26 +1471,26 @@ module ProfileChart {
         //}
 
         renderLegs(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
-            for (var i = 0; i < data.legs.length; i++) {
+            for (var i: number = 0; i < data.legs.length; i++) {
                 var leg: ChartLeg = data.legs[i];
 
-                var legResultOffset = this.trackOffset.scaleTo(0.5);
+                var legResultOffset: Vector = this.trackOffset.scaleTo(0.5);
                 var legMiddlePoint: Point = leg.middlepoint;
                 var legResultPoint: Point = legMiddlePoint.offset(legResultOffset);
 
                 //   paper.circle(legResultPoint.x, legResultPoint.y, 3);
 
-                var stopwatch = paper.el("use", { "xlink:href": "#stopwatch", x: legResultPoint.x, y: legResultPoint.y });
+                var stopwatch: Snap.Element = paper.el("use", { "xlink:href": "#stopwatch", x: legResultPoint.x, y: legResultPoint.y });
 
                 var legResultTimePoint: Point = legResultPoint.offset(new Vector(this.stopwatchWidth, 0));
 
-                var legTime = Text.render(paper, leg.getTime(), legResultTimePoint, Alignment.leftBottom, { fill: "#F9F4F4", fontSize: 16, fontFamily: "Arial" });
+                var legTime: Snap.Element = Text.render(paper, leg.getTime(), legResultTimePoint, Alignment.leftBottom, { fill: "#F9F4F4", fontSize: 16, fontFamily: "Arial" });
 
-                var legPosition = Text.render(paper, "position " + leg.position, legResultPoint, Alignment.leftTop, { fill: "#676868", fontSize: 16, fontFamily: "Arial" });
+                var legPosition: Snap.Element = Text.render(paper, "position " + leg.position, legResultPoint, Alignment.leftTop, { fill: "#676868", fontSize: 16, fontFamily: "Arial" });
 
-                var legResult = paper.group(stopwatch, legTime, legPosition);
-                var offset = this.calcAlignmentVector(legResult, HorizontalAlignment.Center, VerticalAlignment.Middle);
-                var transform = "translate(" + offset.x + "," + -offset.y / 2 + ")";
+                var legResult: any = paper.group(stopwatch, legTime, legPosition);
+                var offset: Vector = this.calcAlignmentVector(legResult, HorizontalAlignment.Center, VerticalAlignment.Middle);
+                var transform: string = "translate(" + offset.x + "," + -offset.y / 2 + ")";
 
                 legResult.attr({ transform: transform });
 
@@ -1888,14 +1900,14 @@ module ProfileChart {
         }
 
         private static calcMin(minAltitude: number, maxAltitude: number, gridMinor: number, gridMajor: number): number {
-            var roundFactor = gridMajor;
+            var roundFactor: number = gridMajor;
             var minBase: number = Math.min(minAltitude, 0);
             
             return Math.max(Math.floor(minAltitude / roundFactor) * roundFactor, minBase);
         }
 
         private static calcMax(minAltitude: number, maxAltitude: number, gridMinor: number, gridMajor: number): number {
-            var roundFactor = gridMajor;
+            var roundFactor: number = gridMajor;
 
             return Math.ceil(maxAltitude / roundFactor) * roundFactor;
         }
