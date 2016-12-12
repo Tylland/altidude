@@ -19,6 +19,7 @@ var Services;
             charts.push(new ProfileChart.SimplySunshineChart());
             charts.push(new ProfileChart.ConnectingDotsChart());
             //charts.push(new ProfileChart.MountainSilhouetteChart());
+            charts.push(new ProfileChart.GiroItaliaChart());
             return charts;
         };
         ;
@@ -34,4 +35,3 @@ var Services;
     Services.ChartService = ChartService;
     angular.module('altidudeApp').service('chartService', Services.ChartService);
 })(Services || (Services = {}));
-//# sourceMappingURL=ChartService.js.map

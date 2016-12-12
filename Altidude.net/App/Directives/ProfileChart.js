@@ -60,4 +60,3 @@ angular.module('altidudeApp').directive('profileChart', ['$http', '$window', fun
             }
         };
     }]);
-//# sourceMappingURL=ProfileChart.js.map

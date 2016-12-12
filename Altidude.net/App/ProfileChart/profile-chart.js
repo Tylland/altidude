@@ -28,7 +28,7 @@ var ProfileChart;
             return Math.abs(this.y - y);
         };
         return Point;
-    }());
+    })();
     ProfileChart.Point = Point;
     var Vector = (function () {
         function Vector(x, y) {
@@ -47,6 +47,10 @@ var ProfileChart;
         };
         Vector.prototype.scaleTo = function (scale) {
             return new Vector(this.x * scale, this.y * scale);
+        };
+        Vector.prototype.scaleToX = function (x) {
+            var k = this.y / this.x;
+            return new Vector(x, x * k);
         };
         Vector.prototype.scale = function (scaleX, scaleY) {
             return new Vector(this.x * scaleX, this.y * scaleY);
@@ -75,7 +79,7 @@ var ProfileChart;
             return new Vector(dy, -dx);
         };
         return Vector;
-    }());
+    })();
     ProfileChart.Vector = Vector;
     var Offset = (function () {
         function Offset(width, height) {
@@ -83,12 +87,12 @@ var ProfileChart;
             this.height = height;
         }
         return Offset;
-    }());
+    })();
     var Size = (function () {
         function Size() {
         }
         return Size;
-    }());
+    })();
     var Margin = (function () {
         function Margin(left, top, right, bottom) {
             this.left = left;
@@ -97,7 +101,7 @@ var ProfileChart;
             this.bottom = bottom;
         }
         return Margin;
-    }());
+    })();
     ProfileChart.Margin = Margin;
     var Rectangle = (function () {
         function Rectangle(x, y, width, height) {
@@ -113,7 +117,7 @@ var ProfileChart;
             return new Rectangle(this.x + margin.left, this.y + margin.top, this.width - margin.left - margin.right, this.height - margin.top - margin.bottom);
         };
         return Rectangle;
-    }());
+    })();
     ProfileChart.Rectangle = Rectangle;
     var Extent = (function () {
         function Extent(points) {
@@ -147,7 +151,7 @@ var ProfileChart;
             return new Rectangle(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
         };
         return Extent;
-    }());
+    })();
     var ElapsedTime = (function () {
         function ElapsedTime(seconds) {
             this.seconds = seconds;
@@ -190,7 +194,7 @@ var ProfileChart;
             return elapsedTime;
         };
         return ElapsedTime;
-    }());
+    })();
     var ChartType = (function () {
         // transformData(data: ChartData, chartArea: Rectangle)
         // {
@@ -203,14 +207,14 @@ var ProfileChart;
             this.templateUrl = templateUrl;
         }
         return ChartType;
-    }());
+    })();
     var ControlPointValues = (function () {
         function ControlPointValues(p1, p2) {
             this.p1 = p1;
             this.p2 = p2;
         }
         return ControlPointValues;
-    }());
+    })();
     var Chart = (function () {
         function Chart(id, name, templateUrl) {
             this.id = id;
@@ -346,7 +350,7 @@ var ProfileChart;
             el.attr({ x: pos.x, y: pos.y });
         };
         return Chart;
-    }());
+    })();
     ProfileChart.Chart = Chart;
     var HorizontalAlignment;
     (function (HorizontalAlignment) {
@@ -375,7 +379,7 @@ var ProfileChart;
         Alignment.rightMiddle = new Alignment(HorizontalAlignment.Right, VerticalAlignment.Middle);
         Alignment.rightBottom = new Alignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
         return Alignment;
-    }());
+    })();
     ProfileChart.Alignment = Alignment;
     var Text = (function () {
         function Text() {
@@ -409,7 +413,7 @@ var ProfileChart;
             return textElement;
         };
         return Text;
-    }());
+    })();
     var LoadingChart = (function (_super) {
         __extends(LoadingChart, _super);
         function LoadingChart() {
@@ -431,7 +435,7 @@ var ProfileChart;
         };
         LoadingChart.id = "73CE29D6-AE8F-405C-BA21-C267F81AEFC5";
         return LoadingChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.LoadingChart = LoadingChart;
     var TestChart = (function (_super) {
         __extends(TestChart, _super);
@@ -514,7 +518,7 @@ var ProfileChart;
         };
         TestChart.id = "4F0B4EC0-6E72-44FD-9F26-F4423D7CE973";
         return TestChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.TestChart = TestChart;
     var MountainSilhouetteChart = (function (_super) {
         __extends(MountainSilhouetteChart, _super);
@@ -579,7 +583,7 @@ var ProfileChart;
         };
         MountainSilhouetteChart.id = "28D33FB8-BEFC-41B3-B947-A0B9B6A811EB";
         return MountainSilhouetteChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.MountainSilhouetteChart = MountainSilhouetteChart;
     var ConnectingDotsChart = (function (_super) {
         __extends(ConnectingDotsChart, _super);
@@ -701,7 +705,7 @@ var ProfileChart;
             // paper.el("use", { "xlink:href": "#finishPen", x: 400, y: 200 });
         };
         return ConnectingDotsChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.ConnectingDotsChart = ConnectingDotsChart;
     var SimplySunshineChart = (function (_super) {
         __extends(SimplySunshineChart, _super);
@@ -849,8 +853,146 @@ var ProfileChart;
             // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         };
         return SimplySunshineChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.SimplySunshineChart = SimplySunshineChart;
+    var GiroItaliaChart = (function (_super) {
+        __extends(GiroItaliaChart, _super);
+        function GiroItaliaChart() {
+            _super.call(this, "E6C5D286-BF69-4FD0-A6DE-F46ACC53F011", "Giro d'Italia", "/App/ProfileChart/Templates/giro_italia.svg");
+        }
+        GiroItaliaChart.prototype.renderBackground = function (paper, surfaceArea) {
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: '#FFFFFF' });
+        };
+        GiroItaliaChart.prototype.renderDistanceRuler = function (paper, data, chartArea) {
+            var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
+            var transform = new TransformProcessor(source, chartArea);
+            paper.rect(chartArea.x, chartArea.y, chartArea.width, chartArea.height).attr({ stroke: "#A4A3A3", fill: "none" });
+            for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
+                var distancePoint = transform.processPoint(new Point(distance, 0));
+                paper.line(distancePoint.x, chartArea.y, distancePoint.x, chartArea.y + chartArea.height).attr({ stroke: "#A4A3A3" });
+                var distanceMajor = data.distanceAxis.major(distance);
+                var top = chartArea.y + chartArea.height;
+                var distanceLine = paper.line(distancePoint.x, top + 10, distancePoint.x, top + 20);
+                if (distanceMajor) {
+                    distanceLine.attr({ stroke: "#231F20", strokeWidth: 2 });
+                    Text.render(paper, data.distanceAxis.format(distance, distance === data.distanceAxis.min), new Point(distancePoint.x, top + 30), Alignment.centerTop, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
+                }
+                else {
+                    distanceLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                }
+            }
+        };
+        GiroItaliaChart.prototype.renderProfile = function (paper, data, chartArea) {
+            var reduce = new ReduceToNumberProcessor(400);
+            var skew = new SkewProcessor(new Vector(10, -1).normalize());
+            var profile = data.courseProfile;
+            profile = reduce.process(profile);
+            var profileBody = [];
+            profileBody.push(new Point(chartArea.x, profile[0].y));
+            profileBody.push.apply(profileBody, profile);
+            profileBody.push(new Point(chartArea.x + chartArea.width, profile[profile.length - 1].y));
+            profileBody.push(new Point(chartArea.x + chartArea.width, chartArea.y + chartArea.height));
+            profileBody.push(new Point(chartArea.x, chartArea.y + chartArea.height));
+            profileBody.push(new Point(chartArea.x, profile[0].y));
+            profileBody = skew.process(profileBody);
+            var bodyPathString = _super.prototype.toPathString.call(this, profileBody) + " Z";
+            //            var g: any = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
+            // TODO: fix multi color https://github.com/canvg/canvg/issues/345
+            var g = paper.gradient("l(0.5, 1, 0.5, 0)#FCFDED:25-#D7E8BE:50-#EEF8FD:75-#EDCAA0:100-#F8FAF9");
+            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#333333", strokeWidth: 5 });
+        };
+        GiroItaliaChart.prototype.renderPlace = function (paper, chartArea, location, name, index) {
+            var width = 180;
+            var height = 36;
+            var signPadding = 5;
+            var offsetSignY = 100;
+            if (index % 2 === 1) {
+                offsetSignY += height + signPadding;
+            }
+            var signSize = new Offset(width / 2, height / 2);
+            var signPoint = new Point(location.x, chartArea.y - offsetSignY);
+            paper.rect(signPoint.x - signSize.width, signPoint.y - signSize.height + 5, width, height, signSize.height, signSize.height).attr({ fill: "#56C4CC" });
+            var points = [];
+            points.push(new Point(signPoint.x - 10, signPoint.y + signSize.height));
+            points.push(new Point(signPoint.x, signPoint.y + signSize.height + 14));
+            points.push(new Point(signPoint.x + 10, signPoint.y + signSize.height));
+            points.push(new Point(signPoint.x - 10, signPoint.y + signSize.height));
+            paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: "#56C4CC" });
+            Text.render(paper, name, signPoint, Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+            paper.line(signPoint.x, signPoint.y + signSize.height + 14 + 10, location.x, location.y).attr({ fill: "none", stroke: "#000000", strokeWidth: 1, strokeDasharray: "5, 5" });
+            ;
+        };
+        GiroItaliaChart.prototype.renderPlaces = function (paper, data, chartArea) {
+            for (var i = 0; i < data.places.length; i++) {
+                this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
+            }
+        };
+        GiroItaliaChart.prototype.renderSplits = function (paper, data, chartArea) {
+            var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
+            var transform = new TransformProcessor(source, chartArea);
+            var offset = new Offset(0, -200);
+            for (var i = 1; i < data.splits.length; i++) {
+                var split = data.splits[i];
+                var splitPoint = transform.processCoordinate(split.distance, 0);
+                paper.rect(splitPoint.x - 90, chartArea.y + offset.height - 18 + 5, 180, 36, 18, 18).attr({ fill: "#E03B3B" });
+                Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+                var splitTimeY = chartArea.y + offset.height - 24;
+                var splitTimeText = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
+                var bbox = splitTimeText.getBBox();
+                paper.el("use", { "xlink:href": "#stopwatch", x: bbox.x, y: splitTimeY + 12 });
+                var radius = 5;
+                paper.circle(splitPoint.x, chartArea.y + offset.height + 40, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+                paper.circle(splitPoint.x, chartArea.y + chartArea.height + radius, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+                paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+                if (i === data.splits.length - 1) {
+                    paper.el("use", { "xlink:href": "#finish_flag", x: splitPoint.x, y: splitTimeY - 18 });
+                }
+            }
+        };
+        GiroItaliaChart.prototype.renderSunAndClouds = function (paper) {
+            paper.el("use", { "xlink:href": "#sun", x: 240, y: 100 });
+            paper.el("use", { "xlink:href": "#clouds", x: 280, y: 130 });
+        };
+        GiroItaliaChart.prototype.renderHeader = function (paper, data, headerArea) {
+            var topCenterPoint = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
+            var courseNamePoint = topCenterPoint.offset(new Vector(0, 80));
+            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            var bbox = courseNameText.getBBox();
+            paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
+            Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#E03B3B", fontSize: "64px", fontFamily: "Arial" });
+        };
+        GiroItaliaChart.prototype.render = function (profile, result, width) {
+            var surfaceArea = this.surfaceArea;
+            var widthMargin = surfaceArea.width / 20;
+            var heightMargin = surfaceArea.height / 2;
+            var headerArea = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, heightMargin));
+            var chartArea = surfaceArea.apply(new Margin(widthMargin * 2, heightMargin, widthMargin, 80));
+            // var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
+            var data = new ChartData(profile, result, chartArea);
+            var height = (surfaceArea.height / surfaceArea.width) * width;
+            var paper = Snap("#giroItaliaChart");
+            paper.attr({ width: width, height: height });
+            paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
+            this.clearChart();
+            this.renderBackground(paper, this.surfaceArea);
+            this.renderProfile(paper, data, chartArea);
+            //this.renderDistanceRuler(paper, data, chartArea);
+            //this.renderSplits(paper, data, chartArea);
+            //this.renderPlaces(paper, data, chartArea);
+            //this.renderSunAndClouds(paper);
+            this.renderHeader(paper, data, headerArea);
+            // paper.circle(100, 200, 3);
+            // paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
+            // paper.circle(200, 200, 3);
+            // paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
+            // paper.circle(300, 200, 3);
+            // paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
+            // paper.circle(400, 200, 3);
+            // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
+        };
+        return GiroItaliaChart;
+    })(Chart);
+    ProfileChart.GiroItaliaChart = GiroItaliaChart;
     var ForestChart = (function (_super) {
         __extends(ForestChart, _super);
         function ForestChart(settings) {
@@ -1149,7 +1291,7 @@ var ProfileChart;
             //});
         };
         return ForestChart;
-    }(Chart));
+    })(Chart);
     ProfileChart.ForestChart = ForestChart;
     var ChartRenderingSettings = (function () {
         function ChartRenderingSettings(chartId, name, renderPersonProfile, renderResultPositios, renderSkierAndTrack) {
@@ -1160,7 +1302,7 @@ var ProfileChart;
             this.renderSkierAndTrack = renderSkierAndTrack;
         }
         return ChartRenderingSettings;
-    }());
+    })();
     ProfileChart.ChartRenderingSettings = ChartRenderingSettings;
     var ChartProfile = (function () {
         function ChartProfile(points, target) {
@@ -1175,7 +1317,7 @@ var ProfileChart;
             return this.transform.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
         };
         return ChartProfile;
-    }());
+    })();
     var TrackpointConverter = (function () {
         function TrackpointConverter(pipeline) {
             this.pipeline = pipeline;
@@ -1184,7 +1326,7 @@ var ProfileChart;
             return this.pipeline.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
         };
         return TrackpointConverter;
-    }());
+    })();
     var ChartData = (function () {
         function ChartData(profile, result, target) {
             console.log(JSON.stringify(result));
@@ -1234,7 +1376,7 @@ var ProfileChart;
             return this.splits[this.splits.length - 1];
         };
         return ChartData;
-    }());
+    })();
     ProfileChart.ChartData = ChartData;
     var ChartPlace = (function () {
         function ChartPlace(name, distance, altitude, point) {
@@ -1244,7 +1386,7 @@ var ProfileChart;
             this.point = point;
         }
         return ChartPlace;
-    }());
+    })();
     ProfileChart.ChartPlace = ChartPlace;
     var ChartSplit = (function (_super) {
         __extends(ChartSplit, _super);
@@ -1262,7 +1404,7 @@ var ProfileChart;
             return elapsedTime.toString();
         };
         return ChartSplit;
-    }(ChartPlace));
+    })(ChartPlace);
     ProfileChart.ChartSplit = ChartSplit;
     var ChartLeg = (function () {
         function ChartLeg(startpoint, middlepoint, endpoint, length, ascending, descending) {
@@ -1277,7 +1419,7 @@ var ProfileChart;
             return new ElapsedTime(this.elapsedSeconds).toString();
         };
         return ChartLeg;
-    }());
+    })();
     ProfileChart.ChartLeg = ChartLeg;
     var ChartAxis = (function () {
         function ChartAxis(min, max, gridMinor, gridMajor) {
@@ -1314,7 +1456,7 @@ var ProfileChart;
             return (altitude % this.gridMajor) === 0;
         };
         return ChartAxis;
-    }());
+    })();
     var DistanceUnit = (function () {
         function DistanceUnit(value, suffix) {
             this.value = value;
@@ -1323,7 +1465,7 @@ var ProfileChart;
         DistanceUnit.meter = new DistanceUnit(1, "m");
         DistanceUnit.kilometer = new DistanceUnit(1000, "km");
         return DistanceUnit;
-    }());
+    })();
     ProfileChart.DistanceUnit = DistanceUnit;
     //enum DistanceUnit {
     //    Meter = 1,
@@ -1356,7 +1498,7 @@ var ProfileChart;
             return res;
         };
         return DistanceAxis;
-    }(ChartAxis));
+    })(ChartAxis);
     ProfileChart.DistanceAxis = DistanceAxis;
     var AltitudeAxis = (function (_super) {
         __extends(AltitudeAxis, _super);
@@ -1423,7 +1565,7 @@ var ProfileChart;
             return Math.ceil(maxAltitude / roundFactor) * roundFactor;
         };
         return AltitudeAxis;
-    }(ChartAxis));
+    })(ChartAxis);
     ProfileChart.AltitudeAxis = AltitudeAxis;
     var PointProcessor = (function () {
         function PointProcessor(name) {
@@ -1433,7 +1575,7 @@ var ProfileChart;
             return null;
         };
         return PointProcessor;
-    }());
+    })();
     var PointProcessorPipeLine = (function (_super) {
         __extends(PointProcessorPipeLine, _super);
         function PointProcessorPipeLine() {
@@ -1453,7 +1595,7 @@ var ProfileChart;
             return points;
         };
         return PointProcessorPipeLine;
-    }(PointProcessor));
+    })(PointProcessor);
     var TransformProcessor = (function (_super) {
         __extends(TransformProcessor, _super);
         function TransformProcessor(source, target) {
@@ -1479,7 +1621,7 @@ var ProfileChart;
             return result;
         };
         return TransformProcessor;
-    }(PointProcessor));
+    })(PointProcessor);
     var ReduceProcessor = (function (_super) {
         __extends(ReduceProcessor, _super);
         function ReduceProcessor(maxlevels, epsilon) {
@@ -1529,7 +1671,7 @@ var ProfileChart;
         ReduceProcessor.maxLevels = 1000;
         ReduceProcessor.minEpsilon = 0.00001;
         return ReduceProcessor;
-    }(PointProcessor));
+    })(PointProcessor);
     var ReduceToNumberProcessor = (function (_super) {
         __extends(ReduceToNumberProcessor, _super);
         function ReduceToNumberProcessor(nrOfPoints) {
@@ -1569,7 +1711,7 @@ var ProfileChart;
             return secondSegment;
         };
         return ReduceToNumberProcessor;
-    }(PointProcessor));
+    })(PointProcessor);
     var ReduceSegment = (function () {
         function ReduceSegment(points) {
             this.points = points;
@@ -1598,7 +1740,7 @@ var ProfileChart;
             this.splitted = true;
         };
         return ReduceSegment;
-    }());
+    })();
     var OffsetProcessor = (function (_super) {
         __extends(OffsetProcessor, _super);
         function OffsetProcessor(offset) {
@@ -1616,7 +1758,25 @@ var ProfileChart;
             return point.offset(this.offset);
         };
         return OffsetProcessor;
-    }(PointProcessor));
+    })(PointProcessor);
+    var SkewProcessor = (function (_super) {
+        __extends(SkewProcessor, _super);
+        function SkewProcessor(vector) {
+            _super.call(this, "Skew");
+            this.vector = vector;
+        }
+        SkewProcessor.prototype.process = function (points) {
+            var skewPoints = [];
+            for (var i = 0; i < points.length; i++) {
+                skewPoints.push(this.processPoint(points[i]));
+            }
+            return skewPoints;
+        };
+        SkewProcessor.prototype.processPoint = function (point) {
+            return new Point(point.x, point.y + this.vector.scaleToX(point.x).y);
+        };
+        return SkewProcessor;
+    })(PointProcessor);
     var MountainGenerator = (function () {
         function MountainGenerator(rectangle, levels, numberOfPoints) {
             this.rectangle = rectangle;
@@ -1645,6 +1805,6 @@ var ProfileChart;
             this.points.push(end);
         };
         return MountainGenerator;
-    }());
+    })();
     ProfileChart.MountainGenerator = MountainGenerator;
 })(ProfileChart || (ProfileChart = {}));

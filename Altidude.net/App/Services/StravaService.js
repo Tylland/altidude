@@ -51,4 +51,3 @@ var Services;
 //        };
 //        return factory;
 //    }]); 
-//# sourceMappingURL=StravaService.js.map

@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\Partials\modal.html" />
+    <Content Include="App\ProfileChart\Templates\giro_italia.svg" />
     <Content Include="App\ProfileChart\Templates\mountain_silhouette.svg" />
     <Content Include="App\ProfileChart\Templates\simply_sunshine.svg" />
     <Content Include="App\ProfileChart\Templates\forest.svg" />

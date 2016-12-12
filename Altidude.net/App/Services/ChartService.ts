@@ -17,6 +17,7 @@
             charts.push(new ProfileChart.SimplySunshineChart());
             charts.push(new ProfileChart.ConnectingDotsChart());
             //charts.push(new ProfileChart.MountainSilhouetteChart());
+            charts.push(new ProfileChart.GiroItaliaChart());
 
             return charts;
         };

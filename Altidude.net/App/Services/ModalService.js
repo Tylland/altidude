@@ -49,4 +49,3 @@ var Services;
     Services.ModalService = ModalService;
     angular.module('altidudeApp').service('modalService', Services.ModalService);
 })(Services || (Services = {}));
-//# sourceMappingURL=ModalService.js.map
