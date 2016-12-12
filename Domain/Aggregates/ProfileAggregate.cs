@@ -263,7 +263,7 @@ namespace Altidude.Domain.Aggregates
             if (user.Id != UserId)
                 throw new ArgumentException("User does not own profile");
 
-            RaiseEvent(new ProfileDeleted(Id));
+            RaiseEvent(new ProfileDeleted(Id, user.Id));
         }
     }
 }

@@ -131,6 +131,7 @@
     <EmbeddedResource Include="Scripts\DbUp0007-Add ExperiencePoints and Level to UserView.sql" />
     <EmbeddedResource Include="Scripts\DbUp0008-Add NrOfViews to PlaceEnvelope.sql" />
     <EmbeddedResource Include="Scripts\DbUp0009-Add AcceptEmails to UserView.sql" />
+    <EmbeddedResource Include="Scripts\DbUp0010-Update ExperiencePoints on UserView.sql" />
     <Content Include="Scripts\Delete From Tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

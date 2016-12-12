@@ -1,7 +1,9 @@
 ﻿module Controllers {
     export class ProfileEditController {
         private profileId: any;
+        public chartTypes: ProfileChart.IChartType[] = [];
         public charts: ProfileChart.Chart[] = [];
+
         private base64Image: string;
 
         public chartNames: string[] = [];
@@ -13,8 +15,8 @@
 
         public chartSelectionVisible: boolean;
 
-        static $inject = ['$window', 'profileService', 'serviceConfig', 'chartService', 'modalService'];
-        constructor(private $window: any, private profileService: Profile.ProfileService, private serviceConfig, private chartService: Services.ChartService, private modalService: Services.ModalService) {
+        static $inject = ['$window', 'profileService', 'serviceConfig', 'chartTypeService', 'chartService', 'modalService'];
+        constructor(private $window: any, private profileService: Profile.ProfileService, private serviceConfig, private chartTypeService: Services.ChartTypeService, private chartService: Services.ChartService, private modalService: Services.ModalService) {
             //this.chart = new ProfileChart.LoadingChart();
         }
 
@@ -29,6 +31,28 @@
 
                 this.charts = this.chartService.getAllCharts();
             });
+
+            this.chartTypeService.getUserChartTypes().then(response => {
+                this.chartTypes = <ProfileChart.IChartType[]>response.data;
+            });
+        }
+
+        private getChartType(chartId: string): ProfileChart.IChartType {
+            for (let chartType of this.chartTypes) {
+                if (chartId === chartType.id) {
+                    return chartType;
+                }
+            }
+
+            return null;
+        }
+
+        public selectChartType(chartId: string) {
+            var chartType: ProfileChart.IChartType = this.getChartType(chartId);
+
+            if (chartType != undefined && chartType.isUnlocked) {
+                this.chart = this.chartService.getChart(chartId);
+            }
         }
 
         public selectChart(chart)

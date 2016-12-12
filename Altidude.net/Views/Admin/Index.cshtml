@@ -14,6 +14,7 @@
                         <a href="/admin/users">
                             <span class="info-box-text">Users</span>
                             <span class="info-box-number">@Model.TotalNrOfUsers</span>
+                            @Html.ActionLink("mailinglist.csv", "GetUserMailingList", "Admin", new { download = "mailinglist.csv" })
                         </a>
                     </div>
                 </div>
@@ -26,6 +27,7 @@
                         <a href="/admin/profiles">
                             <span class="info-box-text">Profiles</span>
                             <span class="info-box-number">@Model.TotalNrOfProfiles</span>
+                            <a href="/api/v1/profiles/gpx" download="profiles.gpx">Profiles (gpx)</a>
                         </a>
                     </div>
 
@@ -46,6 +48,6 @@
             </div>
         </div>
 
-        <a href="/api/v1/profiles/gpx" download="profiles.gpx">Profiles (gpx)</a>
+        
     </div>
 </section>

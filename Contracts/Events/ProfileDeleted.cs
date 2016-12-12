@@ -8,10 +8,12 @@ namespace Altidude.Contracts.Events
     public class ProfileDeleted : IEvent
     {
         public Guid Id { get; set; }
-              
-        public ProfileDeleted(Guid id)
+        public Guid UserId { get; set; }
+
+        public ProfileDeleted(Guid id, Guid userId)
         {
             Id = id;
+            UserId = userId;
         }
         public ProfileDeleted()
         {

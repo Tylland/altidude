@@ -19,9 +19,17 @@
     <hr/>
     <div class="chart-scroller">
         <ul>
-            <li ng-repeat="chart in editController.charts" >
-                <img class="img-rounded" ng-class="editController.chart.id === chart.id ? 'selected-chart' : 'unselected-chart'" src="~/Images/Charts/{{chart.name}}.png" alt="{{chart.name}}" ng-click="editController.selectChart(chart)">
-                <h2>{{chart.name}}</h2>
+            <li ng-repeat="chartType in editController.chartTypes">
+                <div ng-switch="chartType.isUnlocked">
+                    <div ng-switch-when="true">
+                        <img class="img-rounded" ng-class="editController.chart.id === chartType.id ? 'selected-chart' : 'unselected-chart'" src="~/Images/Charts/{{chartType.name}}.png" alt="{{chartType.name}}" ng-click="editController.selectChartType(chartType.id)">
+                        <h2>{{chartType.name}}<br />Level {{chartType.unlockOnLevel}}</h2>
+                    </div>
+                    <div ng-switch-when="false">
+                        <img class="img-rounded unselected-chart" src="~/Images/Charts/Locked.png" alt="Locked">
+                        <h2><span class="glyphicon glyphicon-lock"></span>&nbsp;{{chartType.name}}<br />Level {{chartType.unlockOnLevel}}</h2>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>

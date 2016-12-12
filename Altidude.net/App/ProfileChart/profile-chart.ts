@@ -2408,4 +2408,11 @@ module ProfileChart {
         totalTimeSeconds: number;
         totalPosition: number;
     }
+
+    export interface IChartType {
+        id: string;
+        name: string;
+        unlockOnLevel: number;
+        isUnlocked: boolean;
+    }
 }

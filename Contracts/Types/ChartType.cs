@@ -12,6 +12,9 @@ namespace Altidude.Contracts.Types
         public string Name { get; set; }
         public string TitleTemplate { get; set; }
         public string DescriptionTemplate { get; set; }
+        public int UnlockOnLevel { get; set; }
+        public DateTime UnlockTomDate { get; set; }
+
 
         public string GetTitle(string userDisplayName, string profileName)
         {
@@ -22,16 +25,24 @@ namespace Altidude.Contracts.Types
             return string.Format(DescriptionTemplate, userDisplayName, profileName, Name);
         }
 
-        public ChartType(string idStr, string name, string titleTemplate, string descriptionTemplate)
-            : this(Guid.Parse(idStr), name, titleTemplate, descriptionTemplate)
+        public bool GetIsUnlocked(int level, DateTime now)
+        {
+            return level >= UnlockOnLevel || now <= UnlockTomDate;
+        }
+
+        public ChartType(string idStr, string name, string titleTemplate, string descriptionTemplate, int unlockedLevel, DateTime unlockedToDate)
+            : this(Guid.Parse(idStr), name, titleTemplate, descriptionTemplate, unlockedLevel, unlockedToDate)
         {
         }
-        public ChartType(Guid id, string name, string storyTemplate, string descriptionTemplate)
+
+        public ChartType(Guid id, string name, string storyTemplate, string descriptionTemplate, int unlockLevel, DateTime unlockToDate)
         {
             Id = id;
             Name = name;
             TitleTemplate = storyTemplate;
             DescriptionTemplate = descriptionTemplate;
+            UnlockOnLevel = unlockLevel;
+            UnlockTomDate = unlockToDate;
         }
         public ChartType()
         {

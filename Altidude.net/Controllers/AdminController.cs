@@ -122,40 +122,60 @@ namespace Altidude.net.Controllers
             return View("Index");
         }
 
+        //[HttpGet]
+        //public HttpResponseMessage GetProfilePositionFile()
+        //{
+        //    var views = ApplicationManager.BuildViews();
+
+        //    var profiles = views.Profiles.GetAll();
+
+        //    var waypoints = new List<gpx.wptType>();
+
+        //    foreach (var profile in profiles)
+        //    {
+        //        waypoints.Add(new gpx.wptType()
+        //        {
+        //            lat = (decimal)profile.Track.FirstPoint.Latitude,
+        //            lon = (decimal)profile.Track.FirstPoint.Longitude,
+        //            name = profile.Name
+        //        });
+        //    }
+
+        //    var gpx = new gpx.gpxType();
+        //    gpx.creator = "Altidude.net";
+        //    gpx.version= "0.1";
+        //    gpx.wpt = waypoints.ToArray();
+
+
+
+        //    return new HttpResponseMessage(HttpStatusCode.OK)
+        //    {
+        //        Content = new ObjectContent<gpx.gpxType>(gpx,
+        //                  new System.Net.Http.Formatting.XmlMediaTypeFormatter
+        //                  {
+        //                      UseXmlSerializer = true
+        //                  })
+        //    };
+        //}
+
+
         [HttpGet]
-        public HttpResponseMessage GetProfilePositionFile()
+        public FileContentResult GetUserMailingList()
         {
             var views = ApplicationManager.BuildViews();
 
-            var profiles = views.Profiles.GetAll();
+            var users = views.Users.GetAll();
 
-            var waypoints = new List<gpx.wptType>();
+            var csv = new StringBuilder();
+            csv.AppendLine("Email Addresses,First Name,Last Name");
 
-            foreach (var profile in profiles)
+            foreach (var user in users)
             {
-                waypoints.Add(new gpx.wptType()
-                {
-                    lat = (decimal)profile.Track.FirstPoint.Latitude,
-                    lon = (decimal)profile.Track.FirstPoint.Longitude,
-                    name = profile.Name
-                });
+                if(user.AcceptsEmails)
+                    csv.AppendLine(user.Email + "," + user.FirstName + "," + user.LastName);
             }
 
-            var gpx = new gpx.gpxType();
-            gpx.creator = "Altidude.net";
-            gpx.version= "0.1";
-            gpx.wpt = waypoints.ToArray();
-
-
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ObjectContent<gpx.gpxType>(gpx,
-                          new System.Net.Http.Formatting.XmlMediaTypeFormatter
-                          {
-                              UseXmlSerializer = true
-                          })
-            };
+            return File(new UTF8Encoding().GetBytes(csv.ToString()), "text/csv", "altidude.mailinglist.csv");
         }
 
 

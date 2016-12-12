@@ -288,6 +288,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ApiChartTypeController.cs" />
     <Compile Include="Controllers\ApiProfileController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -332,6 +333,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="gulpfile.js" />
+    <Content Include="Images\Charts\Locked.png" />
     <Content Include="Images\Charts\Mountain Silhouette.png" />
     <Content Include="Images\Charts\Connecting dots.png" />
     <Content Include="Images\Charts\Simply Sunshine.png" />
@@ -449,6 +451,7 @@
     <TypeScriptCompile Include="App\ProfileChart\profile-chart.ts" />
     <TypeScriptCompile Include="App\Services\ChartService.ts" />
     <TypeScriptCompile Include="App\Services\ModalService.ts" />
+    <TypeScriptCompile Include="App\Services\ChartTypeService.ts" />
     <TypeScriptCompile Include="App\Services\ProfileService.ts" />
     <TypeScriptCompile Include="App\Services\StravaService.ts" />
   </ItemGroup>

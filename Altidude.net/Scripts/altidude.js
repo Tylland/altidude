@@ -192,6 +192,26 @@ var Services;
 //# sourceMappingURL=ChartService.js.map
 var Services;
 (function (Services) {
+    var ChartTypeService = (function () {
+        function ChartTypeService($http, serviceConfig) {
+            this.$http = $http;
+            this.serviceConfig = serviceConfig;
+            this.profilesUrlBase = 'api/v1/charttypes/';
+        }
+        ChartTypeService.prototype.getUserChartTypes = function () {
+            var url = this.serviceConfig.altidudeApiBaseUri + this.profilesUrlBase + 'user';
+            return this.$http.get(url);
+        };
+        ;
+        ChartTypeService.$inject = ['$http', 'serviceConfig'];
+        return ChartTypeService;
+    })();
+    Services.ChartTypeService = ChartTypeService;
+    angular.module('altidudeApp').service('chartTypeService', Services.ChartTypeService);
+})(Services || (Services = {}));
+//# sourceMappingURL=ChartTypeService.js.map
+var Services;
+(function (Services) {
     var ModalService = (function () {
         function ModalService($uibModal) {
             this.$uibModal = $uibModal;
@@ -399,12 +419,14 @@ var Controllers;
 var Controllers;
 (function (Controllers) {
     var ProfileEditController = (function () {
-        function ProfileEditController($window, profileService, serviceConfig, chartService, modalService) {
+        function ProfileEditController($window, profileService, serviceConfig, chartTypeService, chartService, modalService) {
             this.$window = $window;
             this.profileService = profileService;
             this.serviceConfig = serviceConfig;
+            this.chartTypeService = chartTypeService;
             this.chartService = chartService;
             this.modalService = modalService;
+            this.chartTypes = [];
             this.charts = [];
             this.chartNames = [];
             //this.chart = new ProfileChart.LoadingChart();
@@ -419,6 +441,24 @@ var Controllers;
                 _this.chart = _this.chartService.getChart(_this.profile.chartId);
                 _this.charts = _this.chartService.getAllCharts();
             });
+            this.chartTypeService.getUserChartTypes().then(function (response) {
+                _this.chartTypes = response.data;
+            });
+        };
+        ProfileEditController.prototype.getChartType = function (chartId) {
+            for (var _i = 0, _a = this.chartTypes; _i < _a.length; _i++) {
+                var chartType = _a[_i];
+                if (chartId === chartType.id) {
+                    return chartType;
+                }
+            }
+            return null;
+        };
+        ProfileEditController.prototype.selectChartType = function (chartId) {
+            var chartType = this.getChartType(chartId);
+            if (chartType != undefined && chartType.isUnlocked) {
+                this.chart = this.chartService.getChart(chartId);
+            }
         };
         ProfileEditController.prototype.selectChart = function (chart) {
             this.chartSelectionVisible = false;
@@ -443,7 +483,7 @@ var Controllers;
                 });
             });
         };
-        ProfileEditController.$inject = ['$window', 'profileService', 'serviceConfig', 'chartService', 'modalService'];
+        ProfileEditController.$inject = ['$window', 'profileService', 'serviceConfig', 'chartTypeService', 'chartService', 'modalService'];
         return ProfileEditController;
     })();
     Controllers.ProfileEditController = ProfileEditController;

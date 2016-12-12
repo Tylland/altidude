@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="AggregateBase.cs" />
     <Compile Include="Aggregates\ProfileAggregate.cs" />
+    <Compile Include="Aggregates\Profile\IChartTypeService.cs" />
     <Compile Include="Aggregates\User\UserAggregate.cs" />
     <Compile Include="CommandDispatcher.cs" />
     <Compile Include="CommandHandlers\UserCommandHandler.cs" />
