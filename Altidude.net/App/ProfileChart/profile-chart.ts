@@ -1169,7 +1169,7 @@ module ProfileChart {
 
         renderProfile(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
 
-            var reduce: PointProcessor = new ReduceToNumberProcessor(400);
+            var reduce: PointProcessor = new ReduceToNumberProcessor(100);
             var skew: PointProcessor = new SkewProcessor(new Vector(10, -1).normalize());
 
             var profile: Array<Point> = data.courseProfile;
@@ -1196,8 +1196,10 @@ module ProfileChart {
             // TODO: fix multi color https://github.com/canvg/canvg/issues/345
             var g: any = paper.gradient("l(0.5, 1, 0.5, 0)#FCFDED:25-#D7E8BE:50-#EEF8FD:75-#EDCAA0:100-#F8FAF9");
 
+            g.transform("r-22 0 0");
 
-            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#333333", strokeWidth: 5 });
+            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#000000", strokeWidth: 9 });
+            paper.path(bodyPathString).attr({ fill: 'none', stroke: "#FF0000", strokeWidth: 5 });
         }
 
         renderPlace(paper: Snap.Paper, chartArea: Rectangle, location: Point, name: string, index: number): void {

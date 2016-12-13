@@ -5120,7 +5120,7 @@ Snap.plugin(function (Snap, Element, Paper, glob, Fragment) {
                     x2 = $(this.node, "x2") || 1,
                     y1 = $(this.node, "y1") || 0,
                     y2 = $(this.node, "y2") || 0;
-                return Snap._.box(x1, y1, math.abs(x2 - x1), math.abs(y2 - y1));
+                return Snap._.box(x1, y1, Math.abs(x2 - x1), Math.abs(y2 - y1));
             } else {
                 var cx = this.node.cx || .5,
                     cy = this.node.cy || .5,

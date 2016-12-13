@@ -351,6 +351,8 @@
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\altidude.js" />
+    <Content Include="Scripts\rgbcolor.js" />
+    <Content Include="Scripts\stackblur.js" />
     <Content Include="Scripts\ui-bootstrap-tpls-2.1.4.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
