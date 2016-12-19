@@ -1510,16 +1510,20 @@ var ProfileChart;
             if (index % 2 === 1) {
                 offsetSignY += height + signPadding;
             }
-            var signSize = new Offset(width / 2, height / 2);
             var signPoint = new Point(location.x, chartArea.y - offsetSignY);
-            paper.rect(signPoint.x - signSize.width, signPoint.y - signSize.height + 5, width, height, signSize.height, signSize.height).attr({ fill: "#56C4CC" });
+            var text = Text.render(paper, name, signPoint, Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+            var textSize = text.getBBox();
+            var cornerRadius = height / 2;
+            width = textSize.width + cornerRadius * 2;
+            var signSize = new Offset(width / 2, height / 2);
+            var sign = paper.rect(signPoint.x - signSize.width, signPoint.y - signSize.height + 5, width, height, cornerRadius, cornerRadius).attr({ fill: "#56C4CC" });
+            text.before(sign);
             var points = [];
             points.push(new Point(signPoint.x - 10, signPoint.y + signSize.height));
             points.push(new Point(signPoint.x, signPoint.y + signSize.height + 14));
             points.push(new Point(signPoint.x + 10, signPoint.y + signSize.height));
             points.push(new Point(signPoint.x - 10, signPoint.y + signSize.height));
-            paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: "#56C4CC" });
-            Text.render(paper, name, signPoint, Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+            text.before(paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: "#56C4CC" }));
             paper.line(signPoint.x, signPoint.y + signSize.height + 14 + 10, location.x, location.y).attr({ fill: "none", stroke: "#000000", strokeWidth: 1, strokeDasharray: "5, 5" });
             ;
         };
@@ -1531,12 +1535,16 @@ var ProfileChart;
         SimplySunshineChart.prototype.renderSplits = function (paper, data, chartArea) {
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var transform = new TransformProcessor(source, chartArea);
+            var signHeight = 36;
+            var signCornerRadius = signHeight / 2;
             var offset = new Offset(0, -200);
             for (var i = 1; i < data.splits.length; i++) {
                 var split = data.splits[i];
                 var splitPoint = transform.processCoordinate(split.distance, 0);
-                paper.rect(splitPoint.x - 90, chartArea.y + offset.height - 18 + 5, 180, 36, 18, 18).attr({ fill: "#E03B3B" });
-                Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+                var placeText = Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+                var placeTextSize = placeText.getBBox();
+                var signWidth = placeTextSize.width + signCornerRadius * 2;
+                placeText.before(paper.rect(splitPoint.x - signWidth / 2, chartArea.y + offset.height - 18 + 5, signWidth, signHeight, signCornerRadius, signCornerRadius).attr({ fill: "#E03B3B" }));
                 var splitTimeY = chartArea.y + offset.height - 24;
                 var splitTimeText = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
                 var bbox = splitTimeText.getBBox();
@@ -1602,30 +1610,86 @@ var ProfileChart;
         GiroItaliaChart.prototype.renderBackground = function (paper, surfaceArea) {
             paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: '#FFFFFF' });
         };
-        GiroItaliaChart.prototype.renderDistanceRuler = function (paper, data, chartArea) {
+        GiroItaliaChart.prototype.renderRulerScaleSegment = function (paper, from, to, rulerHeight, color) {
+            var points = [];
+            points.push(from);
+            points.push(to);
+            points.push(to.offset(rulerHeight));
+            points.push(from.offset(rulerHeight));
+            paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: color, stroke: "#000000", strokeWidth: 2 });
+        };
+        GiroItaliaChart.prototype.renderDistanceRuler = function (paper, data, chartArea, transform) {
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
-            var transform = new TransformProcessor(source, chartArea);
-            paper.rect(chartArea.x, chartArea.y, chartArea.width, chartArea.height).attr({ stroke: "#A4A3A3", fill: "none" });
+            var rulerHeight = new Vector(0, -12);
+            var lastMajorDistancePoint = null;
+            var even = true;
+            var color = "#000000";
             for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
                 var distancePoint = transform.processPoint(new Point(distance, 0));
-                paper.line(distancePoint.x, chartArea.y, distancePoint.x, chartArea.y + chartArea.height).attr({ stroke: "#A4A3A3" });
                 var distanceMajor = data.distanceAxis.major(distance);
-                var top = chartArea.y + chartArea.height;
-                var distanceLine = paper.line(distancePoint.x, top + 10, distancePoint.x, top + 20);
                 if (distanceMajor) {
-                    distanceLine.attr({ stroke: "#231F20", strokeWidth: 2 });
-                    Text.render(paper, data.distanceAxis.format(distance, distance === data.distanceAxis.min), new Point(distancePoint.x, top + 30), Alignment.centerTop, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
+                    if (lastMajorDistancePoint != undefined) {
+                        color = even ? "#000000" : "#FFFFFF";
+                        this.renderRulerScaleSegment(paper, lastMajorDistancePoint, distancePoint, rulerHeight, color);
+                        even = !even;
+                    }
+                    Text.render(paper, data.distanceAxis.format(distance, false), new Point(distancePoint.x, distancePoint.y + 8), Alignment.centerTop, { fontSize: "24px", fill: "#515151", fontFamily: "Biko" });
+                    lastMajorDistancePoint = distancePoint;
                 }
-                else {
-                    distanceLine.attr({ stroke: "#A4A3A3", strokeWidth: 1 });
+                if (lastMajorDistancePoint != undefined) {
+                    var endPoint = transform.processPoint(new Point(data.distanceAxis.max, 0));
+                    color = even ? "#000000" : "#FFFFFF";
+                    this.renderRulerScaleSegment(paper, lastMajorDistancePoint, endPoint, rulerHeight, color);
                 }
             }
         };
-        GiroItaliaChart.prototype.renderProfile = function (paper, data, chartArea) {
+        GiroItaliaChart.prototype.renderGround = function (paper, profile, offset, origo) {
+            var color = "#A2A7AF";
+            var ascendingColor = "#A2A7AF";
+            var descandingColor = "#999999";
+            var points = [];
+            points.push(origo);
+            points.push(profile[0]);
+            points.push(profile[0].offset(offset));
+            points.push(origo.offset(offset));
+            paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: ascendingColor });
+            for (var i = 1; i < profile.length; i++) {
+                points = [];
+                points.push(profile[i - 1]);
+                points.push(profile[i - 1].offset(offset));
+                points.push(profile[i].offset(offset));
+                points.push(profile[i]);
+                points.push(profile[i - 1]);
+                if (profile[i - 1].y > profile[i].y) {
+                    color = ascendingColor;
+                }
+                else {
+                    color = descandingColor;
+                }
+                var pathString = _super.prototype.toPathString.call(this, points) + " Z";
+                paper.path(pathString).attr({ fill: color });
+            }
+        };
+        GiroItaliaChart.prototype.renderLine = function (paper, from, to) {
+            return paper.line(from.x, from.y, to.x, to.y);
+        };
+        GiroItaliaChart.prototype.renderProfile = function (paper, data, chartArea, frontTransform) {
+            var frontOffset = new Vector(24, 14);
             var reduce = new ReduceToNumberProcessor(100);
             var skew = new SkewProcessor(new Vector(10, -1).normalize());
-            var profile = data.courseProfile;
-            profile = reduce.process(profile);
+            var offset = new OffsetProcessor(frontOffset);
+            var profile = reduce.process(data.courseProfile);
+            var backProfile = skew.process(profile);
+            var backOrigo = skew.processPoint(new Point(chartArea.x, chartArea.y + chartArea.height));
+            var frontProfile = offset.process(skew.process(profile));
+            paper.path(_super.prototype.toPathString.call(this, backProfile)).attr({ fill: 'none', stroke: "#000000", strokeWidth: 9, strokeLinejoin: "round" });
+            this.renderGround(paper, backProfile, frontOffset, backOrigo);
+            var lineAttr = { fill: 'none', stroke: "#000000", strokeWidth: 7 };
+            //this.drawLine(paper, backProfile[backProfile.length - 1], frontProfile[frontProfile.length - 1]).attr(lineAttr);
+            this.renderLine(paper, backProfile[0], frontProfile[0]).attr({ fill: 'none', stroke: "#000000", strokeWidth: 5 });
+            this.renderLine(paper, backProfile[0], frontProfile[0]).attr({ fill: 'none', stroke: "#AAAAAA", strokeWidth: 2 });
+            this.renderLine(paper, backProfile[0], backOrigo).attr(lineAttr);
+            this.renderLine(paper, backOrigo, backOrigo.offset(frontOffset)).attr({ fill: 'none', stroke: "#000000", strokeWidth: 5 });
             var profileBody = [];
             profileBody.push(new Point(chartArea.x, profile[0].y));
             profileBody.push.apply(profileBody, profile);
@@ -1633,14 +1697,15 @@ var ProfileChart;
             profileBody.push(new Point(chartArea.x + chartArea.width, chartArea.y + chartArea.height));
             profileBody.push(new Point(chartArea.x, chartArea.y + chartArea.height));
             profileBody.push(new Point(chartArea.x, profile[0].y));
-            profileBody = skew.process(profileBody);
-            var bodyPathString = _super.prototype.toPathString.call(this, profileBody) + " Z";
-            //            var g: any = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
-            // TODO: fix multi color https://github.com/canvg/canvg/issues/345
+            var frontProfileBody = offset.process(skew.process(profileBody));
             var g = paper.gradient("l(0.5, 1, 0.5, 0)#FCFDED:25-#D7E8BE:50-#EEF8FD:75-#EDCAA0:100-#F8FAF9");
             g.transform("r-22 0 0");
-            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#000000", strokeWidth: 9 });
-            paper.path(bodyPathString).attr({ fill: 'none', stroke: "#FF0000", strokeWidth: 5 });
+            var frontBodyPathString = _super.prototype.toPathString.call(this, frontProfileBody) + " Z";
+            paper.path(frontBodyPathString).attr({ fill: g, stroke: "#000000", strokeWidth: 4, strokeLinejoin: "round" });
+            var frontProfilePathString = _super.prototype.toPathString.call(this, frontProfile);
+            paper.path(frontProfilePathString).attr({ fill: 'none', stroke: "#000000", strokeWidth: 9, strokeLinejoin: "round" });
+            paper.path(frontProfilePathString).attr({ fill: 'none', stroke: "#CC2D3C", strokeWidth: 5, strokeLinejoin: "round" });
+            this.renderDistanceRuler(paper, data, chartArea, frontTransform);
         };
         GiroItaliaChart.prototype.renderPlace = function (paper, chartArea, location, name, index) {
             var width = 180;
@@ -1668,27 +1733,41 @@ var ProfileChart;
                 this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
             }
         };
-        GiroItaliaChart.prototype.renderSplits = function (paper, data, chartArea) {
+        GiroItaliaChart.prototype.renderSplits = function (paper, data, chartArea, backTransform) {
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var transform = new TransformProcessor(source, chartArea);
+            var lineOffset = new Vector(0, -450);
+            var textOffset = new Vector(0, -20);
+            var startBasePoint = backTransform.processPoint(data.getFirstSplit().point);
+            var startTopPoint = startBasePoint.offset(lineOffset);
+            //var direction: Vector = new Vector(10, -1);
+            //var directionPoint = startTopPoint.offset(direction.scaleToX(200));
+            //this.renderLine(paper, startTopPoint, directionPoint).attr({ fill: "none", stroke: "#000000", strokeWidth: 1 });
+            this.renderLine(paper, startBasePoint, startTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            var startText = Text.render(paper, data.getFirstSplit().altitude.toFixed(0) + " - " + data.getFirstSplit().name.toUpperCase(), startTopPoint.offset(textOffset), Alignment.leftBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
+            startText.transform("r-5 " + startTopPoint.x + " " + startTopPoint.y);
+            //Text.render(paper, data.getLastSplit().name, topRightPoint.offset(new Vector(-20, 20)), Alignment.rightTop, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
+            //Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " m", topRightPoint.offset(new Vector(-20, 60)), Alignment.rightTop, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
             var offset = new Offset(0, -200);
-            for (var i = 1; i < data.splits.length; i++) {
-                var split = data.splits[i];
-                var splitPoint = transform.processCoordinate(split.distance, 0);
-                paper.rect(splitPoint.x - 90, chartArea.y + offset.height - 18 + 5, 180, 36, 18, 18).attr({ fill: "#E03B3B" });
-                Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
-                var splitTimeY = chartArea.y + offset.height - 24;
-                var splitTimeText = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
-                var bbox = splitTimeText.getBBox();
-                paper.el("use", { "xlink:href": "#stopwatch", x: bbox.x, y: splitTimeY + 12 });
-                var radius = 5;
-                paper.circle(splitPoint.x, chartArea.y + offset.height + 40, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-                paper.circle(splitPoint.x, chartArea.y + chartArea.height + radius, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-                paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-                if (i === data.splits.length - 1) {
-                    paper.el("use", { "xlink:href": "#finish_flag", x: splitPoint.x, y: splitTimeY - 18 });
-                }
-            }
+            //for (var i: number = 1; i < data.splits.length; i++) {
+            //    var split: ChartSplit = data.splits[i];
+            //    var splitPoint: Point = backTransform.processPoint(new Point(split.distance, 0));
+            //    paper.rect(splitPoint.x - 90, chartArea.y + offset.height - 18 + 5, 180, 36, 18, 18).attr({ fill: "#E03B3B" });
+            //    Text.render(paper, split.name, new Point(splitPoint.x, chartArea.y + offset.height), Alignment.centerMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial" });
+            //    var splitTimeY: number = chartArea.y + offset.height - 24;
+            //    var splitTimeText: Snap.Element = Text.render(paper, split.getTime(), new Point(splitPoint.x, splitTimeY), Alignment.centerBottom, { fill: "#333333", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial" });
+            //    var bbox: Snap.BBox = splitTimeText.getBBox();
+            //    paper.el("use", { "xlink:href": "#stopwatch", x: bbox.x, y: splitTimeY + 12 });
+            //    var radius: number = 5;
+            //    paper.circle(splitPoint.x, chartArea.y + offset.height + 40, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            //    paper.circle(splitPoint.x, chartArea.y + chartArea.height + radius, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            //    paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            //}
+            var finishBasePoint = backTransform.processPoint(data.getLastSplit().point);
+            var finishTopPoint = finishBasePoint.offset(lineOffset);
+            this.renderLine(paper, finishBasePoint, finishTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            var finishText = Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " - " + data.getLastSplit().name.toUpperCase(), finishTopPoint.offset(textOffset), Alignment.rightBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
+            finishText.transform("r-5 " + finishTopPoint.x + " " + finishTopPoint.y);
         };
         GiroItaliaChart.prototype.renderSunAndClouds = function (paper) {
             paper.el("use", { "xlink:href": "#sun", x: 240, y: 100 });
@@ -1697,10 +1776,10 @@ var ProfileChart;
         GiroItaliaChart.prototype.renderHeader = function (paper, data, headerArea) {
             var topCenterPoint = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
             var courseNamePoint = topCenterPoint.offset(new Vector(0, 80));
-            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
-            var bbox = courseNameText.getBBox();
-            paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
-            Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#E03B3B", fontSize: "64px", fontFamily: "Arial" });
+            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#A2A7AF", fontSize: "72px", fontFamily: "Arial" });
+            //            var bbox: Snap.BBox = courseNameText.getBBox();
+            //            paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
+            Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#A2A7AF", fontSize: "64px", fontFamily: "Arial" });
         };
         GiroItaliaChart.prototype.render = function (profile, result, width) {
             var surfaceArea = this.surfaceArea;
@@ -1716,9 +1795,19 @@ var ProfileChart;
             paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
             this.clearChart();
             this.renderBackground(paper, this.surfaceArea);
-            this.renderProfile(paper, data, chartArea);
-            //this.renderDistanceRuler(paper, data, chartArea);
-            //this.renderSplits(paper, data, chartArea);
+            var frontOffset = new Vector(24, 14);
+            var reduce = new ReduceToNumberProcessor(100);
+            var skew = new SkewProcessor(new Vector(10, -1).normalize());
+            var offset = new OffsetProcessor(frontOffset);
+            var backTransform = new PointProcessorPipeLine();
+            //            backTransform.add(data.transform);
+            backTransform.add(skew);
+            var frontTransform = new PointProcessorPipeLine();
+            frontTransform.add(data.transform);
+            frontTransform.add(skew);
+            frontTransform.add(offset);
+            this.renderProfile(paper, data, chartArea, frontTransform);
+            this.renderSplits(paper, data, chartArea, backTransform);
             //this.renderPlaces(paper, data, chartArea);
             //this.renderSunAndClouds(paper);
             this.renderHeader(paper, data, headerArea);
@@ -2087,7 +2176,8 @@ var ProfileChart;
             this.altitudeAxis = new AltitudeAxis(extent.minY, extent.maxY);
             var pipeline = new PointProcessorPipeLine();
             var source = new Rectangle(this.distanceAxis.min, this.altitudeAxis.min, this.distanceAxis.getSpan(), this.altitudeAxis.getSpan());
-            pipeline.add(new TransformProcessor(source, target));
+            this.transform = new TransformProcessor(source, target);
+            pipeline.add(this.transform);
             this.courseProfile = pipeline.process(this.courseProfile);
             var converter = new TrackpointConverter(pipeline);
             this.places = new Array();
@@ -2313,6 +2403,9 @@ var ProfileChart;
             this.name = name;
         }
         PointProcessor.prototype.process = function (points) {
+            return null;
+        };
+        PointProcessor.prototype.processPoint = function (point) {
             return null;
         };
         return PointProcessor;

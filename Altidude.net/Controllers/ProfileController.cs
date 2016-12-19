@@ -66,11 +66,15 @@ namespace Altidude.net.Controllers
             return View(new ProfileEditViewModel() { ProfileId = id });
         }
 
-        public ActionResult Detail(Guid id)
+        public ActionResult Detail(Guid id, string source)
         {
-            var referrer = Request.UrlReferrer;
+            var referrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : null;
 
-             _log.Debug("Detail page referrer: {referrer}", referrer.ToString());
+            if(referrer == null)
+                referrer = source != null ? source : "<null>";
+
+
+            _log.Debug($"Detail page referrer: {referrer}");
 
             Guid userId = Guid.Empty;
 
@@ -84,7 +88,7 @@ namespace Altidude.net.Controllers
             var profile = application.Views.Profiles.GetById(id);
             var chartType = application.Views.ChartTypes.GetById(profile.ChartId);
 
-            application.ExecuteCommand(new RegisterProfileView(profile.Id, referrer.ToString()));
+            application.ExecuteCommand(new RegisterProfileView(profile.Id, referrer));
 
 
             var title = chartType != null ? chartType.GetTitle(profile.Result.Athlete.DisplayName, profile.Name) : string.Empty;

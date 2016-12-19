@@ -77,6 +77,17 @@ namespace Altidude.net.Controllers
             return View(model);
         }
 
+        public ActionResult Profiles()
+        {
+            var views = ApplicationManager.BuildViews();
+
+            var model = new ProfilesViewModel();
+
+            model.Profiles = views.Profiles.GetAll();
+
+            return View(model);
+        }
+
         public ActionResult Import()
         {
             return View();

@@ -22,4 +22,8 @@ namespace Altidude.net.Models
     {
         public List<User> Users { get; set; }
     }
+    public class ProfilesViewModel
+    {
+        public List<Profile> Profiles { get; set; }
+    }
 }

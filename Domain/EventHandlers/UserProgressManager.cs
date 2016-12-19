@@ -9,7 +9,7 @@ namespace Altidude.Domain.EventHandlers
 {
     public class UserProgressManager : IHandleEvent<UserCreated>, IHandleEvent<ProfileCreated>, IHandleEvent<ProfileDeleted>, IHandleEvent<ProfileViewRegistred>
     {
-        private static readonly List<string> _socialRefferers = new List<string> { "facebook", "twitter" };
+        private static readonly List<string> _socialRefferers = new List<string> { "facebook", "twitter", "shared" };
 
         private DomainEntry _domainEntry;
 
@@ -20,9 +20,7 @@ namespace Altidude.Domain.EventHandlers
 
         private bool IsSocial(string referrer)
         {
-            var referrerUri= new Uri(referrer.Trim().ToLower());
-
-            return _socialRefferers.Any(socialName => referrerUri.Host.Contains(referrer));
+            return _socialRefferers.Any(socialName => referrer.Contains(socialName));
         }
 
         public void Handle(ProfileViewRegistred evt)

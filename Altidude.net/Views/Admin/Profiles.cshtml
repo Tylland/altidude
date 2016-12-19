@@ -1,0 +1,21 @@
+﻿@model Altidude.net.Models.ProfilesViewModel
+@{
+    ViewBag.Title = "Profiles";
+}
+
+<h2>Profiles</h2>
+
+<ul class="list-group">
+
+@foreach (var profile in Model.Profiles)
+{
+    <li class="list-group-item row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6"><strong>@profile.Name</strong></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-1"></div>
+    </li>
+}
+</ul>
+

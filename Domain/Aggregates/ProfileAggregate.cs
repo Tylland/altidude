@@ -16,12 +16,14 @@ namespace Altidude.Domain.Aggregates
         public Track Track { get; set; }
         public ProfilePlace[] Places { get; set; }
         public int NrOfViews { get; set; }
+        public bool Deleted { get; set; }
 
         public ProfileAggregate()
         {
             RegisterTransition<ProfileCreated>(Apply);
             RegisterTransition<ChartChanged>(Apply);
             RegisterTransition<ProfileViewRegistred>(Apply);
+            RegisterTransition<ProfileDeleted>(Apply);
         }
 
         private IEnumerable<TrackPoint> FindPlacePoints(TrackPoint[] track, Place place)
@@ -224,6 +226,10 @@ namespace Altidude.Domain.Aggregates
         public void Apply(ProfileViewRegistred @event)
         {
             NrOfViews = @event.NrOfViews;
+        }
+        public void Apply(ProfileDeleted @event)
+        {
+            Deleted = true; 
         }
 
         public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService)
