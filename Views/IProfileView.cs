@@ -12,5 +12,6 @@ namespace Altidude.Views
         List<Profile> GetByUser(Guid userId);
         List<Profile> GetAll();
         List<Profile> GetLatest(int nrOfProfiles);
+        List<ProfileSummary> GetSummaries();
     }
 }

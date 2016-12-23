@@ -120,6 +120,16 @@ namespace Altidude.Infrastructure
 
             return envelopes.Select(envelope => Deserialize<Profile>(envelope.Payload)).ToList();
         }
+
+        public List<ProfileSummary> GetSummaries()
+        {
+            var envelopes = _db.Select<ProfileEnvelope>().OrderBy(row => row.CreatedTime);
+
+            Debug.WriteLine(_db.GetLastSql());
+
+            return envelopes.Select(env => new ProfileSummary(env.Id, env.UserId, env.Name, env.NrOfViews, env.CreatedTime)).ToList();
+
+        }
     }
 
     public class PayloadHelper

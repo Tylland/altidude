@@ -10,11 +10,11 @@
 @foreach (var profile in Model.Profiles)
 {
     <li class="list-group-item row">
-        <div class="col-md-3"></div>
+        <div class="col-md-3">@profile.CreatedTime</div>
         <div class="col-md-6"><strong>@profile.Name</strong></div>
         <div class="col-md-1"></div>
         <div class="col-md-1"></div>
-        <div class="col-md-1"></div>
+        <div class="col-md-1">@profile.NrOfViews</div>
     </li>
 }
 </ul>

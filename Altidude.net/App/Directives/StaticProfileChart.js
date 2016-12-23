@@ -85,3 +85,4 @@ var Directives;
 //        }
 //    };
 //}]);
+//# sourceMappingURL=StaticProfileChart.js.map

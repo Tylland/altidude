@@ -73,6 +73,7 @@
     <Compile Include="Types\Coordinate.cs" />
     <Compile Include="Types\GeoPolygon.cs" />
     <Compile Include="Types\GeoBoundary.cs" />
+    <Compile Include="Types\ProfileSummary.cs" />
     <Compile Include="Types\TrackBoundary.cs" />
     <Compile Include="Types\Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

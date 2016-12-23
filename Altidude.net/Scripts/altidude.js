@@ -1,7 +1,7 @@
 var altidudeApp = angular.module('altidudeApp', ['ui.bootstrap', 'ngFileUpload'])
     .value('serviceConfig', { qrunchtimeApiBaseUri: "http://localhost/qrunchtime", altidudeApiBaseUri: "/" });
 //jhhkjhjk 
-
+//# sourceMappingURL=app.js.map
 angular.module('altidudeApp').directive('profileChart', ['$http', '$window', function ($http, $window) {
         var chartTypeTemplateUrl;
         var templateLoaded = false;
@@ -416,7 +416,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileDetailController.js.map
 var Controllers;
 (function (Controllers) {
     var ProfileEditController = (function () {
@@ -526,7 +526,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileEditController.js.map
 var Controllers;
 (function (Controllers) {
     var ProfileImportController = (function () {
@@ -696,7 +696,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileImportController.js.map
 var AltCore;
 (function (AltCore) {
     var Vector = (function () {
@@ -1619,13 +1619,13 @@ var ProfileChart;
             paper.path(_super.prototype.toPathString.call(this, points) + " Z").attr({ fill: color, stroke: "#000000", strokeWidth: 2 });
         };
         GiroItaliaChart.prototype.renderDistanceRuler = function (paper, data, chartArea, transform) {
-            var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
+            //var source: Rectangle = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var rulerHeight = new Vector(0, -12);
             var lastMajorDistancePoint = null;
             var even = true;
             var color = "#000000";
             for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
-                var distancePoint = transform.processPoint(new Point(distance, 0));
+                var distancePoint = transform.processPoint(data.transform.processPoint(new Point(distance, 0)));
                 var distanceMajor = data.distanceAxis.major(distance);
                 if (distanceMajor) {
                     if (lastMajorDistancePoint != undefined) {
@@ -1637,7 +1637,7 @@ var ProfileChart;
                     lastMajorDistancePoint = distancePoint;
                 }
                 if (lastMajorDistancePoint != undefined) {
-                    var endPoint = transform.processPoint(new Point(data.distanceAxis.max, 0));
+                    var endPoint = transform.processPoint(data.transform.processPoint(new Point(data.distanceAxis.max, 0)));
                     color = even ? "#000000" : "#FFFFFF";
                     this.renderRulerScaleSegment(paper, lastMajorDistancePoint, endPoint, rulerHeight, color);
                 }
@@ -1705,7 +1705,6 @@ var ProfileChart;
             var frontProfilePathString = _super.prototype.toPathString.call(this, frontProfile);
             paper.path(frontProfilePathString).attr({ fill: 'none', stroke: "#000000", strokeWidth: 9, strokeLinejoin: "round" });
             paper.path(frontProfilePathString).attr({ fill: 'none', stroke: "#CC2D3C", strokeWidth: 5, strokeLinejoin: "round" });
-            this.renderDistanceRuler(paper, data, chartArea, frontTransform);
         };
         GiroItaliaChart.prototype.renderPlace = function (paper, chartArea, location, name, index) {
             var width = 180;
@@ -1733,19 +1732,35 @@ var ProfileChart;
                 this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
             }
         };
-        GiroItaliaChart.prototype.renderSplits = function (paper, data, chartArea, backTransform) {
-            var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
-            var transform = new TransformProcessor(source, chartArea);
+        GiroItaliaChart.prototype.renderStartFinish = function (paper, split, textAlignment, backTransform) {
             var lineOffset = new Vector(0, -450);
             var textOffset = new Vector(0, -20);
-            var startBasePoint = backTransform.processPoint(data.getFirstSplit().point);
-            var startTopPoint = startBasePoint.offset(lineOffset);
+            var basePoint = backTransform.processPoint(split.point);
+            var topPoint = basePoint.offset(lineOffset);
+            this.renderLine(paper, basePoint, topPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            var text = Text.render(paper, split.altitude.toFixed(0) + " - " + split.name.toUpperCase(), topPoint.offset(textOffset), textAlignment, { fontSize: "48px", fill: "#000000", fontFamily: "Arial", fontWeight: "bold" });
+            text.transform("r-5 " + topPoint.x + " " + topPoint.y);
+        };
+        GiroItaliaChart.prototype.renderDistance = function (paper, data, split, frontTransform, bold) {
+            var topPoint = frontTransform.processPoint(split.point);
+            var basePoint = frontTransform.processPoint(data.transform.processPoint(new Point(split.distance, data.altitudeAxis.min))).offset(new Vector(0, 30));
+            var textPoint = basePoint.offset(new Vector(0, 5));
+            this.renderLine(paper, basePoint, topPoint).attr({ fill: "none", stroke: "#000000", strokeWidth: 3 });
+            var fontWeight = bold ? "bold" : "normal";
+            var text = Text.render(paper, data.distanceAxis.format(split.distance, false), textPoint, Alignment.rightBottom, { fontSize: "24px", fill: "#000000", fontFamily: "Arial", fontWeight: fontWeight });
+            text.transform("r-90 " + textPoint.x + " " + textPoint.y);
+        };
+        GiroItaliaChart.prototype.renderSplits = function (paper, data, chartArea, backTransform, frontTransform) {
+            this.renderStartFinish(paper, data.getFirstSplit(), Alignment.leftBottom, backTransform);
+            this.renderDistance(paper, data, data.getFirstSplit(), frontTransform, true);
+            this.renderStartFinish(paper, data.getLastSplit(), Alignment.rightBottom, backTransform);
+            this.renderDistance(paper, data, data.getLastSplit(), frontTransform, true);
             //var direction: Vector = new Vector(10, -1);
-            //var directionPoint = startTopPoint.offset(direction.scaleToX(200));
+            //var directionPoint = startTopPoint.offset(direction.scaleToX(1600));
             //this.renderLine(paper, startTopPoint, directionPoint).attr({ fill: "none", stroke: "#000000", strokeWidth: 1 });
-            this.renderLine(paper, startBasePoint, startTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-            var startText = Text.render(paper, data.getFirstSplit().altitude.toFixed(0) + " - " + data.getFirstSplit().name.toUpperCase(), startTopPoint.offset(textOffset), Alignment.leftBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
-            startText.transform("r-5 " + startTopPoint.x + " " + startTopPoint.y);
+            //this.renderLine(paper, startBasePoint, startTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            //var startText: Snap.Element = Text.render(paper, data.getFirstSplit().altitude.toFixed(0) + " - " + data.getFirstSplit().name.toUpperCase(), startTopPoint.offset(textOffset), Alignment.leftBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
+            //startText.transform("r-5 " + startTopPoint.x + " " + startTopPoint.y);
             //Text.render(paper, data.getLastSplit().name, topRightPoint.offset(new Vector(-20, 20)), Alignment.rightTop, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
             //Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " m", topRightPoint.offset(new Vector(-20, 60)), Alignment.rightTop, { fontSize: "32px", fill: "#676868", fontFamily: "Arial" });
             var offset = new Offset(0, -200);
@@ -1763,11 +1778,11 @@ var ProfileChart;
             //    paper.circle(splitPoint.x, chartArea.y + chartArea.height + radius, radius).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
             //    paper.line(splitPoint.x, chartArea.y + offset.height + 40 + radius, splitPoint.x, chartArea.y + chartArea.height).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
             //}
-            var finishBasePoint = backTransform.processPoint(data.getLastSplit().point);
-            var finishTopPoint = finishBasePoint.offset(lineOffset);
-            this.renderLine(paper, finishBasePoint, finishTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
-            var finishText = Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " - " + data.getLastSplit().name.toUpperCase(), finishTopPoint.offset(textOffset), Alignment.rightBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
-            finishText.transform("r-5 " + finishTopPoint.x + " " + finishTopPoint.y);
+            //var finishBasePoint = backTransform.processPoint(data.getLastSplit().point);
+            //var finishTopPoint = finishBasePoint.offset(lineOffset);
+            //this.renderLine(paper, finishBasePoint, finishTopPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
+            //var finishText: Snap.Element = Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " - " + data.getLastSplit().name.toUpperCase(), finishTopPoint.offset(textOffset), Alignment.rightBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial" });
+            //finishText.transform("r-5 " + finishTopPoint.x + " " + finishTopPoint.y);
         };
         GiroItaliaChart.prototype.renderSunAndClouds = function (paper) {
             paper.el("use", { "xlink:href": "#sun", x: 240, y: 100 });
@@ -1776,10 +1791,12 @@ var ProfileChart;
         GiroItaliaChart.prototype.renderHeader = function (paper, data, headerArea) {
             var topCenterPoint = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
             var courseNamePoint = topCenterPoint.offset(new Vector(0, 80));
-            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#A2A7AF", fontSize: "72px", fontFamily: "Arial" });
+            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#000000", fontSize: "72px", fontFamily: "Arial" });
+            courseNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
             //            var bbox: Snap.BBox = courseNameText.getBBox();
             //            paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
-            Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#A2A7AF", fontSize: "64px", fontFamily: "Arial" });
+            var athleteNameText = Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#000000", fontSize: "64px", fontFamily: "Arial" });
+            athleteNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
         };
         GiroItaliaChart.prototype.render = function (profile, result, width) {
             var surfaceArea = this.surfaceArea;
@@ -1803,11 +1820,12 @@ var ProfileChart;
             //            backTransform.add(data.transform);
             backTransform.add(skew);
             var frontTransform = new PointProcessorPipeLine();
-            frontTransform.add(data.transform);
+            //frontTransform.add(data.transform);
             frontTransform.add(skew);
             frontTransform.add(offset);
             this.renderProfile(paper, data, chartArea, frontTransform);
-            this.renderSplits(paper, data, chartArea, backTransform);
+            this.renderDistanceRuler(paper, data, chartArea, frontTransform);
+            this.renderSplits(paper, data, chartArea, backTransform, frontTransform);
             //this.renderPlaces(paper, data, chartArea);
             //this.renderSunAndClouds(paper);
             this.renderHeader(paper, data, headerArea);

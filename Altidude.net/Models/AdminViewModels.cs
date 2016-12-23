@@ -24,6 +24,6 @@ namespace Altidude.net.Models
     }
     public class ProfilesViewModel
     {
-        public List<Profile> Profiles { get; set; }
+        public List<ProfileSummary> Profiles { get; set; }
     }
 }

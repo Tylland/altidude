@@ -37,3 +37,4 @@ var AltCore;
     })();
     AltCore.Vector = Vector;
 })(AltCore || (AltCore = {}));
+//# sourceMappingURL=AltCore.js.map

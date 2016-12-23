@@ -41,3 +41,4 @@ var Profile;
     Profile.ProfileService = ProfileService;
     angular.module('altidudeApp').service('profileService', Profile.ProfileService);
 })(Profile || (Profile = {}));
+//# sourceMappingURL=ProfileService.js.map

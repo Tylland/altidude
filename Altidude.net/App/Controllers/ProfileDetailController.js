@@ -53,3 +53,4 @@ var Controllers;
 //            });
 //        };
 //    }]);
+//# sourceMappingURL=ProfileDetailController.js.map

@@ -28,7 +28,7 @@ namespace Altidude.Infrastructure
             Add(new ChartType("19930022-DDB3-4CFC-A75E-3E8CC2DEEB04", "Simply Sunshine", "{1}", "{2}", 1, NoDate));
             Add(new ChartType("57B271BD-CA75-42BD-B7FD-A5A0EBEC887F", "Connecting Dots", "{0} has connected the dots", "{1}", 1, NoDate));
             //Add(new ChartType("28D33FB8-BEFC-41B3-B947-A0B9B6A811EB", "Mountain Silhouette", "{1}", "{2}", 2, NoDate));
-            Add(new ChartType("E6C5D286-BF69-4FD0-A6DE-F46ACC53F011", "Giro d'Italia", "{1}", "{2}", 2, NoDate));
+            //Add(new ChartType("E6C5D286-BF69-4FD0-A6DE-F46ACC53F011", "Giro d'Italia", "{1}", "{2}", 2, NoDate));
         }
 
         private void Add(ChartType chartType)

@@ -35,3 +35,4 @@ var Services;
     Services.ChartService = ChartService;
     angular.module('altidudeApp').service('chartService', Services.ChartService);
 })(Services || (Services = {}));
+//# sourceMappingURL=ChartService.js.map

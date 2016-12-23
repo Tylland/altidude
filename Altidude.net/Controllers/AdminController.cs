@@ -18,6 +18,7 @@ using gpx = Altidude.Files.Gpx11;
 using System.Net.Http;
 using System.Text;
 using System.Net;
+using Altidude.Contracts.Commands;
 
 namespace Altidude.net.Controllers
 {
@@ -83,7 +84,7 @@ namespace Altidude.net.Controllers
 
             var model = new ProfilesViewModel();
 
-            model.Profiles = views.Profiles.GetAll();
+            model.Profiles = views.Profiles.GetSummaries();
 
             return View(model);
         }
@@ -132,6 +133,34 @@ namespace Altidude.net.Controllers
 
             return View("Index");
         }
+
+        [HttpPost]
+        public ActionResult AdjustUserXP()
+        {
+            var application = ApplicationManager.BuildApplication();
+
+            var users = application.Views.Users.GetAll();
+            var profiles = application.Views.Profiles.GetSummaries();
+
+            foreach(var user in users)
+            {
+                var xp = 10;
+
+                var userProfiles = profiles.Where(profile => profile.UserId == user.Id);
+
+                xp += userProfiles.Count() * 5;
+
+                xp += userProfiles.Sum(profile => profile.NrOfViews / 10);
+
+                var points = xp - user.ExperiencePoints;
+
+                application.ExecuteCommand(new RegisterUserExperience(user.Id, points));
+            }
+
+            return View("Index");
+        }
+
+
 
         //[HttpGet]
         //public HttpResponseMessage GetProfilePositionFile()
