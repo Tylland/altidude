@@ -1,6 +1,6 @@
 ﻿@model Altidude.net.Models.AdminViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Admin";
 }
 
 <section class="info-box-container tango-aluminium-1">
@@ -52,8 +52,10 @@
     </div>
 </section>
 
-@using (Html.BeginForm("AdjustUserXP", "Admin", FormMethod.Post))
+<pre>@Model.Timestamp</pre>
+
+@*@using (Html.BeginForm("AdjustUserXP", "Admin", FormMethod.Post))
 {
     <input type="submit" name="Submit" id="Submit" value="Adjust User XP" />
-}
+}*@
 

@@ -222,14 +222,18 @@ namespace Altidude.net.Controllers
 
             var waypoints = new List<gpx11.wptType>();
 
+            var number = 1;
+
             foreach (var profile in profiles)
             {
                 waypoints.Add(new gpx11.wptType()
                 {
                     lat = (decimal)profile.Track.FirstPoint.Latitude,
                     lon = (decimal)profile.Track.FirstPoint.Longitude,
-                    name = profile.Name
+                    name = "#" + number + " - " + profile.Name
                 });
+
+                number++;
             }
 
             var gpx = new gpx11.gpxType();

@@ -55,6 +55,14 @@
             }
         }
 
+        public isSelected(chartId: string) {
+            if (this.chart != undefined) {
+                return this.chart.id.toUpperCase() === chartId.toUpperCase();
+            }
+
+            return false;
+        }
+
         public selectChart(chart)
         {
             this.chartSelectionVisible = false;

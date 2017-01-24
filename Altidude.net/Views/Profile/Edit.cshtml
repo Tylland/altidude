@@ -19,10 +19,10 @@
     <hr/>
     <div class="chart-scroller">
         <ul>
-            <li ng-repeat="chartType in editController.chartTypes">
+            <li ng-repeat="chartType in editController.chartTypes" >
                 <div ng-switch="chartType.isUnlocked">
-                    <div ng-switch-when="true">
-                        <img class="img-rounded" ng-class="editController.chart.id === chartType.id ? 'selected-chart' : 'unselected-chart'" src="~/Images/Charts/{{chartType.name}}.png" alt="{{chartType.name}}" ng-click="editController.selectChartType(chartType.id)">
+                    <div ng-switch-when="true"  ng-click="editController.selectChartType(chartType.id)">
+                        <img class="img-rounded" ng-class="editController.isSelected(chartType.id) ? 'selected-chart' : 'unselected-chart'" src="~/Images/Charts/{{chartType.name}}.png" alt="{{chartType.name}}">
                         <h2>{{chartType.name}}<br />Level {{chartType.unlockOnLevel}}</h2>
                     </div>
                     <div ng-switch-when="false">

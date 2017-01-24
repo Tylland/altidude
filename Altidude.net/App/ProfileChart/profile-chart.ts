@@ -421,6 +421,16 @@ module ProfileChart {
             el.attr({ x: pos.x, y: pos.y });
         }
 
+        fitTextInto(text: Snap.Element, startSize: number, maxWidth: number): void {
+            var bbox: Snap.BBox = text.getBBox();
+
+            for (let fontSize = startSize; bbox.width > maxWidth; fontSize--) {
+                text.attr({fontSize: fontSize + "px" });
+                bbox = text.getBBox();
+            }
+        }
+
+
         constructor(public id: string, public name: string, public templateUrl: string) {
         }
     }
@@ -480,6 +490,25 @@ module ProfileChart {
             var pos: Point = position.offset(this.calcAlignmentVector(el, alignment.horizontal, alignment.vertical));
 
             el.attr({ x: pos.x, y: pos.y });
+        }
+
+        public static fitInside(text: Snap.Element, startSize: number, maxWidth: number): void {
+            var bbox: Snap.BBox = text.getBBox();
+
+            for (let fontSize = startSize; bbox.width > maxWidth; fontSize--) {
+                text.attr({ fontSize: fontSize + "px" });
+                bbox = text.getBBox();
+            }
+        }
+
+        public static renderInside(paper: Snap.Paper, text: string, position: Point, alignment: Alignment, fontSize: number, maxWidth: number, params: any): Snap.Element {
+            var textElement: Snap.Element = paper.text(position.x, position.y, text);
+            textElement.attr(params);
+
+            this.fitInside(textElement, fontSize, maxWidth);
+            this.align(textElement, alignment, position);
+
+            return textElement;
         }
 
         public static render(paper: Snap.Paper, text: string, position: Point, alignment: Alignment, params: any): Snap.Element {
@@ -795,7 +824,7 @@ module ProfileChart {
 
             var courseNamePoint: Point = headerArea.getCenter();
 
-            Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fill: "#1d5f8d", fontSize: "72px" });
+            Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerTop, 72, headerArea.width, { fill: "#1d5f8d", fontSize: "72px" });
         }
 
         renderProfile(paper: Snap.Paper, data: ChartData, profileArea: Rectangle): void {
@@ -997,7 +1026,7 @@ module ProfileChart {
 
             var g: any = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
 
-            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2 });
+            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2, strokeLinejoin: "round" });
         }
 
         renderPlace(paper: Snap.Paper, chartArea: Rectangle, location: Point, name: string, index: number): void {
@@ -1097,7 +1126,10 @@ module ProfileChart {
 
             var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 80));
 
-            var courseNameText: Snap.Element = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            var courseNameText: Snap.Element = Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerBottom, 72, headerArea.width, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            //super.fitTextInto(courseNameText, 72, headerArea.width);
+
+
             var bbox: Snap.BBox = courseNameText.getBBox();
 
             paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
@@ -1142,6 +1174,320 @@ module ProfileChart {
             // paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
             // paper.circle(400, 200, 3);
             // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
+        }
+    }
+
+    export class ZodiacChart extends Chart {
+
+        protected headerArea: Rectangle;
+        protected chartArea: Rectangle;
+        protected profileArea: Rectangle;
+        protected twinklingStars: Array<Snap.Element>;
+        private addStar: boolean;
+
+        constructor(id: string, name: string) {
+            super(id, name, "/App/ProfileChart/Templates/zodiac.svg");
+        }
+
+        createPaper(profile: IProfile, result: IResult, width: number): Snap.Paper {
+            var widthMargin: number = this.surfaceArea.width / 40;
+            var headerHeight: number = 180;
+
+            this.headerArea = this.surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, this.surfaceArea.height - headerHeight));
+            this.chartArea = this.surfaceArea.apply(new Margin(widthMargin, headerHeight, widthMargin, widthMargin));
+            this.profileArea = this.chartArea.apply(new Margin(0, 50, 0, 200));
+
+            var data: ChartData = new ChartData(profile, result, this.chartArea);
+
+            var height: number = (this.surfaceArea.height / this.surfaceArea.width) * width;
+
+            var paper: Snap.Paper = Snap("#zodiacChart");
+            paper.attr({ width: width, height: height });
+            paper.attr({ viewBox: this.surfaceArea.x + " " + this.surfaceArea.y + " " + this.surfaceArea.width + " " + this.surfaceArea.height });
+
+            this.clearChart();
+
+            return paper;
+        }
+
+        getRandomPoint(boundary: Rectangle): Point {
+            return new Point(boundary.x + boundary.width * Math.random(), boundary.y + boundary.height * Math.random());
+        }
+
+
+        renderStars(paper: Snap.Paper, surfaceArea: Rectangle, nrOfStars: number): void {
+
+            for (var i: number = 0; i < nrOfStars; i++) {
+                var treeId: string = "#star" + (Math.floor(Math.random() * 3) + 1);
+                var point: Point = this.getRandomPoint(surfaceArea);
+                var scale: number = 0.6 + Math.random() * 0.4;
+                var rotate: number = Math.random() * 45;
+
+                var transform: string = "scale(" + scale + ", " + scale + ", " + point.x + "," + point.y + ") rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x / scale, y: point.y / scale });
+            }
+
+            paper.el("use", { "xlink:href": "#shootingStar", x: 300, y: 300 });
+
+        }
+
+        renderHeader(paper: Snap.Paper, data: ChartData, headerArea: Rectangle): void {
+
+            var topLeftPoint: Point = new Point(headerArea.x, headerArea.y);
+            var topRightPoint: Point = new Point(headerArea.x + headerArea.width, headerArea.y);
+
+            Text.render(paper, data.splits[0].name, topLeftPoint.offset(new Vector(20, 20)), Alignment.leftTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            Text.render(paper, data.splits[0].altitude.toFixed(0) + " m", topLeftPoint.offset(new Vector(20, 60)), Alignment.leftTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+
+            Text.render(paper, data.getLastSplit().name, topRightPoint.offset(new Vector(-20, 20)), Alignment.rightTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " m", topRightPoint.offset(new Vector(-20, 60)), Alignment.rightTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+
+
+            var athleteDisplayNamePoint: Point = headerArea.getCenter();
+
+            Text.render(paper, data.athlete.displayName, athleteDisplayNamePoint.offset(new Vector(0, -20)), Alignment.centerBottom, { fill: "#ffffff", fontSize: "64px" });
+
+            var courseNamePoint: Point = headerArea.getCenter();
+
+            Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerTop, 72, headerArea.width, { fill: "#ffffff", fontSize: "72px" });
+        }
+
+        renderDistances(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
+            var bottomLeftPoint: Point = new Point(chartArea.x, chartArea.y + chartArea.height);
+            var bottomRightPoint: Point = new Point(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
+
+            Text.render(paper, data.distanceAxis.format(data.distanceAxis.min, true), bottomLeftPoint, Alignment.leftBottom, { fontSize: "32px", fill: "#FFFFFF", fontFamily: "Arial" });
+            Text.render(paper, data.distanceAxis.format(data.distanceAxis.max, true), bottomRightPoint, Alignment.rightBottom, { fontSize: "32px", fill: "#FFFFFF", fontFamily: "Arial" });
+        }
+
+
+        renderProfile(paper: Snap.Paper, data: ChartData, profileArea: Rectangle): void {
+            //paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill:"none", stroke: "#FF0000" });
+
+            var profileLineTransform: PointProcessor = new ReduceToNumberProcessor(13);
+            var profileLine: Point[] = profileLineTransform.process(data.courseProfile);
+
+            paper.path(super.toPathString(profileLine)).attr({ fill: "none", stroke: "#FFFFFF", strokeWidth: 3, strokeLinejoin: "round" });
+
+
+            var smallStarsTransform: PointProcessor = new ReduceToNumberProcessor(13);
+            var smallStarPoints: Point[] = smallStarsTransform.process(data.courseProfile);
+
+            for (var i: number = 0; i < smallStarPoints.length; i++) {
+                var treeId: string = "#profileStarSmall";
+                var point: Point = smallStarPoints[i];
+                //                var scale: number = 0.9 + Math.random() * 0.2;
+                var rotate: number = Math.random() * 45;
+
+                var transform: string = "rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x, y: point.y });
+            }
+
+            var bigStarsTransform: PointProcessor = new ReduceToNumberProcessor(3);
+            var bigStarPoints: Point[] = bigStarsTransform.process(data.courseProfile);
+
+            for (var i: number = 0; i < bigStarPoints.length; i++) {
+                var treeId: string = "#profileStarBig";
+                var point: Point = bigStarPoints[i];
+                //                var scale: number = 0.9 + Math.random() * 0.2;
+                var rotate: number = Math.random() * 45;
+
+                var transform: string = "rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x, y: point.y });
+            }
+
+            var finishPoint: Point = bigStarPoints[bigStarPoints.length - 1];
+
+            paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: finishPoint.x, y: finishPoint.y });
+
+            var finishTextPoint: Point = finishPoint.offset(new Vector(-100, -85));
+
+            Text.render(paper, data.getLastSplit().getTime(), finishTextPoint, Alignment.rightMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial", transform: "r05," + finishTextPoint.x + "," + finishTextPoint.y });
+        }
+
+        renderMoon(paper: Snap.Paper, surfaceArea: Rectangle): void {
+            paper.el("use", { "xlink:href": "#moon", x: 200, y: 200 });
+        }
+
+        twinkleStars(paper: Snap.Paper, starArea: Rectangle): void {
+
+            if (this.addStar) {
+                this.twinklingStars[0].remove();
+
+                this.twinklingStars.shift();
+            } else {
+                this.twinklingStars.push(this.createTwinklingStar(paper, starArea));
+            }
+
+            this.addStar = !this.addStar;
+        }
+
+        createTwinklingStar(paper: Snap.Paper, starArea: Rectangle): Snap.Element {
+            var x = starArea.x + starArea.width * Math.random();
+            var y = starArea.y + starArea.height * Math.random();
+
+            return paper.circle(x, y, 2).attr({ fill: "#6C7FB6" });
+        }
+
+        startTwinklingStars(paper: Snap.Paper, starArea: Rectangle, nrOfStars: number): void {
+
+            this.twinklingStars = new Array<Snap.Element>();
+
+            for (var i: number = 1; i < nrOfStars; i++) {
+                this.twinklingStars.push(this.createTwinklingStar(paper, starArea));
+            }
+
+            setInterval(() => this.twinkleStars(paper, starArea), 2000);
+
+        }
+    }
+
+    export class NorthernZodiacChart extends ZodiacChart {
+
+        constructor() {
+            super("614483F0-5B42-41B3-939E-24C4BD1660F8", "Northern Zodiac");
+        }
+
+        renderBackground(paper: Snap.Paper, surfaceArea: Rectangle): void {
+
+            var g: any = paper.gradient("r(0.5, 0.5, 0.5)#12389b-#1c234d");
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
+
+//            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#radialGradient3793)" });
+
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#backgroundGradient)" });
+        }
+
+
+        renderTrees(paper: Snap.Paper, surfaceArea: Rectangle, y: number): void {
+            paper.el("use", { "xlink:href": "#northernTrees", x: surfaceArea.x, y: y });
+        }
+
+
+
+        render(profile: IProfile, result: IResult, width: number): void {
+
+            var paper: Snap.Paper = super.createPaper(profile, result, width);
+            var data: ChartData = new ChartData(profile, result, this.profileArea);
+
+
+            this.renderBackground(paper, this.surfaceArea);
+            super.renderStars(paper, this.surfaceArea, 30);
+            super.renderHeader(paper, data, this.headerArea);
+            super.renderProfile(paper, data, this.profileArea);
+            this.renderTrees(paper, this.surfaceArea, 600);
+            super.renderDistances(paper, data, this.chartArea);
+
+            var starArea = this.chartArea.apply(new Margin(0, 0, 0, 200));
+            super.startTwinklingStars(paper, starArea, 21);
+
+
+            //paper.circle(100, 200, 3).attr({ fill: "#FF0000"});
+            //paper.el("use", { "xlink:href": "#star1", x: 100, y: 200 });
+
+            //paper.circle(200, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star2", x: 200, y: 200 });
+
+            //paper.circle(300, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star3", x: 300, y: 200 });
+
+            //paper.circle(400, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarSmall", x: 400, y: 200 });
+
+            //paper.circle(500, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarBig", x: 500, y: 200 });
+
+           //paper.circle(600, 200, 3).attr({ fill: "#FF0000" });
+           //paper.el("use", { "xlink:href": "#shootingStar", x: 600, y: 200 });
+
+           //paper.circle(700, 200, 3).attr({ fill: "#FF0000" });
+           //paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: 700, y: 200 });
+
+
+
+            //paper.circle(100, 400, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#forest", x: 100, y: 400 });
+        }
+    }
+
+    export class SouthernZodiacChart extends ZodiacChart {
+
+        constructor() {
+            super("507AF72C-5678-4AFC-AB43-AB7DC34D904E", "Southern Zodiac");
+        }
+
+        renderBackground(paper: Snap.Paper, surfaceArea: Rectangle): void {
+
+            var g: any = paper.gradient("r(0.5, 0.5, 0.5)#6e4c4c-#44234d");
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
+
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#backgroundGradient)" });
+        }
+
+        renderTrees(paper: Snap.Paper, surfaceArea: Rectangle, y: number): void {
+            paper.el("use", { "xlink:href": "#southernTrees", x: surfaceArea.x, y: y });
+        }
+
+        render(profile: IProfile, result: IResult, width: number): void {
+
+            var surfaceArea: Rectangle = this.surfaceArea;
+
+            var widthMargin: number = surfaceArea.width / 40;
+            //            var heightMargin: number = surfaceArea.height / 2;
+            var headerHeight: number = 180;
+
+            var headerArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, surfaceArea.height - headerHeight));
+            var chartArea: Rectangle = surfaceArea.apply(new Margin(widthMargin, headerHeight, widthMargin, widthMargin));
+            var profileArea: Rectangle = chartArea.apply(new Margin(0, 0, 0, 0));
+
+            var data: ChartData = new ChartData(profile, result, chartArea);
+
+            var height: number = (surfaceArea.height / surfaceArea.width) * width;
+
+            var paper: Snap.Paper = Snap("#zodiacChart");
+            paper.attr({ width: width, height: height });
+            paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
+
+            this.clearChart();
+
+            this.renderBackground(paper, this.surfaceArea);
+            super.renderStars(paper, this.surfaceArea, 30);
+            super.renderHeader(paper, data, headerArea);
+            super.renderProfile(paper, data, profileArea);
+            this.renderTrees(paper, surfaceArea, 600);
+            super.renderDistances(paper, data, chartArea);
+            //super.renderMoon(paper, this.surfaceArea);
+
+
+            //paper.circle(100, 200, 3).attr({ fill: "#FF0000"});
+            //paper.el("use", { "xlink:href": "#star1", x: 100, y: 200 });
+
+            //paper.circle(200, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star2", x: 200, y: 200 });
+
+            //paper.circle(300, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star3", x: 300, y: 200 });
+
+            //paper.circle(400, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarSmall", x: 400, y: 200 });
+
+            //paper.circle(500, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarBig", x: 500, y: 200 });
+
+            //paper.circle(600, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStar", x: 600, y: 200 });
+
+            //paper.circle(700, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: 700, y: 200 });
+
+            //paper.circle(800, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#moon", x: 800, y: 200 });
+
+            //paper.circle(100, 400, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#southernTree1", x: 100, y: 400 });
         }
     }
 
@@ -1542,12 +1888,13 @@ module ProfileChart {
             // var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
             // courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
 
-            var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 5));
+            var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 60));
             // var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
 
+
             var name: string = data.athlete.displayName;
-            var resultNamePoint: Point = topCenterPoint.offset(new Vector(0, 60));
+            var resultNamePoint: Point = topCenterPoint.offset(new Vector(0, 5));
             // var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
             Text.render(paper, name, resultNamePoint, Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial" });
 
@@ -1607,7 +1954,7 @@ module ProfileChart {
             for (let i: any = 1; i < profile.length; i++) {
                 var length: number = Vector.create(profile[i - 1], profile[i]).getLength();
 
-                this.renderTrees(paper, profile[i - 1], profile[i], offset, Math.floor(length * 60 / totalLength));
+                this.renderTrees(paper, profileArea, profile[i - 1], profile[i], offset, Math.floor(length * 100 / totalLength));
             }
 
             this.renderOwlTree(paper, profile);
@@ -1700,18 +2047,21 @@ module ProfileChart {
             var owl: Snap.Element = paper.el("use", { "xlink:href": "#owl", x: point.x, y: point.y, opacity: 0 });
             var eyes: Snap.Element = paper.el("use", { "xlink:href": "#owl_eyes", x: point.x, y: point.y });
 
-            eyes.hover((event: MouseEvent) => { this.show(owl); }, (event: MouseEvent) => { this.hide(owl); });
+            eyes.hover((event: MouseEvent) => { this.showElement(owl); }, (event: MouseEvent) => { this.hideElement(owl); });
         }
 
-        renderTrees(paper: Snap.Paper, from: Point, to: Point, offset: Vector, nrOfTrees: number): void {
+        renderTrees(paper: Snap.Paper, profileArea: Rectangle, from: Point, to: Point, offset: Vector, nrOfTrees: number): void {
             var colors: string[] = ["#588427", "#6a992f", "#48711e", "#31550e", "#3d6317", "#1f4100", "#395f15", "#3a6015", "#32560f", "#77a935", "#365f16", "#173900"];
 
             for (var i: number = 0; i < nrOfTrees; i++) {
                 var treeId: string = "#tree" + (Math.floor(Math.random() * 4) + 1);
                 var point: Point = this.getRandomTreePoint(from, to, offset);
                 var color: string = colors[Math.floor(Math.random() * colors.length)];
-                var scaleX: number = 0.6 + Math.random() * 0.4;
-                var scaleY: number = 0.7 + Math.random() * 0.3;
+
+                var elevationScale: number = 0.6 + (point.y - profileArea.y) / profileArea.height * 0.6;
+
+                var scaleX: number = (0.6 + Math.random() * 0.4) * elevationScale;
+                var scaleY: number = (0.7 + Math.random() * 0.3) * elevationScale;
 
                 var transform: string = "scale(" + scaleX + ", " + scaleY + ", " + point.x + "," + point.y + ")"; // translate(" + (point.x * -1/scaleX) + ", " + (point.y * 1/scaleY) + ")";
 
@@ -1741,6 +2091,14 @@ module ProfileChart {
             return () => {
                 // el.animate({ opacity: "0" }, 1000);
             };
+        }
+
+        showElement(el: Snap.Element) {
+            el.attr({ opacity: "1" });
+        }
+
+        hideElement(el: Snap.Element) {
+            el.animate({ opacity: "0" }, 1000);
         }
 
         show(el: Snap.Element): Function {

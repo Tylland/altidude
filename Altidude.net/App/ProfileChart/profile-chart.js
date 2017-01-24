@@ -349,6 +349,13 @@ var ProfileChart;
             var pos = position.offset(this.calcAlignmentVector(el, alignment.horizontal, alignment.vertical));
             el.attr({ x: pos.x, y: pos.y });
         };
+        Chart.prototype.fitTextInto = function (text, startSize, maxWidth) {
+            var bbox = text.getBBox();
+            for (var fontSize = startSize; bbox.width > maxWidth; fontSize--) {
+                text.attr({ fontSize: fontSize + "px" });
+                bbox = text.getBBox();
+            }
+        };
         return Chart;
     })();
     ProfileChart.Chart = Chart;
@@ -405,6 +412,20 @@ var ProfileChart;
         Text.align = function (el, alignment, position) {
             var pos = position.offset(this.calcAlignmentVector(el, alignment.horizontal, alignment.vertical));
             el.attr({ x: pos.x, y: pos.y });
+        };
+        Text.fitInside = function (text, startSize, maxWidth) {
+            var bbox = text.getBBox();
+            for (var fontSize = startSize; bbox.width > maxWidth; fontSize--) {
+                text.attr({ fontSize: fontSize + "px" });
+                bbox = text.getBBox();
+            }
+        };
+        Text.renderInside = function (paper, text, position, alignment, fontSize, maxWidth, params) {
+            var textElement = paper.text(position.x, position.y, text);
+            textElement.attr(params);
+            this.fitInside(textElement, fontSize, maxWidth);
+            this.align(textElement, alignment, position);
+            return textElement;
         };
         Text.render = function (paper, text, position, alignment, params) {
             var textElement = paper.text(position.x, position.y, text);
@@ -627,7 +648,7 @@ var ProfileChart;
             var athleteDisplayNamePoint = headerArea.getCenter();
             Text.render(paper, data.athlete.displayName, athleteDisplayNamePoint.offset(new Vector(0, -20)), Alignment.centerBottom, { fill: "#1d5f8d", fontSize: "64px" });
             var courseNamePoint = headerArea.getCenter();
-            Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fill: "#1d5f8d", fontSize: "72px" });
+            Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerTop, 72, headerArea.width, { fill: "#1d5f8d", fontSize: "72px" });
         };
         ConnectingDotsChart.prototype.renderProfile = function (paper, data, profileArea) {
             // paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill:"none", stroke: "#FF0000" });
@@ -761,7 +782,7 @@ var ProfileChart;
             profileBody.push(new Point(chartArea.x, profile[0].y));
             var bodyPathString = _super.prototype.toPathString.call(this, profileBody) + " Z";
             var g = paper.gradient("l(0.5, 1, 0.5, 0)#81F5E0-#56B5FB");
-            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2 });
+            paper.path(bodyPathString).attr({ fill: g, opacity: 0.8, stroke: "#105A77", strokeWidth: 2, strokeLinejoin: "round" });
         };
         SimplySunshineChart.prototype.renderPlace = function (paper, chartArea, location, name, index) {
             var width = 180;
@@ -826,7 +847,8 @@ var ProfileChart;
         SimplySunshineChart.prototype.renderHeader = function (paper, data, headerArea) {
             var topCenterPoint = new Point(headerArea.x + headerArea.width / 2, headerArea.y);
             var courseNamePoint = topCenterPoint.offset(new Vector(0, 80));
-            var courseNameText = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            var courseNameText = Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerBottom, 72, headerArea.width, { fill: "#E03B3B", fontSize: "72px", fontFamily: "Arial" });
+            //super.fitTextInto(courseNameText, 72, headerArea.width);
             var bbox = courseNameText.getBBox();
             paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
             Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#E03B3B", fontSize: "64px", fontFamily: "Arial" });
@@ -863,6 +885,217 @@ var ProfileChart;
         return SimplySunshineChart;
     })(Chart);
     ProfileChart.SimplySunshineChart = SimplySunshineChart;
+    var ZodiacChart = (function (_super) {
+        __extends(ZodiacChart, _super);
+        function ZodiacChart(id, name) {
+            _super.call(this, id, name, "/App/ProfileChart/Templates/zodiac.svg");
+        }
+        ZodiacChart.prototype.createPaper = function (profile, result, width) {
+            var widthMargin = this.surfaceArea.width / 40;
+            var headerHeight = 180;
+            this.headerArea = this.surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, this.surfaceArea.height - headerHeight));
+            this.chartArea = this.surfaceArea.apply(new Margin(widthMargin, headerHeight, widthMargin, widthMargin));
+            this.profileArea = this.chartArea.apply(new Margin(0, 50, 0, 200));
+            var data = new ChartData(profile, result, this.chartArea);
+            var height = (this.surfaceArea.height / this.surfaceArea.width) * width;
+            var paper = Snap("#zodiacChart");
+            paper.attr({ width: width, height: height });
+            paper.attr({ viewBox: this.surfaceArea.x + " " + this.surfaceArea.y + " " + this.surfaceArea.width + " " + this.surfaceArea.height });
+            this.clearChart();
+            return paper;
+        };
+        ZodiacChart.prototype.getRandomPoint = function (boundary) {
+            return new Point(boundary.x + boundary.width * Math.random(), boundary.y + boundary.height * Math.random());
+        };
+        ZodiacChart.prototype.renderStars = function (paper, surfaceArea, nrOfStars) {
+            for (var i = 0; i < nrOfStars; i++) {
+                var treeId = "#star" + (Math.floor(Math.random() * 3) + 1);
+                var point = this.getRandomPoint(surfaceArea);
+                var scale = 0.6 + Math.random() * 0.4;
+                var rotate = Math.random() * 45;
+                var transform = "scale(" + scale + ", " + scale + ", " + point.x + "," + point.y + ") rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x / scale, y: point.y / scale });
+            }
+            paper.el("use", { "xlink:href": "#shootingStar", x: 300, y: 300 });
+        };
+        ZodiacChart.prototype.renderHeader = function (paper, data, headerArea) {
+            var topLeftPoint = new Point(headerArea.x, headerArea.y);
+            var topRightPoint = new Point(headerArea.x + headerArea.width, headerArea.y);
+            Text.render(paper, data.splits[0].name, topLeftPoint.offset(new Vector(20, 20)), Alignment.leftTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            Text.render(paper, data.splits[0].altitude.toFixed(0) + " m", topLeftPoint.offset(new Vector(20, 60)), Alignment.leftTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            Text.render(paper, data.getLastSplit().name, topRightPoint.offset(new Vector(-20, 20)), Alignment.rightTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            Text.render(paper, data.getLastSplit().altitude.toFixed(0) + " m", topRightPoint.offset(new Vector(-20, 60)), Alignment.rightTop, { fontSize: "32px", fill: "#ffffff", fontFamily: "Arial" });
+            var athleteDisplayNamePoint = headerArea.getCenter();
+            Text.render(paper, data.athlete.displayName, athleteDisplayNamePoint.offset(new Vector(0, -20)), Alignment.centerBottom, { fill: "#ffffff", fontSize: "64px" });
+            var courseNamePoint = headerArea.getCenter();
+            Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerTop, 72, headerArea.width, { fill: "#ffffff", fontSize: "72px" });
+        };
+        ZodiacChart.prototype.renderDistances = function (paper, data, chartArea) {
+            var bottomLeftPoint = new Point(chartArea.x, chartArea.y + chartArea.height);
+            var bottomRightPoint = new Point(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
+            Text.render(paper, data.distanceAxis.format(data.distanceAxis.min, true), bottomLeftPoint, Alignment.leftBottom, { fontSize: "32px", fill: "#FFFFFF", fontFamily: "Arial" });
+            Text.render(paper, data.distanceAxis.format(data.distanceAxis.max, true), bottomRightPoint, Alignment.rightBottom, { fontSize: "32px", fill: "#FFFFFF", fontFamily: "Arial" });
+        };
+        ZodiacChart.prototype.renderProfile = function (paper, data, profileArea) {
+            //paper.rect(profileArea.x, profileArea.y, profileArea.width, profileArea.height).attr({ fill:"none", stroke: "#FF0000" });
+            var profileLineTransform = new ReduceToNumberProcessor(13);
+            var profileLine = profileLineTransform.process(data.courseProfile);
+            paper.path(_super.prototype.toPathString.call(this, profileLine)).attr({ fill: "none", stroke: "#FFFFFF", strokeWidth: 3, strokeLinejoin: "round" });
+            var smallStarsTransform = new ReduceToNumberProcessor(13);
+            var smallStarPoints = smallStarsTransform.process(data.courseProfile);
+            for (var i = 0; i < smallStarPoints.length; i++) {
+                var treeId = "#profileStarSmall";
+                var point = smallStarPoints[i];
+                //                var scale: number = 0.9 + Math.random() * 0.2;
+                var rotate = Math.random() * 45;
+                var transform = "rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x, y: point.y });
+            }
+            var bigStarsTransform = new ReduceToNumberProcessor(3);
+            var bigStarPoints = bigStarsTransform.process(data.courseProfile);
+            for (var i = 0; i < bigStarPoints.length; i++) {
+                var treeId = "#profileStarBig";
+                var point = bigStarPoints[i];
+                //                var scale: number = 0.9 + Math.random() * 0.2;
+                var rotate = Math.random() * 45;
+                var transform = "rotate(" + rotate + ", " + point.x + ", " + point.y + ")";
+                paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x, y: point.y });
+            }
+            var finishPoint = bigStarPoints[bigStarPoints.length - 1];
+            paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: finishPoint.x, y: finishPoint.y });
+            var finishTextPoint = finishPoint.offset(new Vector(-100, -85));
+            Text.render(paper, data.getLastSplit().getTime(), finishTextPoint, Alignment.rightMiddle, { fill: "#FFFFFF", fontSize: "24px", fontFamily: "Arial", transform: "r05," + finishTextPoint.x + "," + finishTextPoint.y });
+        };
+        ZodiacChart.prototype.renderMoon = function (paper, surfaceArea) {
+            paper.el("use", { "xlink:href": "#moon", x: 200, y: 200 });
+        };
+        ZodiacChart.prototype.twinkleStars = function (paper, starArea) {
+            if (this.addStar) {
+                this.twinklingStars[0].remove();
+                this.twinklingStars.shift();
+            }
+            else {
+                this.twinklingStars.push(this.createTwinklingStar(paper, starArea));
+            }
+            this.addStar = !this.addStar;
+        };
+        ZodiacChart.prototype.createTwinklingStar = function (paper, starArea) {
+            var x = starArea.x + starArea.width * Math.random();
+            var y = starArea.y + starArea.height * Math.random();
+            return paper.circle(x, y, 2).attr({ fill: "#6C7FB6" });
+        };
+        ZodiacChart.prototype.startTwinklingStars = function (paper, starArea, nrOfStars) {
+            var _this = this;
+            this.twinklingStars = new Array();
+            for (var i = 1; i < nrOfStars; i++) {
+                this.twinklingStars.push(this.createTwinklingStar(paper, starArea));
+            }
+            setInterval(function () { return _this.twinkleStars(paper, starArea); }, 2000);
+        };
+        return ZodiacChart;
+    })(Chart);
+    ProfileChart.ZodiacChart = ZodiacChart;
+    var NorthernZodiacChart = (function (_super) {
+        __extends(NorthernZodiacChart, _super);
+        function NorthernZodiacChart() {
+            _super.call(this, "614483F0-5B42-41B3-939E-24C4BD1660F8", "Northern Zodiac");
+        }
+        NorthernZodiacChart.prototype.renderBackground = function (paper, surfaceArea) {
+            var g = paper.gradient("r(0.5, 0.5, 0.5)#12389b-#1c234d");
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
+            //            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#radialGradient3793)" });
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#backgroundGradient)" });
+        };
+        NorthernZodiacChart.prototype.renderTrees = function (paper, surfaceArea, y) {
+            paper.el("use", { "xlink:href": "#northernTrees", x: surfaceArea.x, y: y });
+        };
+        NorthernZodiacChart.prototype.render = function (profile, result, width) {
+            var paper = _super.prototype.createPaper.call(this, profile, result, width);
+            var data = new ChartData(profile, result, this.profileArea);
+            this.renderBackground(paper, this.surfaceArea);
+            _super.prototype.renderStars.call(this, paper, this.surfaceArea, 30);
+            _super.prototype.renderHeader.call(this, paper, data, this.headerArea);
+            _super.prototype.renderProfile.call(this, paper, data, this.profileArea);
+            this.renderTrees(paper, this.surfaceArea, 600);
+            _super.prototype.renderDistances.call(this, paper, data, this.chartArea);
+            var starArea = this.chartArea.apply(new Margin(0, 0, 0, 200));
+            _super.prototype.startTwinklingStars.call(this, paper, starArea, 21);
+            //paper.circle(100, 200, 3).attr({ fill: "#FF0000"});
+            //paper.el("use", { "xlink:href": "#star1", x: 100, y: 200 });
+            //paper.circle(200, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star2", x: 200, y: 200 });
+            //paper.circle(300, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star3", x: 300, y: 200 });
+            //paper.circle(400, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarSmall", x: 400, y: 200 });
+            //paper.circle(500, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarBig", x: 500, y: 200 });
+            //paper.circle(600, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStar", x: 600, y: 200 });
+            //paper.circle(700, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: 700, y: 200 });
+            //paper.circle(100, 400, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#forest", x: 100, y: 400 });
+        };
+        return NorthernZodiacChart;
+    })(ZodiacChart);
+    ProfileChart.NorthernZodiacChart = NorthernZodiacChart;
+    var SouthernZodiacChart = (function (_super) {
+        __extends(SouthernZodiacChart, _super);
+        function SouthernZodiacChart() {
+            _super.call(this, "507AF72C-5678-4AFC-AB43-AB7DC34D904E", "Southern Zodiac");
+        }
+        SouthernZodiacChart.prototype.renderBackground = function (paper, surfaceArea) {
+            var g = paper.gradient("r(0.5, 0.5, 0.5)#6e4c4c-#44234d");
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: g });
+            paper.rect(surfaceArea.x, surfaceArea.y, surfaceArea.width, surfaceArea.height).attr({ fill: "url(#backgroundGradient)" });
+        };
+        SouthernZodiacChart.prototype.renderTrees = function (paper, surfaceArea, y) {
+            paper.el("use", { "xlink:href": "#southernTrees", x: surfaceArea.x, y: y });
+        };
+        SouthernZodiacChart.prototype.render = function (profile, result, width) {
+            var surfaceArea = this.surfaceArea;
+            var widthMargin = surfaceArea.width / 40;
+            //            var heightMargin: number = surfaceArea.height / 2;
+            var headerHeight = 180;
+            var headerArea = surfaceArea.apply(new Margin(widthMargin, 0, widthMargin, surfaceArea.height - headerHeight));
+            var chartArea = surfaceArea.apply(new Margin(widthMargin, headerHeight, widthMargin, widthMargin));
+            var profileArea = chartArea.apply(new Margin(0, 0, 0, 0));
+            var data = new ChartData(profile, result, chartArea);
+            var height = (surfaceArea.height / surfaceArea.width) * width;
+            var paper = Snap("#zodiacChart");
+            paper.attr({ width: width, height: height });
+            paper.attr({ viewBox: surfaceArea.x + " " + surfaceArea.y + " " + surfaceArea.width + " " + surfaceArea.height });
+            this.clearChart();
+            this.renderBackground(paper, this.surfaceArea);
+            _super.prototype.renderStars.call(this, paper, this.surfaceArea, 30);
+            _super.prototype.renderHeader.call(this, paper, data, headerArea);
+            _super.prototype.renderProfile.call(this, paper, data, profileArea);
+            this.renderTrees(paper, surfaceArea, 600);
+            _super.prototype.renderDistances.call(this, paper, data, chartArea);
+            //super.renderMoon(paper, this.surfaceArea);
+            //paper.circle(100, 200, 3).attr({ fill: "#FF0000"});
+            //paper.el("use", { "xlink:href": "#star1", x: 100, y: 200 });
+            //paper.circle(200, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star2", x: 200, y: 200 });
+            //paper.circle(300, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#star3", x: 300, y: 200 });
+            //paper.circle(400, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarSmall", x: 400, y: 200 });
+            //paper.circle(500, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#profileStarBig", x: 500, y: 200 });
+            //paper.circle(600, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStar", x: 600, y: 200 });
+            //paper.circle(700, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#shootingStarTailFinish", x: 700, y: 200 });
+            //paper.circle(800, 200, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#moon", x: 800, y: 200 });
+            //paper.circle(100, 400, 3).attr({ fill: "#FF0000" });
+            //paper.el("use", { "xlink:href": "#southernTree1", x: 100, y: 400 });
+        };
+        return SouthernZodiacChart;
+    })(ZodiacChart);
+    ProfileChart.SouthernZodiacChart = SouthernZodiacChart;
     var GiroItaliaChart = (function (_super) {
         __extends(GiroItaliaChart, _super);
         function GiroItaliaChart() {
@@ -1130,11 +1363,11 @@ var ProfileChart;
             var topCenterPoint = new Point(area.x + area.width / 2, area.y);
             // var courseNameText = paper.text(textPoint.x, textPoint.y, data.courseName);
             // courseNameText.attr({ fontSize: "48px", fill: "#2ba7de", fontFamily: "Arial" });
-            var courseNamePoint = topCenterPoint.offset(new Vector(0, 5));
+            var courseNamePoint = topCenterPoint.offset(new Vector(0, 60));
             // var courseNameShadow = this.renderText(paper, data.courseName, courseNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             Text.render(paper, data.courseName, courseNamePoint, Alignment.centerTop, { fontSize: "48px", fill: "#676868", fontFamily: "Arial" });
             var name = data.athlete.displayName;
-            var resultNamePoint = topCenterPoint.offset(new Vector(0, 60));
+            var resultNamePoint = topCenterPoint.offset(new Vector(0, 5));
             // var personNameShadow = this.renderText(paper, name, personNamePoint.offset(new Vector(-2, 2)), Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial", opacity: 0.75 });
             Text.render(paper, name, resultNamePoint, Alignment.centerTop, { fontSize: "56px", fill: "#676868", fontFamily: "Arial" });
             if (this.settings.renderPersonProfile) {
@@ -1168,7 +1401,7 @@ var ProfileChart;
             }
             for (var i = 1; i < profile.length; i++) {
                 var length = Vector.create(profile[i - 1], profile[i]).getLength();
-                this.renderTrees(paper, profile[i - 1], profile[i], offset, Math.floor(length * 60 / totalLength));
+                this.renderTrees(paper, profileArea, profile[i - 1], profile[i], offset, Math.floor(length * 100 / totalLength));
             }
             this.renderOwlTree(paper, profile);
             if (this.settings.renderSkierAndTrack) {
@@ -1235,16 +1468,17 @@ var ProfileChart;
             paper.el("use", { "xlink:href": "#tree4", x: point.x, y: point.y, fill: color });
             var owl = paper.el("use", { "xlink:href": "#owl", x: point.x, y: point.y, opacity: 0 });
             var eyes = paper.el("use", { "xlink:href": "#owl_eyes", x: point.x, y: point.y });
-            eyes.hover(function (event) { _this.show(owl); }, function (event) { _this.hide(owl); });
+            eyes.hover(function (event) { _this.showElement(owl); }, function (event) { _this.hideElement(owl); });
         };
-        ForestChart.prototype.renderTrees = function (paper, from, to, offset, nrOfTrees) {
+        ForestChart.prototype.renderTrees = function (paper, profileArea, from, to, offset, nrOfTrees) {
             var colors = ["#588427", "#6a992f", "#48711e", "#31550e", "#3d6317", "#1f4100", "#395f15", "#3a6015", "#32560f", "#77a935", "#365f16", "#173900"];
             for (var i = 0; i < nrOfTrees; i++) {
                 var treeId = "#tree" + (Math.floor(Math.random() * 4) + 1);
                 var point = this.getRandomTreePoint(from, to, offset);
                 var color = colors[Math.floor(Math.random() * colors.length)];
-                var scaleX = 0.6 + Math.random() * 0.4;
-                var scaleY = 0.7 + Math.random() * 0.3;
+                var elevationScale = 0.6 + (point.y - profileArea.y) / profileArea.height * 0.6;
+                var scaleX = (0.6 + Math.random() * 0.4) * elevationScale;
+                var scaleY = (0.7 + Math.random() * 0.3) * elevationScale;
                 var transform = "scale(" + scaleX + ", " + scaleY + ", " + point.x + "," + point.y + ")"; // translate(" + (point.x * -1/scaleX) + ", " + (point.y * 1/scaleY) + ")";
                 paper.el("use", { "xlink:href": treeId, transform: transform, x: point.x / scaleX, y: point.y / scaleY, fill: color });
             }
@@ -1265,6 +1499,12 @@ var ProfileChart;
             return function () {
                 // el.animate({ opacity: "0" }, 1000);
             };
+        };
+        ForestChart.prototype.showElement = function (el) {
+            el.attr({ opacity: "1" });
+        };
+        ForestChart.prototype.hideElement = function (el) {
+            el.animate({ opacity: "0" }, 1000);
         };
         ForestChart.prototype.show = function (el) {
             return function () {

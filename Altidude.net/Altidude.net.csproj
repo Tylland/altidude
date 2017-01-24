@@ -313,6 +313,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\Partials\modal.html" />
+    <Content Include="App\ProfileChart\Templates\zodiac.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App\ProfileChart\Templates\giro_italia.svg" />
     <Content Include="App\ProfileChart\Templates\mountain_silhouette.svg" />
     <Content Include="App\ProfileChart\Templates\simply_sunshine.svg" />
@@ -337,7 +340,9 @@
     <Content Include="Images\Charts\Locked.png" />
     <Content Include="Images\Charts\Mountain Silhouette.png" />
     <Content Include="Images\Charts\Connecting dots.png" />
+    <Content Include="Images\Charts\Northern Zodiac.png" />
     <Content Include="Images\Charts\Simply Sunshine.png" />
+    <Content Include="Images\Charts\Southern Zodiac.png" />
     <Content Include="Images\Charts\The Forest.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\logo_test.png" />

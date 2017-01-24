@@ -18,6 +18,9 @@
             charts.push(new ProfileChart.ConnectingDotsChart());
             //charts.push(new ProfileChart.MountainSilhouetteChart());
             charts.push(new ProfileChart.GiroItaliaChart());
+            charts.push(new ProfileChart.NorthernZodiacChart());
+            charts.push(new ProfileChart.SouthernZodiacChart());
+
 
             return charts;
         };

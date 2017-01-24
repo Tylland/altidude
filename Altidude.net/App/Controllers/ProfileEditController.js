@@ -42,6 +42,12 @@ var Controllers;
                 this.chart = this.chartService.getChart(chartId);
             }
         };
+        ProfileEditController.prototype.isSelected = function (chartId) {
+            if (this.chart != undefined) {
+                return this.chart.id.toUpperCase() === chartId.toUpperCase();
+            }
+            return false;
+        };
         ProfileEditController.prototype.selectChart = function (chart) {
             this.chartSelectionVisible = false;
             this.chart = chart;

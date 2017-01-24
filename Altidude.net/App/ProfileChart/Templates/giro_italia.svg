@@ -8,7 +8,7 @@
       <stop offset="30%" stop-color="#D7E8BE" stop-opacity="1"/>
 
       <stop offset="70%" stop-color="#EDCAA0" stop-opacity="1"/>
-      <stop offset="90%" stop-color="#F8FAF9" stop-opacity="1"/>
+      <stop offset="90%" stop-color="#F8FAF9v" stop-opacity="1"/>
     </linearGradient>
   </defs>
 
