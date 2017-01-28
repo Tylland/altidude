@@ -3049,11 +3049,26 @@ module ProfileChart {
         legs: ILeg[];
     }
 
+    export interface IClimbCategary {
+        name: string;
+        threshold: number;
+    }
+
+    export interface IClimb {
+        start: ITrackpoint;
+        end: ITrackpoint;
+        category: IClimbCategary;
+        slope: number;
+        points: number;
+    }
+
+
     export interface ITrack {
         length: number;
         points: ITrackpoint[];
         firstPoint: ITrackpoint;
         lastPoint: ITrackpoint;
+        climbs: IClimb[];
     }
 
     export interface ILeg {

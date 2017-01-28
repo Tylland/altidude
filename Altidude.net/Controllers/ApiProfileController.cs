@@ -12,6 +12,7 @@ using Altidude.Files;
 using tcx20 = Altidude.Files.Tcx20;
 using gpx11 = Altidude.Files.Gpx11;
 using Altidude.Transformation;
+using Altidude.Infrastructure;
 
 namespace Altidude.net.Controllers
 {
@@ -113,7 +114,9 @@ namespace Altidude.net.Controllers
 
             }
 
-            return new Track(Guid.NewGuid(), trackPoints.ToArray());
+            var climbs = new ClimbFinder().Find(trackPoints.ToArray());
+
+            return new Track(Guid.NewGuid(), trackPoints.ToArray(), climbs);
         }
 
         public static Track CreateTrack(gpx11.gpxType gpx)
@@ -147,7 +150,10 @@ namespace Altidude.net.Controllers
                 }
             }
 
-            return new Track(Guid.NewGuid(), trackPoints.ToArray());
+            var climbs = new ClimbFinder().Find(trackPoints.ToArray());
+
+
+            return new Track(Guid.NewGuid(), trackPoints.ToArray(), climbs);
         }
 
         private string GetNameFromFilename(string filename)

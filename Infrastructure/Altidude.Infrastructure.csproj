@@ -81,8 +81,10 @@
     <Compile Include="AggregateNotFoundException.cs" />
     <Compile Include="AzureBlobChartImageManager.cs" />
     <Compile Include="AzureBlobStorage.cs" />
+    <Compile Include="ClimbFinder.cs" />
     <Compile Include="CustomSqlServerOrmLiteDialectProvider .cs" />
     <Compile Include="DbUpgrader.cs" />
+    <Compile Include="DouglasPeuckerTransformer.cs" />
     <Compile Include="GoogleMailSender.cs" />
     <Compile Include="InMemoryChartTypeView.cs" />
     <Compile Include="InMemoryDomainRepository.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ManualDateTimeProvider.cs" />
     <Compile Include="SystemDateTimeProvider.cs" />
+    <Compile Include="TrackPointNrOfPointsReducer.cs" />
     <Compile Include="WrongExpectedVersionException.cs" />
   </ItemGroup>
   <ItemGroup>

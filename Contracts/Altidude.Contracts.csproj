@@ -70,6 +70,8 @@
     <Compile Include="IHandleEvent.cs" />
     <Compile Include="Types\Athlete.cs" />
     <Compile Include="Types\ChartType.cs" />
+    <Compile Include="Types\Climb.cs" />
+    <Compile Include="Types\ClimbCategory.cs" />
     <Compile Include="Types\Coordinate.cs" />
     <Compile Include="Types\GeoPolygon.cs" />
     <Compile Include="Types\GeoBoundary.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Types\StravaActivitySummary.cs" />
     <Compile Include="Types\Track.cs" />
     <Compile Include="Types\TrackPoint.cs" />
+    <Compile Include="Types\TrackSegment.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserChartType.cs" />
     <Compile Include="Types\UserLevel.cs" />

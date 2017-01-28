@@ -42,7 +42,10 @@
                     <li>@Html.ActionLink("Profiles", "index", "profile")</li>
                     <li>@Html.ActionLink("Contact", "contact", "home")</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
+
+                @{
+                    Html.RenderAction("UserLoginPartial", "User");
+                }
             </div>
         </div>
     </div>

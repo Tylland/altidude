@@ -28,6 +28,7 @@ using Altidude.Contracts.Types;
 using Newtonsoft.Json.Serialization;
 using System.Configuration;
 using Serilog;
+using Altidude.Infrastructure;
 
 namespace Altidude.net.Controllers
 {
@@ -266,6 +267,7 @@ namespace Altidude.net.Controllers
             var id = Guid.NewGuid();
             var track = CreateTrack(activity, streams);
 
+            
             var application = ApplicationManager.BuildApplication();
 
             application.ExecuteCommand(new CreateProfile(id, UserId, activity.Name, track));
@@ -307,7 +309,9 @@ namespace Altidude.net.Controllers
                 trackPoints.Add(trackpoint);
             }
 
-            return new Track(Guid.NewGuid(), trackPoints.ToArray());
+            var climbs = new ClimbFinder().Find(trackPoints.ToArray());
+
+            return new Track(Guid.NewGuid(), trackPoints.ToArray(), climbs);
         }
 
 

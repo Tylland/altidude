@@ -1,7 +1,7 @@
 var altidudeApp = angular.module('altidudeApp', ['ui.bootstrap', 'ngFileUpload'])
     .value('serviceConfig', { qrunchtimeApiBaseUri: "http://localhost/qrunchtime", altidudeApiBaseUri: "/" });
 //jhhkjhjk 
-//# sourceMappingURL=app.js.map
+
 angular.module('altidudeApp').directive('profileChart', ['$http', '$window', function ($http, $window) {
         var chartTypeTemplateUrl;
         var templateLoaded = false;
@@ -64,7 +64,7 @@ angular.module('altidudeApp').directive('profileChart', ['$http', '$window', fun
             }
         };
     }]);
-//# sourceMappingURL=ProfileChart.js.map
+
 var Directives;
 (function (Directives) {
     var StaticProfileChart = (function () {
@@ -152,7 +152,7 @@ var Directives;
 //        }
 //    };
 //}]);
-//# sourceMappingURL=StaticProfileChart.js.map
+
 var Services;
 (function (Services) {
     var ChartEntry = (function () {
@@ -192,7 +192,7 @@ var Services;
     Services.ChartService = ChartService;
     angular.module('altidudeApp').service('chartService', Services.ChartService);
 })(Services || (Services = {}));
-//# sourceMappingURL=ChartService.js.map
+
 var Services;
 (function (Services) {
     var ChartTypeService = (function () {
@@ -212,7 +212,7 @@ var Services;
     Services.ChartTypeService = ChartTypeService;
     angular.module('altidudeApp').service('chartTypeService', Services.ChartTypeService);
 })(Services || (Services = {}));
-//# sourceMappingURL=ChartTypeService.js.map
+
 var Services;
 (function (Services) {
     var ModalService = (function () {
@@ -264,7 +264,7 @@ var Services;
     Services.ModalService = ModalService;
     angular.module('altidudeApp').service('modalService', Services.ModalService);
 })(Services || (Services = {}));
-//# sourceMappingURL=ModalService.js.map
+
 var Profile;
 (function (Profile) {
     var ProfileService = (function () {
@@ -308,7 +308,7 @@ var Profile;
     Profile.ProfileService = ProfileService;
     angular.module('altidudeApp').service('profileService', Profile.ProfileService);
 })(Profile || (Profile = {}));
-//# sourceMappingURL=ProfileService.js.map
+
 var Services;
 (function (Services) {
     var StravaService = (function () {
@@ -362,7 +362,7 @@ var Services;
 //        };
 //        return factory;
 //    }]); 
-//# sourceMappingURL=StravaService.js.map
+
 var Controllers;
 (function (Controllers) {
     var ProfileDetailController = (function () {
@@ -418,7 +418,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-//# sourceMappingURL=ProfileDetailController.js.map
+
 var Controllers;
 (function (Controllers) {
     var ProfileEditController = (function () {
@@ -534,7 +534,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-//# sourceMappingURL=ProfileEditController.js.map
+
 var Controllers;
 (function (Controllers) {
     var ProfileImportController = (function () {
@@ -704,7 +704,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-//# sourceMappingURL=ProfileImportController.js.map
+
 var AltCore;
 (function (AltCore) {
     var Vector = (function () {
@@ -744,7 +744,7 @@ var AltCore;
     })();
     AltCore.Vector = Vector;
 })(AltCore || (AltCore = {}));
-//# sourceMappingURL=AltCore.js.map
+
 /// <reference path="../definitions/snap.svg.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -2908,4 +2908,3 @@ var ProfileChart;
     })();
     ProfileChart.MountainGenerator = MountainGenerator;
 })(ProfileChart || (ProfileChart = {}));
-//# sourceMappingURL=profile-chart.js.map

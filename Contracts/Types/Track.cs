@@ -10,6 +10,8 @@ namespace Altidude.Contracts.Types
 
         public TrackPoint[] Points { get; set; }
 
+        public Climb[] Climbs { get; set; }
+
         public TrackPoint FirstPoint
         {
             get { return Points[0]; }
@@ -75,6 +77,12 @@ namespace Altidude.Contracts.Types
             }
 
             return LastPoint;
+        }
+        public Track(Guid id, TrackPoint[] points, Climb[] climbs)
+        {
+            Id = id;
+            Points = points;
+            Climbs = climbs;
         }
         public Track(Guid id, TrackPoint[] points)
         {
