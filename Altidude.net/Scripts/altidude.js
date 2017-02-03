@@ -1,7 +1,7 @@
 var altidudeApp = angular.module('altidudeApp', ['ui.bootstrap', 'ngFileUpload'])
     .value('serviceConfig', { qrunchtimeApiBaseUri: "http://localhost/qrunchtime", altidudeApiBaseUri: "/" });
 //jhhkjhjk 
-
+//# sourceMappingURL=app.js.map
 angular.module('altidudeApp').directive('profileChart', ['$http', '$window', function ($http, $window) {
         var chartTypeTemplateUrl;
         var templateLoaded = false;
@@ -51,9 +51,12 @@ angular.module('altidudeApp').directive('profileChart', ['$http', '$window', fun
                 }
                 function render(width) {
                     if (templateLoaded && scope.chart != undefined && scope.profile != undefined && scope.result != undefined) {
-                        scope.chart.render(scope.profile, scope.result, width);
-                        // if (scope.createBitmap)
-                        convertToBitmap();
+                        try {
+                            scope.chart.render(scope.profile, scope.result, width);
+                        }
+                        finally {
+                            convertToBitmap();
+                        }
                     }
                 }
                 var width = el.width();
@@ -64,7 +67,7 @@ angular.module('altidudeApp').directive('profileChart', ['$http', '$window', fun
             }
         };
     }]);
-
+//# sourceMappingURL=ProfileChart.js.map
 var Directives;
 (function (Directives) {
     var StaticProfileChart = (function () {
@@ -152,7 +155,7 @@ var Directives;
 //        }
 //    };
 //}]);
-
+//# sourceMappingURL=StaticProfileChart.js.map
 var Services;
 (function (Services) {
     var ChartEntry = (function () {
@@ -192,7 +195,7 @@ var Services;
     Services.ChartService = ChartService;
     angular.module('altidudeApp').service('chartService', Services.ChartService);
 })(Services || (Services = {}));
-
+//# sourceMappingURL=ChartService.js.map
 var Services;
 (function (Services) {
     var ChartTypeService = (function () {
@@ -212,7 +215,7 @@ var Services;
     Services.ChartTypeService = ChartTypeService;
     angular.module('altidudeApp').service('chartTypeService', Services.ChartTypeService);
 })(Services || (Services = {}));
-
+//# sourceMappingURL=ChartTypeService.js.map
 var Services;
 (function (Services) {
     var ModalService = (function () {
@@ -264,7 +267,7 @@ var Services;
     Services.ModalService = ModalService;
     angular.module('altidudeApp').service('modalService', Services.ModalService);
 })(Services || (Services = {}));
-
+//# sourceMappingURL=ModalService.js.map
 var Profile;
 (function (Profile) {
     var ProfileService = (function () {
@@ -308,7 +311,7 @@ var Profile;
     Profile.ProfileService = ProfileService;
     angular.module('altidudeApp').service('profileService', Profile.ProfileService);
 })(Profile || (Profile = {}));
-
+//# sourceMappingURL=ProfileService.js.map
 var Services;
 (function (Services) {
     var StravaService = (function () {
@@ -362,7 +365,7 @@ var Services;
 //        };
 //        return factory;
 //    }]); 
-
+//# sourceMappingURL=StravaService.js.map
 var Controllers;
 (function (Controllers) {
     var ProfileDetailController = (function () {
@@ -418,7 +421,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileDetailController.js.map
 var Controllers;
 (function (Controllers) {
     var ProfileEditController = (function () {
@@ -534,7 +537,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileEditController.js.map
 var Controllers;
 (function (Controllers) {
     var ProfileImportController = (function () {
@@ -704,7 +707,7 @@ var Controllers;
 //            });
 //        };
 //    }]);
-
+//# sourceMappingURL=ProfileImportController.js.map
 var AltCore;
 (function (AltCore) {
     var Vector = (function () {
@@ -744,7 +747,7 @@ var AltCore;
     })();
     AltCore.Vector = Vector;
 })(AltCore || (AltCore = {}));
-
+//# sourceMappingURL=AltCore.js.map
 /// <reference path="../definitions/snap.svg.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -1561,6 +1564,15 @@ var ProfileChart;
                 this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
             }
         };
+        SimplySunshineChart.prototype.renderClimbs = function (paper, data, chartArea) {
+            if (data.track != undefined && data.track.climbs != undefined) {
+                for (var i = 0; i < data.track.climbs.length; i++) {
+                    var climb = data.track.climbs[i];
+                    var segmentPoints = data.profile.getSegmentPoints(climb.start, climb.end);
+                    paper.path(_super.prototype.toPathString.call(this, segmentPoints)).attr({ fill: "none", stroke: "#FF0000" });
+                }
+            }
+        };
         SimplySunshineChart.prototype.renderSplits = function (paper, data, chartArea) {
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var transform = new TransformProcessor(source, chartArea);
@@ -1608,6 +1620,7 @@ var ProfileChart;
             var chartArea = surfaceArea.apply(new Margin(widthMargin * 2, heightMargin, widthMargin, 80));
             // var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
             var data = new ChartData(profile, result, chartArea);
+            data.profile.addTransform(new ReduceToNumberProcessor(1000));
             var height = (surfaceArea.height / surfaceArea.width) * width;
             var paper = Snap("#simplySunshineChart");
             paper.attr({ width: width, height: height });
@@ -1616,6 +1629,7 @@ var ProfileChart;
             this.renderBackground(paper, this.surfaceArea);
             this.renderGrid(paper, data, chartArea);
             this.renderProfile(paper, data, chartArea);
+            // this.renderClimbs(paper, data, chartArea);
             this.renderSplits(paper, data, chartArea);
             this.renderPlaces(paper, data, chartArea);
             this.renderSunAndClouds(paper);
@@ -2401,16 +2415,27 @@ var ProfileChart;
     })();
     ProfileChart.ChartRenderingSettings = ChartRenderingSettings;
     var ChartProfile = (function () {
-        function ChartProfile(points, target) {
-            this.points = points;
-            var extent = new Extent([new Point(0, 0)]);
-            extent.containPoints(points);
-            var source = extent.toRectangle();
-            this.transform = new TransformProcessor(source, target);
-            this.points = this.transform.process(points);
+        function ChartProfile(trackPoints) {
+            this.trackPoints = trackPoints;
+            this.pipeline = new PointProcessorPipeLine();
         }
-        ChartProfile.prototype.tpPoint = function (trackpoint) {
-            return this.transform.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+        ChartProfile.prototype.addTransform = function (transform) {
+            this.pipeline.add(transform);
+            this.points = this.pipeline.process(this.trackPoints);
+        };
+        ChartProfile.prototype.toPoint = function (trackpoint) {
+            return this.pipeline.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+        };
+        ChartProfile.prototype.getSegmentPoints = function (start, end) {
+            var segmentPoints = new Array();
+            var startPoint = this.toPoint(start);
+            var endPoint = this.toPoint(end);
+            for (var i = 0; i < this.points.length; i++) {
+                if (this.points[i].x >= startPoint.x && this.points[i].x <= endPoint.x) {
+                    segmentPoints.push(this.points[i]);
+                }
+            }
+            return segmentPoints;
         };
         return ChartProfile;
     })();
@@ -2428,6 +2453,7 @@ var ProfileChart;
             console.log(JSON.stringify(result));
             this.courseName = profile.name;
             this.athlete = result.athlete;
+            this.track = profile.track;
             this.splits = [];
             this.legs = [];
             this.courseProfile = [];
@@ -2444,6 +2470,8 @@ var ProfileChart;
             var source = new Rectangle(this.distanceAxis.min, this.altitudeAxis.min, this.distanceAxis.getSpan(), this.altitudeAxis.getSpan());
             this.transform = new TransformProcessor(source, target);
             pipeline.add(this.transform);
+            this.profile = new ChartProfile(this.courseProfile);
+            this.profile.addTransform(this.transform);
             this.courseProfile = pipeline.process(this.courseProfile);
             var converter = new TrackpointConverter(pipeline);
             this.places = new Array();
@@ -2908,3 +2936,4 @@ var ProfileChart;
     })();
     ProfileChart.MountainGenerator = MountainGenerator;
 })(ProfileChart || (ProfileChart = {}));
+//# sourceMappingURL=profile-chart.js.map

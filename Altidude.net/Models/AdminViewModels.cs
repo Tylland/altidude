@@ -11,7 +11,9 @@ namespace Altidude.net.Models
     {
         public int TotalNrOfUsers { get; set; }
         public int TotalNrOfProfiles { get; set; }
+        public int TotalNrOfViews { get; set; }
         public int TotalNrOfPlaces { get; set; }
+        
         public DateTime Timestamp { get; set; }
     }
 

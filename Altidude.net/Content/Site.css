@@ -294,6 +294,10 @@ display:block;
     padding-bottom: 20px;
 }
 
+.badge-level {
+    background-color: #FFFFFF;
+    color: #3276b1;
+}
 
 /** Tango Color Scheme
  *

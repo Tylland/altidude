@@ -1075,6 +1075,20 @@ module ProfileChart {
             }
         }
 
+        renderClimbs(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
+
+            if (data.track != undefined && data.track.climbs != undefined) {
+
+                for (var i: number = 0; i < data.track.climbs.length; i++) {
+                    var climb: IClimb = data.track.climbs[i];
+
+                    var segmentPoints: Point[] = data.profile.getSegmentPoints(climb.start, climb.end);
+                     
+                    paper.path(super.toPathString(segmentPoints)).attr({ fill: "none", stroke: "#FF0000" })
+                }
+            }
+        }
+
         renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle): void {
             var source: Rectangle = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
 
@@ -1150,6 +1164,9 @@ module ProfileChart {
 
             var data: ChartData = new ChartData(profile, result, chartArea);
 
+            data.profile.addTransform(new ReduceToNumberProcessor(1000));
+
+
             var height: number = (surfaceArea.height / surfaceArea.width) * width;
 
             var paper: Snap.Paper = Snap("#simplySunshineChart");
@@ -1161,6 +1178,7 @@ module ProfileChart {
             this.renderBackground(paper, this.surfaceArea);
             this.renderGrid(paper, data, chartArea);
             this.renderProfile(paper, data, chartArea);
+           // this.renderClimbs(paper, data, chartArea);
             this.renderSplits(paper, data, chartArea);
             this.renderPlaces(paper, data, chartArea);
             this.renderSunAndClouds(paper);
@@ -2327,22 +2345,36 @@ module ProfileChart {
     }
 
     class ChartProfile {
-        transform: TransformProcessor;
+        private pipeline: PointProcessorPipeLine = new PointProcessorPipeLine();
+        public points: Point[];
 
-        tpPoint(trackpoint: ITrackpoint): Point {
-            return this.transform.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+
+        public addTransform(transform: PointProcessor): void {
+            this.pipeline.add(transform);
+
+            this.points = this.pipeline.process(this.trackPoints);
         }
 
-        constructor(public points: Point[], target: Rectangle) {
-            var extent: Extent = new Extent([new Point(0, 0)]);
+        public toPoint(trackpoint: ITrackpoint): Point {
+            return this.pipeline.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+        }
 
-            extent.containPoints(points);
+        public getSegmentPoints(start: ITrackpoint, end: ITrackpoint): Point[] {
+            var segmentPoints: Point[] = new Array<Point>();
 
-            var source: Rectangle = extent.toRectangle();
+            var startPoint: Point = this.toPoint(start);
+            var endPoint: Point = this.toPoint(end);
 
-            this.transform = new TransformProcessor(source, target);
+            for (let i: number = 0; i < this.points.length; i++) {
+                if (this.points[i].x >= startPoint.x && this.points[i].x <= endPoint.x) {
+                    segmentPoints.push(this.points[i]);
+                }
+            }
 
-            this.points = this.transform.process(points);
+            return segmentPoints;
+        }  
+
+        constructor(public trackPoints: Point[]) {
         }
     }
 
@@ -2376,6 +2408,8 @@ module ProfileChart {
         public distanceAxis: DistanceAxis;
         public altitudeAxis: AltitudeAxis;
         public profileExtent: Rectangle;
+        public profile: ChartProfile;
+        public track: ITrack;
 
         public transform: TransformProcessor;
         
@@ -2391,6 +2425,7 @@ module ProfileChart {
             console.log(JSON.stringify(result));
             this.courseName = profile.name;
             this.athlete = result.athlete;
+            this.track = profile.track;
 
             this.splits = [];
             this.legs = [];
@@ -2404,7 +2439,6 @@ module ProfileChart {
             }
 
             var extent: Extent = new Extent(this.courseProfile);
-
             this.profileExtent = extent.toRectangle();
 
             this.distanceAxis = new DistanceAxis(0, profile.track.length);
@@ -2418,7 +2452,12 @@ module ProfileChart {
             this.transform = new TransformProcessor(source, target);
             pipeline.add(this.transform);
 
+            this.profile = new ChartProfile(this.courseProfile);
+            this.profile.addTransform(this.transform);
+
+
             this.courseProfile = pipeline.process(this.courseProfile);
+
 
             var converter: TrackpointConverter = new TrackpointConverter(pipeline);
 

@@ -130,6 +130,11 @@ namespace Altidude.Infrastructure
             return envelopes.Select(env => new ProfileSummary(env.Id, env.UserId, env.Name, env.NrOfViews, env.CreatedTime)).ToList();
 
         }
+
+        public int GetTotalNrOfViews()
+        {
+            return _db.Select<ProfileEnvelope>().Sum(env => env.NrOfViews);
+        }
     }
 
     public class PayloadHelper

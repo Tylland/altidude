@@ -814,6 +814,15 @@ var ProfileChart;
                 this.renderPlace(paper, chartArea, data.places[i].point, data.places[i].name, i);
             }
         };
+        SimplySunshineChart.prototype.renderClimbs = function (paper, data, chartArea) {
+            if (data.track != undefined && data.track.climbs != undefined) {
+                for (var i = 0; i < data.track.climbs.length; i++) {
+                    var climb = data.track.climbs[i];
+                    var segmentPoints = data.profile.getSegmentPoints(climb.start, climb.end);
+                    paper.path(_super.prototype.toPathString.call(this, segmentPoints)).attr({ fill: "none", stroke: "#FF0000" });
+                }
+            }
+        };
         SimplySunshineChart.prototype.renderSplits = function (paper, data, chartArea) {
             var source = new Rectangle(data.distanceAxis.min, data.altitudeAxis.min, data.distanceAxis.getSpan(), data.altitudeAxis.getSpan());
             var transform = new TransformProcessor(source, chartArea);
@@ -861,6 +870,7 @@ var ProfileChart;
             var chartArea = surfaceArea.apply(new Margin(widthMargin * 2, heightMargin, widthMargin, 80));
             // var profileArea: Rectangle = chartArea.apply(new Margin(0, chartArea.height / 4, 0, chartArea.height / 2));
             var data = new ChartData(profile, result, chartArea);
+            data.profile.addTransform(new ReduceToNumberProcessor(1000));
             var height = (surfaceArea.height / surfaceArea.width) * width;
             var paper = Snap("#simplySunshineChart");
             paper.attr({ width: width, height: height });
@@ -869,6 +879,7 @@ var ProfileChart;
             this.renderBackground(paper, this.surfaceArea);
             this.renderGrid(paper, data, chartArea);
             this.renderProfile(paper, data, chartArea);
+            // this.renderClimbs(paper, data, chartArea);
             this.renderSplits(paper, data, chartArea);
             this.renderPlaces(paper, data, chartArea);
             this.renderSunAndClouds(paper);
@@ -1654,16 +1665,27 @@ var ProfileChart;
     })();
     ProfileChart.ChartRenderingSettings = ChartRenderingSettings;
     var ChartProfile = (function () {
-        function ChartProfile(points, target) {
-            this.points = points;
-            var extent = new Extent([new Point(0, 0)]);
-            extent.containPoints(points);
-            var source = extent.toRectangle();
-            this.transform = new TransformProcessor(source, target);
-            this.points = this.transform.process(points);
+        function ChartProfile(trackPoints) {
+            this.trackPoints = trackPoints;
+            this.pipeline = new PointProcessorPipeLine();
         }
-        ChartProfile.prototype.tpPoint = function (trackpoint) {
-            return this.transform.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+        ChartProfile.prototype.addTransform = function (transform) {
+            this.pipeline.add(transform);
+            this.points = this.pipeline.process(this.trackPoints);
+        };
+        ChartProfile.prototype.toPoint = function (trackpoint) {
+            return this.pipeline.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
+        };
+        ChartProfile.prototype.getSegmentPoints = function (start, end) {
+            var segmentPoints = new Array();
+            var startPoint = this.toPoint(start);
+            var endPoint = this.toPoint(end);
+            for (var i = 0; i < this.points.length; i++) {
+                if (this.points[i].x >= startPoint.x && this.points[i].x <= endPoint.x) {
+                    segmentPoints.push(this.points[i]);
+                }
+            }
+            return segmentPoints;
         };
         return ChartProfile;
     })();
@@ -1681,6 +1703,7 @@ var ProfileChart;
             console.log(JSON.stringify(result));
             this.courseName = profile.name;
             this.athlete = result.athlete;
+            this.track = profile.track;
             this.splits = [];
             this.legs = [];
             this.courseProfile = [];
@@ -1697,6 +1720,8 @@ var ProfileChart;
             var source = new Rectangle(this.distanceAxis.min, this.altitudeAxis.min, this.distanceAxis.getSpan(), this.altitudeAxis.getSpan());
             this.transform = new TransformProcessor(source, target);
             pipeline.add(this.transform);
+            this.profile = new ChartProfile(this.courseProfile);
+            this.profile.addTransform(this.transform);
             this.courseProfile = pipeline.process(this.courseProfile);
             var converter = new TrackpointConverter(pipeline);
             this.places = new Array();

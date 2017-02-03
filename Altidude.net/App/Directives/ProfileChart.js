@@ -47,9 +47,12 @@ angular.module('altidudeApp').directive('profileChart', ['$http', '$window', fun
                 }
                 function render(width) {
                     if (templateLoaded && scope.chart != undefined && scope.profile != undefined && scope.result != undefined) {
-                        scope.chart.render(scope.profile, scope.result, width);
-                        // if (scope.createBitmap)
-                        convertToBitmap();
+                        try {
+                            scope.chart.render(scope.profile, scope.result, width);
+                        }
+                        finally {
+                            convertToBitmap();
+                        }
                     }
                 }
                 var width = el.width();

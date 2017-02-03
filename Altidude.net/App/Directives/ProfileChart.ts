@@ -59,11 +59,11 @@
 
             function render(width) {
                 if (templateLoaded && scope.chart != undefined && scope.profile != undefined && scope.result != undefined) {
-                    scope.chart.render(scope.profile, scope.result, width);
-
-                   // if (scope.createBitmap)
+                    try {
+                        scope.chart.render(scope.profile, scope.result, width);
+                    } finally {
                         convertToBitmap();
-                        
+                    }
                 }
             }
 

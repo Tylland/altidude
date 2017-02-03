@@ -61,6 +61,7 @@ namespace Altidude.net.Controllers
 
             model.TotalNrOfUsers = views.Users.GetAll().Count;
             model.TotalNrOfProfiles = views.Profiles.GetAll().Count;
+            model.TotalNrOfViews = views.Profiles.GetTotalNrOfViews();
             model.TotalNrOfPlaces = views.Places.GetAll().Count;
             model.Timestamp = DateTime.Now;
 
