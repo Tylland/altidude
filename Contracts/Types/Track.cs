@@ -28,19 +28,25 @@ namespace Altidude.Contracts.Types
                 return Points.Length > 0 ? LastPoint.Distance : 0.0;
             }
         }
-        public TrackPoint[] GetSubTrack(double startDistance, double endDistance)
+
+        public static TrackPoint[] GetSegment(TrackPoint[] points, TrackPoint start, TrackPoint end)
+        {
+            return points.SkipWhile(point => !point.Equals(start)).TakeWhile(point => !point.Equals(end)).ToArray();
+        }
+
+        public TrackPoint[] GetSegment(double startDistance, double endDistance)
         {
             return Points.SkipWhile(point => point.Distance < startDistance).TakeWhile(point => point.Distance <= endDistance).ToArray();
 
             //var start = GetPointAtDistance(startDistance);
             //var end = GetPointAtDistance(endDistance);
 
-            //return GetSubTrack(start, end);
+            //return GetSegment(start, end);
         }
 
-        public TrackPoint[] GetSubTrack(TrackPoint start, TrackPoint end)
+        public TrackPoint[] GetSegment(TrackPoint start, TrackPoint end)
         {
-            return Points.SkipWhile(point => point != start).TakeWhile(point => point != end).ToArray();
+            return GetSegment(Points, start, end);
         }
 
         public TrackPoint FindClosestPointAtDistance(double distance)

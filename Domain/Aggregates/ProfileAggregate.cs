@@ -170,7 +170,7 @@ namespace Altidude.Domain.Aggregates
 
         private Leg CreateLeg(Track track, double startDistance, double endDistance)
         {
-            var points = track.GetSubTrack(startDistance, endDistance);
+            var points = track.GetSegment(startDistance, endDistance);
             var ascending = 0.0;
             var descending = 0.0;
 

@@ -1,14 +1,43 @@
-﻿using Altidude.Contracts.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Altidude.Contracts.Types;
 
 namespace Altidude.Infrastructure
 {
     public class ClimbFinder
     {
+        private double CalcSlopeGrade(TrackPoint start, TrackPoint end)
+        {
+            var distance = end.Distance - start.Distance;
+            var rise = end.Altitude - start.Altitude;
+
+            var run = Math.Sqrt(Math.Pow(distance, 2) - Math.Pow(rise, 2));
+
+            return rise / run;
+        }
+        private double CalcAscendingDistance(TrackPoint[] points, TrackPoint start, TrackPoint end)
+        {
+            var segment = Track.GetSegment(points, start, end);
+
+            TrackPoint lastPoint = null;
+            var distance = 0.0;
+
+            foreach (var trackPoint in segment)
+            {
+                if (lastPoint != null)
+                {
+                    var ascending = trackPoint.Altitude >= lastPoint.Altitude;
+
+                    if (ascending)
+                        distance += lastPoint.DistanceTo(trackPoint);
+                }
+
+                lastPoint = trackPoint;
+            }
+
+            return distance;
+        }
         private List<Climb> FindClimbs(TrackPoint[] points)
         {
             var climbs = new List<Climb>();
@@ -17,8 +46,9 @@ namespace Altidude.Infrastructure
             {
                 for (int j = i + 1; j < points.Length; j++)
                 {
-                    var distance = points[j].Distance - points[i].Distance;
-                    var slope = (points[j].Altitude - points[i].Altitude) / distance;
+                    var slope = CalcSlopeGrade(points[i], points[j]);
+                    var distance = CalcAscendingDistance(points, points[i], points[j]);
+
                     var climbPoints = slope * 100 * distance;
 
                     var category = ClimbCategory.GetCategory(climbPoints);
@@ -30,8 +60,6 @@ namespace Altidude.Infrastructure
 
             return climbs;
         }
-
-
 
         public Climb[] Find(TrackPoint[] points)
         {
