@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddProfilePlace.cs" />
+    <Compile Include="Commands\ImportElevation.cs" />
     <Compile Include="Commands\DeleteProfile.cs" />
     <Compile Include="Commands\UpdateUserSettings.cs" />
     <Compile Include="Commands\RegisterUserExperience.cs" />

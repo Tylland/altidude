@@ -1,5 +1,6 @@
 ﻿using Altidude.Contracts.Commands;
 using Altidude.Domain.Aggregates;
+using Altidude.Domain.Aggregates.Profile;
 using System;
 
 namespace Altidude.Domain.CommandHandlers
@@ -10,20 +11,22 @@ namespace Altidude.Domain.CommandHandlers
         private readonly IDateTimeProvider _dateTimeProvider;
         private IUserService _userService;
         private IPlaceFinder _placeFinder;
+        private IElevationService _elevationService;
 
-        public ProfileCommandHandler(IDomainRepository domainRepository, IDateTimeProvider dateTimeProvider, IUserService userService, IPlaceFinder placeFinder)
+        public ProfileCommandHandler(IDomainRepository domainRepository, IDateTimeProvider dateTimeProvider, IUserService userService, IPlaceFinder placeFinder, IElevationService elevationService)
         {
             _domainRepository = domainRepository;
             _dateTimeProvider = dateTimeProvider;
             _userService = userService;
             _placeFinder = placeFinder;
+            _elevationService = elevationService;
         }
 
         public IAggregate Handle(CreateProfile command)
         {
             var user = _userService.GetById(command.UserId);
 
-            return ProfileAggregate.Create(command.Id, user, command.Name, command.Track, _dateTimeProvider, _placeFinder);
+            return ProfileAggregate.Create(command.Id, user, command.Name, command.Track, _dateTimeProvider, _placeFinder, _elevationService);
         }
 
         public IAggregate Handle(ChangeChart command)

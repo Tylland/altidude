@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Serilog">
+      <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +46,7 @@
     <Compile Include="AggregateBase.cs" />
     <Compile Include="Aggregates\ProfileAggregate.cs" />
     <Compile Include="Aggregates\Profile\IChartTypeService.cs" />
+    <Compile Include="Aggregates\Profile\IElevationService.cs" />
     <Compile Include="Aggregates\User\UserAggregate.cs" />
     <Compile Include="CommandDispatcher.cs" />
     <Compile Include="CommandHandlers\UserCommandHandler.cs" />

@@ -1,5 +1,6 @@
 ﻿using Altidude.Contracts;
 using Altidude.Contracts.Commands;
+using Altidude.Domain.Aggregates.Profile;
 using Altidude.Domain.CommandHandlers;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace Altidude.Domain
     {
         private readonly CommandDispatcher _commandDispatcher;
 
-        public DomainEntry(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IEnumerable<Action<ICommand>> preExecutionPipe = null, IEnumerable<Action<object>> postExecutionPipe = null)
+        public DomainEntry(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IElevationService elevationService, IEnumerable<Action<ICommand>> preExecutionPipe = null, IEnumerable<Action<object>> postExecutionPipe = null)
         {
             preExecutionPipe = preExecutionPipe ?? Enumerable.Empty<Action<ICommand>>();
             postExecutionPipe = CreatePostExecutionPipe(postExecutionPipe);
 
-            _commandDispatcher = CreateCommandDispatcher(domainRepository, eventBus, dateTimeProvider, userService, levelService, placeFinder, preExecutionPipe, postExecutionPipe);
+            _commandDispatcher = CreateCommandDispatcher(domainRepository, eventBus, dateTimeProvider, userService, levelService, placeFinder, elevationService, preExecutionPipe, postExecutionPipe);
         }
 
         public void ExecuteCommand<TCommand>(TCommand command) where TCommand : ICommand
@@ -26,7 +27,7 @@ namespace Altidude.Domain
             _commandDispatcher.ExecuteCommand(command);
         }
 
-        private CommandDispatcher CreateCommandDispatcher(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IEnumerable<Action<ICommand>> preExecutionPipe, IEnumerable<Action<object>> postExecutionPipe)
+        private CommandDispatcher CreateCommandDispatcher(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IElevationService elevationService, IEnumerable<Action<ICommand>> preExecutionPipe, IEnumerable<Action<object>> postExecutionPipe)
         {
             var commandDispatcher = new CommandDispatcher(domainRepository, eventBus, preExecutionPipe, postExecutionPipe);
 
@@ -35,7 +36,7 @@ namespace Altidude.Domain
             commandDispatcher.RegisterHandler<RegisterUserExperience>(userCommandHandler);
             commandDispatcher.RegisterHandler<UpdateUserSettings>(userCommandHandler);
 
-            var profileCommandHandler = new ProfileCommandHandler(domainRepository, dateTimeProvider, userService, placeFinder);
+            var profileCommandHandler = new ProfileCommandHandler(domainRepository, dateTimeProvider, userService, placeFinder, elevationService);
             commandDispatcher.RegisterHandler<CreateProfile>(profileCommandHandler);
             commandDispatcher.RegisterHandler<ChangeChart>(profileCommandHandler);
             commandDispatcher.RegisterHandler<RegisterProfileView>(profileCommandHandler);

@@ -28,7 +28,7 @@ namespace Domain.Test
             _domainRepository = new InMemoryDomainRespository();
             _domainRepository.AddEvents(_preConditions);
 
-            return new DomainEntry(_domainRepository, null, DateTimeProvider, UserService, UserLevelService, PlaceRepository as IPlaceFinder);
+            return new DomainEntry(_domainRepository, null, DateTimeProvider, UserService, UserLevelService, PlaceRepository as IPlaceFinder, null);
         }
 
         [TestInitialize]

@@ -1,5 +1,7 @@
 ﻿using Altidude.Contracts.Events;
 using Altidude.Contracts.Types;
+using Altidude.Domain.Aggregates.Profile;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ namespace Altidude.Domain.Aggregates
 {
     public class ProfileAggregate : AggregateBase
     {
+        private static ILogger _log = Log.ForContext<ProfileAggregate>();
+
         public Guid UserId { get; set; }
         public Guid ChartId { get; set; }
         public string Name { get; set; }
@@ -201,9 +205,13 @@ namespace Altidude.Domain.Aggregates
 
             return legs.ToArray();
         }
-        public ProfileAggregate(Guid id, User user, string name, Track track, IDateTimeProvider datetime, IPlaceFinder placeFinder)
+
+        public ProfileAggregate(Guid id, User user, string name, Track track, IDateTimeProvider datetime, IPlaceFinder placeFinder, IElevationService elevationService)
             : this()
         {
+            if (!track.HasElevation())
+                elevationService.ImportElevationTo(track);
+
             var profilePlaces = CreateProfilePlaces(user.Id, track, placeFinder);
             var result = CreateResult(user, track, profilePlaces);
             var legs = CreateLegs(track, profilePlaces);
@@ -219,6 +227,7 @@ namespace Altidude.Domain.Aggregates
             Track = @event.Track;
             Places = @event.Places;
         }
+
         public void Apply(ChartChanged @event)
         {
             ChartId = @event.ChartId;
@@ -232,7 +241,7 @@ namespace Altidude.Domain.Aggregates
             Deleted = true; 
         }
 
-        public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService)
+        public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService, IElevationService elevationService)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("id  can't be empty", "id");
@@ -244,7 +253,7 @@ namespace Altidude.Domain.Aggregates
                 throw new ArgumentException("track.Id can't be empty", "track.Id");
 
 
-            return new ProfileAggregate(id, user, name, track, dateTimeProvider, placeService);
+            return new ProfileAggregate(id, user, name, track, dateTimeProvider, placeService, elevationService);
         }
 
         public void AddPlace(string name, double distance, double size, bool split)

@@ -63,6 +63,15 @@ namespace Altidude.Contracts.Types
             return closestPoint;
         }
 
+        public bool HasElevation()
+        {
+            var min = Points.Min(p => p.Altitude);
+            var max = Points.Max(p => p.Altitude);
+
+            return (max - min) > 0.5;
+        }
+
+
         public TrackPoint CalcPointAtDistance(double distance)
         {
             for (var i = 1; i < Points.Length; i++)

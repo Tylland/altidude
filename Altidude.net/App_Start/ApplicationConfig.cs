@@ -100,8 +100,9 @@ namespace Altidude.net
             var dateTimeProvider = new SystemDateTimeProvider();
             var userService = new OrmLiteUserView(db);
             var placeFinder = new OrmLitePlaceRepository(db);
+            var elevationService = new GoogleMapsElevationService();
 
-            var domainEntry = new DomainEntry(domainRepository, new ApplicationEventBus(eventHandlers), dateTimeProvider, userService, new InMemoryUserLevelService(), placeFinder);
+            var domainEntry = new DomainEntry(domainRepository, new ApplicationEventBus(eventHandlers), dateTimeProvider, userService, new InMemoryUserLevelService(), placeFinder, elevationService);
 
             eventHandlers.Add(new UserProgressManager(domainEntry));
 
