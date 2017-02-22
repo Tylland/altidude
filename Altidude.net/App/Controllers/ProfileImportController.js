@@ -91,7 +91,7 @@ var Controllers;
         ;
         ProfileImportController.$inject = ['$scope', '$window', 'Upload', 'stravaService'];
         return ProfileImportController;
-    })();
+    }());
     Controllers.ProfileImportController = ProfileImportController;
     angular.module('altidudeApp').controller('profileImportController', Controllers.ProfileImportController);
 })(Controllers || (Controllers = {}));

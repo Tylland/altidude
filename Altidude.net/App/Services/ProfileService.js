@@ -16,6 +16,11 @@ var Profile;
             return this.$http.post(url, { chartId: chartId, base64Image: base64Image });
         };
         ;
+        ProfileService.prototype.giveKudos = function (profileId) {
+            var url = this.serviceConfig.altidudeApiBaseUri + this.profilesUrlBase + profileId + '/givekudos';
+            return this.$http.post(url, {});
+        };
+        ;
         ProfileService.prototype.delete = function (profileId) {
             var url = this.serviceConfig.altidudeApiBaseUri + this.profilesUrlBase + profileId + '/delete';
             return this.$http.post(url, {});
@@ -37,7 +42,7 @@ var Profile;
         };
         ProfileService.$inject = ['$http', 'serviceConfig'];
         return ProfileService;
-    })();
+    }());
     Profile.ProfileService = ProfileService;
     angular.module('altidudeApp').service('profileService', Profile.ProfileService);
 })(Profile || (Profile = {}));

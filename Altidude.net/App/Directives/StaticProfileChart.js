@@ -7,7 +7,7 @@ var Directives;
         }
         StaticProfileChart.$inject = ['profileService', 'chartService'];
         return StaticProfileChart;
-    })();
+    }());
     Directives.StaticProfileChart = StaticProfileChart;
 })(Directives || (Directives = {}));
 ///// <reference path="../../typings/angularjs/angular.d.ts" />

@@ -1,12 +1,15 @@
 ﻿module Controllers {
     export class ProfileDetailController {
+        private static noUserId = "00000000-0000-0000-0000-000000000000";
         public chart: ProfileChart.Chart;
         public profile: any;
         public result: any;
         public isOwner: boolean;
+        public isAuthenticated: boolean;
+        public kudos: number;
 
-        static $inject = ['profileService', 'chartService'];
-        constructor(private profileService: Profile.ProfileService, private chartService: Services.ChartService) {
+        static $inject = ['$window', 'profileService', 'chartService'];
+        constructor(private $window: any, private profileService: Profile.ProfileService, private chartService: Services.ChartService) {
             //this.chart = new ProfileChart.LoadingChart();
         }
 
@@ -18,7 +21,20 @@
 
                 this.chart = this.chartService.getChart(this.profile.chartId);
 
+                this.isAuthenticated = userId !== ProfileDetailController.noUserId;
                 this.isOwner = this.profile.userId === userId;
+
+                this.kudos = this.profile.kudos;
+            });
+        }
+
+        public giveKudos(): void {
+
+            if (!this.isAuthenticated)
+                this.$window.location.href = "/account/login/?returnurl=" + this.$window.location.pathname;
+
+            this.profileService.giveKudos(this.profile.id).then((response: ng.IHttpPromiseCallbackArg<number>) => {
+                this.kudos = response.data;
             });
         }
 

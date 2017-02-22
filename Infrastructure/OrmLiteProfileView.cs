@@ -16,7 +16,7 @@ using System.Data.SqlClient;
 
 namespace Altidude.Infrastructure
 {
-    public class OrmLiteProfileView : IProfileView, IHandleEvent<ProfileCreated>, IHandleEvent<ChartChanged>, IHandleEvent<ProfileViewRegistred>, IHandleEvent<ProfileDeleted>
+    public class OrmLiteProfileView : IProfileView, IHandleEvent<ProfileCreated>, IHandleEvent<ChartChanged>, IHandleEvent<ProfileViewRegistred>, IHandleEvent<KudosGiven>, IHandleEvent<ProfileDeleted>
     {
         private IDbConnection _db;
         private JsonSerializerSettings _serializerSettings;
@@ -72,7 +72,7 @@ namespace Altidude.Infrastructure
 
         public void Handle(ProfileCreated evt)
         {
-            var profile = new Profile(evt.Id, evt.UserId, evt.Name, evt.Track, evt.Places, evt.Legs, evt.Result);
+            var profile = new Profile(evt.Id, evt.UserId, evt.Name, evt.Track, evt.Places, evt.Legs, evt.Result, 0);
 
             var envelope = new ProfileEnvelope();
             envelope.Id = evt.Id;
@@ -107,6 +107,23 @@ namespace Altidude.Infrastructure
             _db.Update<ProfileEnvelope>(new { NrOfViews = evt.NrOfViews }, p => p.Id == evt.Id);
         }
 
+        public void Handle(KudosGiven evt)
+        {
+            var envelope = _db.GetById<ProfileEnvelope>(evt.Id);
+            Debug.WriteLine(_db.GetLastSql());
+
+            if (envelope != null && envelope.Payload != null)
+            {
+                var profile = Deserialize<Profile>(envelope.Payload);
+
+                profile.Kudos = evt.TotalKudos;
+
+                envelope.Payload = JsonConvert.SerializeObject(profile, _serializerSettings);
+
+                _db.Update(envelope);
+            }
+        }
+
         public void Handle(ProfileDeleted evt)
         {
             _db.Delete<ProfileEnvelope>(p => p.Id == evt.Id);
@@ -135,6 +152,7 @@ namespace Altidude.Infrastructure
         {
             return _db.Select<ProfileEnvelope>().Sum(env => env.NrOfViews);
         }
+
     }
 
     public class PayloadHelper

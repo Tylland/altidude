@@ -18,6 +18,12 @@
             return this.$http.post(url, { chartId: chartId, base64Image: base64Image });
         };
 
+        public giveKudos(profileId): ng.IHttpPromise<{}> {
+            var url = this.serviceConfig.altidudeApiBaseUri + this.profilesUrlBase + profileId + '/givekudos';
+
+            return this.$http.post(url, {});
+        };
+
         public delete(profileId): ng.IHttpPromise<{}> {
             var url = this.serviceConfig.altidudeApiBaseUri + this.profilesUrlBase + profileId + '/delete';
 

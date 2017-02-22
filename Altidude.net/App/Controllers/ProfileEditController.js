@@ -73,7 +73,7 @@ var Controllers;
         };
         ProfileEditController.$inject = ['$window', 'profileService', 'serviceConfig', 'chartTypeService', 'chartService', 'modalService'];
         return ProfileEditController;
-    })();
+    }());
     Controllers.ProfileEditController = ProfileEditController;
     angular.module('altidudeApp').controller('profileEditController', Controllers.ProfileEditController);
 })(Controllers || (Controllers = {}));

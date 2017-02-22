@@ -45,7 +45,7 @@ var Services;
         };
         ModalService.$inject = ['$uibModal'];
         return ModalService;
-    })();
+    }());
     Services.ModalService = ModalService;
     angular.module('altidudeApp').service('modalService', Services.ModalService);
 })(Services || (Services = {}));

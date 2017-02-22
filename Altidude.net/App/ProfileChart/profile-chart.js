@@ -28,7 +28,7 @@ var ProfileChart;
             return Math.abs(this.y - y);
         };
         return Point;
-    })();
+    }());
     ProfileChart.Point = Point;
     var Vector = (function () {
         function Vector(x, y) {
@@ -79,7 +79,7 @@ var ProfileChart;
             return new Vector(dy, -dx);
         };
         return Vector;
-    })();
+    }());
     ProfileChart.Vector = Vector;
     var Offset = (function () {
         function Offset(width, height) {
@@ -87,12 +87,12 @@ var ProfileChart;
             this.height = height;
         }
         return Offset;
-    })();
+    }());
     var Size = (function () {
         function Size() {
         }
         return Size;
-    })();
+    }());
     var Margin = (function () {
         function Margin(left, top, right, bottom) {
             this.left = left;
@@ -101,7 +101,7 @@ var ProfileChart;
             this.bottom = bottom;
         }
         return Margin;
-    })();
+    }());
     ProfileChart.Margin = Margin;
     var Rectangle = (function () {
         function Rectangle(x, y, width, height) {
@@ -117,7 +117,7 @@ var ProfileChart;
             return new Rectangle(this.x + margin.left, this.y + margin.top, this.width - margin.left - margin.right, this.height - margin.top - margin.bottom);
         };
         return Rectangle;
-    })();
+    }());
     ProfileChart.Rectangle = Rectangle;
     var Extent = (function () {
         function Extent(points) {
@@ -151,7 +151,7 @@ var ProfileChart;
             return new Rectangle(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
         };
         return Extent;
-    })();
+    }());
     var ElapsedTime = (function () {
         function ElapsedTime(seconds) {
             this.seconds = seconds;
@@ -194,7 +194,7 @@ var ProfileChart;
             return elapsedTime;
         };
         return ElapsedTime;
-    })();
+    }());
     var ChartType = (function () {
         // transformData(data: ChartData, chartArea: Rectangle)
         // {
@@ -207,14 +207,14 @@ var ProfileChart;
             this.templateUrl = templateUrl;
         }
         return ChartType;
-    })();
+    }());
     var ControlPointValues = (function () {
         function ControlPointValues(p1, p2) {
             this.p1 = p1;
             this.p2 = p2;
         }
         return ControlPointValues;
-    })();
+    }());
     var Chart = (function () {
         function Chart(id, name, templateUrl) {
             this.id = id;
@@ -357,7 +357,7 @@ var ProfileChart;
             }
         };
         return Chart;
-    })();
+    }());
     ProfileChart.Chart = Chart;
     var HorizontalAlignment;
     (function (HorizontalAlignment) {
@@ -386,7 +386,7 @@ var ProfileChart;
         Alignment.rightMiddle = new Alignment(HorizontalAlignment.Right, VerticalAlignment.Middle);
         Alignment.rightBottom = new Alignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
         return Alignment;
-    })();
+    }());
     ProfileChart.Alignment = Alignment;
     var Text = (function () {
         function Text() {
@@ -434,7 +434,7 @@ var ProfileChart;
             return textElement;
         };
         return Text;
-    })();
+    }());
     var LoadingChart = (function (_super) {
         __extends(LoadingChart, _super);
         function LoadingChart() {
@@ -456,7 +456,7 @@ var ProfileChart;
         };
         LoadingChart.id = "73CE29D6-AE8F-405C-BA21-C267F81AEFC5";
         return LoadingChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.LoadingChart = LoadingChart;
     var TestChart = (function (_super) {
         __extends(TestChart, _super);
@@ -539,7 +539,7 @@ var ProfileChart;
         };
         TestChart.id = "4F0B4EC0-6E72-44FD-9F26-F4423D7CE973";
         return TestChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.TestChart = TestChart;
     var MountainSilhouetteChart = (function (_super) {
         __extends(MountainSilhouetteChart, _super);
@@ -604,7 +604,7 @@ var ProfileChart;
         };
         MountainSilhouetteChart.id = "28D33FB8-BEFC-41B3-B947-A0B9B6A811EB";
         return MountainSilhouetteChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.MountainSilhouetteChart = MountainSilhouetteChart;
     var ConnectingDotsChart = (function (_super) {
         __extends(ConnectingDotsChart, _super);
@@ -726,7 +726,7 @@ var ProfileChart;
             // paper.el("use", { "xlink:href": "#finishPen", x: 400, y: 200 });
         };
         return ConnectingDotsChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.ConnectingDotsChart = ConnectingDotsChart;
     var SimplySunshineChart = (function (_super) {
         __extends(SimplySunshineChart, _super);
@@ -894,7 +894,7 @@ var ProfileChart;
             // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         };
         return SimplySunshineChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.SimplySunshineChart = SimplySunshineChart;
     var ZodiacChart = (function (_super) {
         __extends(ZodiacChart, _super);
@@ -1004,7 +1004,7 @@ var ProfileChart;
             setInterval(function () { return _this.twinkleStars(paper, starArea); }, 2000);
         };
         return ZodiacChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.ZodiacChart = ZodiacChart;
     var NorthernZodiacChart = (function (_super) {
         __extends(NorthernZodiacChart, _super);
@@ -1049,7 +1049,7 @@ var ProfileChart;
             //paper.el("use", { "xlink:href": "#forest", x: 100, y: 400 });
         };
         return NorthernZodiacChart;
-    })(ZodiacChart);
+    }(ZodiacChart));
     ProfileChart.NorthernZodiacChart = NorthernZodiacChart;
     var SouthernZodiacChart = (function (_super) {
         __extends(SouthernZodiacChart, _super);
@@ -1105,7 +1105,7 @@ var ProfileChart;
             //paper.el("use", { "xlink:href": "#southernTree1", x: 100, y: 400 });
         };
         return SouthernZodiacChart;
-    })(ZodiacChart);
+    }(ZodiacChart));
     ProfileChart.SouthernZodiacChart = SouthernZodiacChart;
     var GiroItaliaChart = (function (_super) {
         __extends(GiroItaliaChart, _super);
@@ -1344,7 +1344,7 @@ var ProfileChart;
             // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         };
         return GiroItaliaChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.GiroItaliaChart = GiroItaliaChart;
     var ForestChart = (function (_super) {
         __extends(ForestChart, _super);
@@ -1651,7 +1651,7 @@ var ProfileChart;
             //});
         };
         return ForestChart;
-    })(Chart);
+    }(Chart));
     ProfileChart.ForestChart = ForestChart;
     var ChartRenderingSettings = (function () {
         function ChartRenderingSettings(chartId, name, renderPersonProfile, renderResultPositios, renderSkierAndTrack) {
@@ -1662,7 +1662,7 @@ var ProfileChart;
             this.renderSkierAndTrack = renderSkierAndTrack;
         }
         return ChartRenderingSettings;
-    })();
+    }());
     ProfileChart.ChartRenderingSettings = ChartRenderingSettings;
     var ChartProfile = (function () {
         function ChartProfile(trackPoints) {
@@ -1688,7 +1688,7 @@ var ProfileChart;
             return segmentPoints;
         };
         return ChartProfile;
-    })();
+    }());
     var TrackpointConverter = (function () {
         function TrackpointConverter(pipeline) {
             this.pipeline = pipeline;
@@ -1697,7 +1697,7 @@ var ProfileChart;
             return this.pipeline.processPoint(new Point(trackpoint.distance, trackpoint.altitude));
         };
         return TrackpointConverter;
-    })();
+    }());
     var ChartData = (function () {
         function ChartData(profile, result, target) {
             console.log(JSON.stringify(result));
@@ -1751,7 +1751,7 @@ var ProfileChart;
             return this.splits[this.splits.length - 1];
         };
         return ChartData;
-    })();
+    }());
     ProfileChart.ChartData = ChartData;
     var ChartPlace = (function () {
         function ChartPlace(name, distance, altitude, point) {
@@ -1761,7 +1761,7 @@ var ProfileChart;
             this.point = point;
         }
         return ChartPlace;
-    })();
+    }());
     ProfileChart.ChartPlace = ChartPlace;
     var ChartSplit = (function (_super) {
         __extends(ChartSplit, _super);
@@ -1779,7 +1779,7 @@ var ProfileChart;
             return elapsedTime.toString();
         };
         return ChartSplit;
-    })(ChartPlace);
+    }(ChartPlace));
     ProfileChart.ChartSplit = ChartSplit;
     var ChartLeg = (function () {
         function ChartLeg(startpoint, middlepoint, endpoint, length, ascending, descending) {
@@ -1794,7 +1794,7 @@ var ProfileChart;
             return new ElapsedTime(this.elapsedSeconds).toString();
         };
         return ChartLeg;
-    })();
+    }());
     ProfileChart.ChartLeg = ChartLeg;
     var ChartAxis = (function () {
         function ChartAxis(min, max, gridMinor, gridMajor) {
@@ -1831,7 +1831,7 @@ var ProfileChart;
             return (altitude % this.gridMajor) === 0;
         };
         return ChartAxis;
-    })();
+    }());
     var DistanceUnit = (function () {
         function DistanceUnit(value, suffix) {
             this.value = value;
@@ -1840,7 +1840,7 @@ var ProfileChart;
         DistanceUnit.meter = new DistanceUnit(1, "m");
         DistanceUnit.kilometer = new DistanceUnit(1000, "km");
         return DistanceUnit;
-    })();
+    }());
     ProfileChart.DistanceUnit = DistanceUnit;
     //enum DistanceUnit {
     //    Meter = 1,
@@ -1873,7 +1873,7 @@ var ProfileChart;
             return res;
         };
         return DistanceAxis;
-    })(ChartAxis);
+    }(ChartAxis));
     ProfileChart.DistanceAxis = DistanceAxis;
     var AltitudeAxis = (function (_super) {
         __extends(AltitudeAxis, _super);
@@ -1940,7 +1940,7 @@ var ProfileChart;
             return Math.ceil(maxAltitude / roundFactor) * roundFactor;
         };
         return AltitudeAxis;
-    })(ChartAxis);
+    }(ChartAxis));
     ProfileChart.AltitudeAxis = AltitudeAxis;
     var PointProcessor = (function () {
         function PointProcessor(name) {
@@ -1953,7 +1953,7 @@ var ProfileChart;
             return null;
         };
         return PointProcessor;
-    })();
+    }());
     var PointProcessorPipeLine = (function (_super) {
         __extends(PointProcessorPipeLine, _super);
         function PointProcessorPipeLine() {
@@ -1973,7 +1973,7 @@ var ProfileChart;
             return points;
         };
         return PointProcessorPipeLine;
-    })(PointProcessor);
+    }(PointProcessor));
     var TransformProcessor = (function (_super) {
         __extends(TransformProcessor, _super);
         function TransformProcessor(source, target) {
@@ -1999,7 +1999,7 @@ var ProfileChart;
             return result;
         };
         return TransformProcessor;
-    })(PointProcessor);
+    }(PointProcessor));
     var ReduceProcessor = (function (_super) {
         __extends(ReduceProcessor, _super);
         function ReduceProcessor(maxlevels, epsilon) {
@@ -2049,7 +2049,7 @@ var ProfileChart;
         ReduceProcessor.maxLevels = 1000;
         ReduceProcessor.minEpsilon = 0.00001;
         return ReduceProcessor;
-    })(PointProcessor);
+    }(PointProcessor));
     var ReduceToNumberProcessor = (function (_super) {
         __extends(ReduceToNumberProcessor, _super);
         function ReduceToNumberProcessor(nrOfPoints) {
@@ -2089,7 +2089,7 @@ var ProfileChart;
             return secondSegment;
         };
         return ReduceToNumberProcessor;
-    })(PointProcessor);
+    }(PointProcessor));
     var ReduceSegment = (function () {
         function ReduceSegment(points) {
             this.points = points;
@@ -2118,7 +2118,7 @@ var ProfileChart;
             this.splitted = true;
         };
         return ReduceSegment;
-    })();
+    }());
     var OffsetProcessor = (function (_super) {
         __extends(OffsetProcessor, _super);
         function OffsetProcessor(offset) {
@@ -2136,7 +2136,7 @@ var ProfileChart;
             return point.offset(this.offset);
         };
         return OffsetProcessor;
-    })(PointProcessor);
+    }(PointProcessor));
     var SkewProcessor = (function (_super) {
         __extends(SkewProcessor, _super);
         function SkewProcessor(vector) {
@@ -2154,7 +2154,7 @@ var ProfileChart;
             return new Point(point.x, point.y + this.vector.scaleToX(point.x).y);
         };
         return SkewProcessor;
-    })(PointProcessor);
+    }(PointProcessor));
     var MountainGenerator = (function () {
         function MountainGenerator(rectangle, levels, numberOfPoints) {
             this.rectangle = rectangle;
@@ -2183,7 +2183,7 @@ var ProfileChart;
             this.points.push(end);
         };
         return MountainGenerator;
-    })();
+    }());
     ProfileChart.MountainGenerator = MountainGenerator;
 })(ProfileChart || (ProfileChart = {}));
 //# sourceMappingURL=profile-chart.js.map

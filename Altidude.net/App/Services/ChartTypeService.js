@@ -13,7 +13,7 @@ var Services;
         ;
         ChartTypeService.$inject = ['$http', 'serviceConfig'];
         return ChartTypeService;
-    })();
+    }());
     Services.ChartTypeService = ChartTypeService;
     angular.module('altidudeApp').service('chartTypeService', Services.ChartTypeService);
 })(Services || (Services = {}));

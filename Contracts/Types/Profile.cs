@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Altidude.Contracts.Types
 {
@@ -16,8 +12,9 @@ namespace Altidude.Contracts.Types
         public ProfilePlace[] Places { get; set; }
         public Leg[] Legs { get; set; }
         public Result Result { get; set; }
+        public int Kudos { get; set; }
 
-        public Profile(Guid id, Guid userId, string name, Track track, ProfilePlace[] places, Leg[] legs, Result result)
+        public Profile(Guid id, Guid userId, string name, Track track, ProfilePlace[] places, Leg[] legs, Result result, int kudos)
         {
             Id = id;
             UserId = userId;
@@ -26,6 +23,7 @@ namespace Altidude.Contracts.Types
             Places = places;
             Legs = legs;
             Result = result;
+            Kudos = kudos;
         }
         public Profile()
         {

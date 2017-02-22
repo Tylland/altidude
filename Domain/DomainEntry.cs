@@ -40,6 +40,7 @@ namespace Altidude.Domain
             commandDispatcher.RegisterHandler<CreateProfile>(profileCommandHandler);
             commandDispatcher.RegisterHandler<ChangeChart>(profileCommandHandler);
             commandDispatcher.RegisterHandler<RegisterProfileView>(profileCommandHandler);
+            commandDispatcher.RegisterHandler<GiveKudos>(profileCommandHandler);
             commandDispatcher.RegisterHandler<DeleteProfile>(profileCommandHandler);
 
             return commandDispatcher;

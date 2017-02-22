@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddProfilePlace.cs" />
+    <Compile Include="Commands\GiveKudos.cs" />
     <Compile Include="Commands\ImportElevation.cs" />
     <Compile Include="Commands\DeleteProfile.cs" />
     <Compile Include="Commands\UpdateUserSettings.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Events\ChartChanged.cs" />
     <Compile Include="Events\ProfileDeleted.cs" />
     <Compile Include="Events\ProfileCreated.cs" />
+    <Compile Include="Events\KudosGiven.cs" />
     <Compile Include="Events\UserGainedLevel.cs" />
     <Compile Include="Events\UserSettingsUpdated.cs" />
     <Compile Include="Events\UserGainedExperience.cs" />

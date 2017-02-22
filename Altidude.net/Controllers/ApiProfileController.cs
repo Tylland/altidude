@@ -45,6 +45,27 @@ namespace Altidude.net.Controllers
 
             application.ExecuteCommand(new ChangeChart(profileId, Guid.Empty, command.ChartId, command.Base64Image));
         }
+        [HttpPost]
+        [Authorize]
+        [Route("api/v1/profiles/{profileId}/givekudos")]
+        public HttpResponseMessage GiveKudos([FromUri]Guid profileId)
+        {
+            if (!HttpContext.Current.Request.IsAuthenticated)
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+
+            var userId = new Guid(User.Identity.GetUserId());
+
+            var application = ApplicationManager.BuildApplication();
+
+            application.ExecuteCommand(new GiveKudos(profileId, userId));
+
+            var profile = application.Views.Profiles.GetById(profileId);
+
+            if (profile != null)
+                return Request.CreateResponse(HttpStatusCode.OK, profile.Kudos);
+
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+        }
 
         [HttpPost]
         [Authorize]

@@ -67,6 +67,7 @@
 <div id="detailControllerID" ng-app="altidudeApp" ng-controller="profileDetailController as detailController" ng-init="detailController.init('@Model.ProfileId', '@Model.UserId')">
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
+            <a class='btn btn-primary' href="#" data-toggle="tooltip" title="Give Altitude (Kudos)" ng-click="detailController.giveKudos()"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;{{detailController.kudos}}</a>
             <a class='btn btn-primary' href="/profile/edit/@Model.ProfileId" ng-disabled="!detailController.isOwner"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>
             @*<a class='btn btn-social btn-facebook'>&nbsp;Share on facebook</a>*@
         </div>

@@ -7,7 +7,7 @@ var Services;
             this.chart = chart;
         }
         return ChartEntry;
-    })();
+    }());
     Services.ChartEntry = ChartEntry;
     var ChartService = (function () {
         function ChartService() {
@@ -33,7 +33,7 @@ var Services;
             return new ProfileChart.SimplySunshineChart();
         };
         return ChartService;
-    })();
+    }());
     Services.ChartService = ChartService;
     angular.module('altidudeApp').service('chartService', Services.ChartService);
 })(Services || (Services = {}));

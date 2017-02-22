@@ -1,7 +1,8 @@
 var Controllers;
 (function (Controllers) {
     var ProfileDetailController = (function () {
-        function ProfileDetailController(profileService, chartService) {
+        function ProfileDetailController($window, profileService, chartService) {
+            this.$window = $window;
             this.profileService = profileService;
             this.chartService = chartService;
             //this.chart = new ProfileChart.LoadingChart();
@@ -12,7 +13,17 @@ var Controllers;
                 _this.profile = response.data;
                 _this.result = _this.profile.result;
                 _this.chart = _this.chartService.getChart(_this.profile.chartId);
+                _this.isAuthenticated = userId !== ProfileDetailController.noUserId;
                 _this.isOwner = _this.profile.userId === userId;
+                _this.kudos = _this.profile.kudos;
+            });
+        };
+        ProfileDetailController.prototype.giveKudos = function () {
+            var _this = this;
+            if (!this.isAuthenticated)
+                this.$window.location.href = "/account/login/?returnurl=" + this.$window.location.pathname;
+            this.profileService.giveKudos(this.profile.id).then(function (response) {
+                _this.kudos = response.data;
             });
         };
         ProfileDetailController.prototype.shareOnFacebook = function () {
@@ -20,9 +31,10 @@ var Controllers;
             //alert('share profile ' + this.profile.id);
             this.profileService.shareOnFacebook(this.profile);
         };
-        ProfileDetailController.$inject = ['profileService', 'chartService'];
+        ProfileDetailController.noUserId = "00000000-0000-0000-0000-000000000000";
+        ProfileDetailController.$inject = ['$window', 'profileService', 'chartService'];
         return ProfileDetailController;
-    })();
+    }());
     Controllers.ProfileDetailController = ProfileDetailController;
     angular.module('altidudeApp').controller('profileDetailController', Controllers.ProfileDetailController);
 })(Controllers || (Controllers = {}));

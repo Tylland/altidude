@@ -20,13 +20,17 @@ namespace Altidude.Domain.Aggregates
         public Track Track { get; set; }
         public ProfilePlace[] Places { get; set; }
         public int NrOfViews { get; set; }
+        public List<Guid> Kudos { get; set; }
         public bool Deleted { get; set; }
 
         public ProfileAggregate()
         {
+            Kudos = new List<Guid>();
+
             RegisterTransition<ProfileCreated>(Apply);
             RegisterTransition<ChartChanged>(Apply);
             RegisterTransition<ProfileViewRegistred>(Apply);
+            RegisterTransition<KudosGiven>(Apply);
             RegisterTransition<ProfileDeleted>(Apply);
         }
 
@@ -236,9 +240,13 @@ namespace Altidude.Domain.Aggregates
         {
             NrOfViews = @event.NrOfViews;
         }
+        public void Apply(KudosGiven @event)
+        {
+            Kudos.Add(@event.UserId);
+        }
         public void Apply(ProfileDeleted @event)
         {
-            Deleted = true; 
+            Deleted = true;
         }
 
         public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService, IElevationService elevationService)
@@ -279,6 +287,12 @@ namespace Altidude.Domain.Aggregates
                 throw new ArgumentException("User does not own profile");
 
             RaiseEvent(new ProfileDeleted(Id, user.Id));
+        }
+
+        public void GiveKudos(User user)
+        {
+            if(user != null && !Kudos.Contains(user.Id))
+                RaiseEvent(new KudosGiven(Id, user.Id, Kudos.Count + 1));
         }
     }
 }

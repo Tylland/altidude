@@ -35,7 +35,7 @@ var Services;
         ;
         StravaService.$inject = ['$http', 'serviceConfig'];
         return StravaService;
-    })();
+    }());
     Services.StravaService = StravaService;
     angular.module('altidudeApp').service('stravaService', StravaService);
 })(Services || (Services = {}));
