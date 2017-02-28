@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Altidude.Domain.EventHandlers
 {
-    public class UserProgressManager : IHandleEvent<UserCreated>, IHandleEvent<ProfileCreated>, IHandleEvent<ProfileDeleted>, IHandleEvent<ProfileViewRegistred>
+    public class UserProgressManager : IHandleEvent<UserCreated>, IHandleEvent<ProfileCreated>, IHandleEvent<ProfileDeleted>, IHandleEvent<ProfileViewRegistred>, IHandleEvent<KudosGiven>
     {
         private static readonly List<string> _socialRefferers = new List<string> { "facebook", "twitter", "shared" };
 
@@ -43,9 +43,15 @@ namespace Altidude.Domain.EventHandlers
             _domainEntry.ExecuteCommand(new RegisterUserExperience(evt.Id, 10));
         }
 
+        public void Handle(KudosGiven evt)
+        {
+            _domainEntry.ExecuteCommand(new RegisterUserExperience(evt.UserId, 1));
+            _domainEntry.ExecuteCommand(new RegisterUserExperience(evt.OwnerUserId, 1));
+        }
         public void Handle(ProfileDeleted evt)
         {
             _domainEntry.ExecuteCommand(new RegisterUserExperience(evt.UserId, -5));
         }
+
     }
 }

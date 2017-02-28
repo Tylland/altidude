@@ -109,8 +109,8 @@
       <HintPath>..\packages\NEventStore.5.2.0\lib\net40\NEventStore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
@@ -377,6 +377,8 @@
     <Content Include="Images\Strava\api_logo_cptblWith_strava_horiz_gray.eps" />
     <Content Include="Images\Strava\api_logo_cptblWith_strava_stack_gray.eps" />
     <None Include="Properties\PublishProfiles\Altidude - Azure Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Altidude - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Altidude - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\Altidude - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\canvg.js" />

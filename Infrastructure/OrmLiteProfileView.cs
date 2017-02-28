@@ -116,6 +116,7 @@ namespace Altidude.Infrastructure
             {
                 var profile = Deserialize<Profile>(envelope.Payload);
 
+                envelope.Kudos = evt.TotalKudos;
                 profile.Kudos = evt.TotalKudos;
 
                 envelope.Payload = JsonConvert.SerializeObject(profile, _serializerSettings);
@@ -144,7 +145,7 @@ namespace Altidude.Infrastructure
 
             Debug.WriteLine(_db.GetLastSql());
 
-            return envelopes.Select(env => new ProfileSummary(env.Id, env.UserId, env.Name, env.NrOfViews, env.CreatedTime)).ToList();
+            return envelopes.Select(env => new ProfileSummary(env.Id, env.UserId, env.Name, env.NrOfViews, env.Kudos, env.CreatedTime)).ToList();
 
         }
 
@@ -180,6 +181,7 @@ namespace Altidude.Infrastructure
         [StringLength(100)]
         public string Name { get; set; }
         public int NrOfViews { get; set; }
+        public int Kudos { get; set; }
         public DateTime CreatedTime { get; set; }
 
         [StringLength(int.MaxValue)]

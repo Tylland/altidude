@@ -292,7 +292,7 @@ namespace Altidude.Domain.Aggregates
         public void GiveKudos(User user)
         {
             if(user != null && !Kudos.Contains(user.Id))
-                RaiseEvent(new KudosGiven(Id, user.Id, Kudos.Count + 1));
+                RaiseEvent(new KudosGiven(Id, UserId, user.Id, Kudos.Count + 1));
         }
     }
 }

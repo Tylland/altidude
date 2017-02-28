@@ -51,12 +51,13 @@ namespace Altidude.net.Controllers
         [HttpPost]
         public ActionResult SendContactMessage(ContactUsMessageModel model)
         {
-            MailMessage message = new MailMessage(model.Email, "altidude.net@gmail.com");
-            message.ReplyToList.Add(model.Email);
-            message.Subject = "Contact message";
-            message.Body = model.Message;
+            //MailMessage message = new MailMessage(model.Email, "altidude.net@gmail.com");
+            //message.ReplyToList.Add(model.Email);
+            //message.Subject = "Contact message";
+            //message.Body = model.Message;
 
-            new GoogleMailSender().Send(message);
+            //new GoogleMailSender().Send(message);
+            new SendGridMailSender().SendMessage(model.Email, model.Name, "altidude.net@gmail.com", "Altidude", "Contact message", model.Message, null);
 
             return View("Index");
         }

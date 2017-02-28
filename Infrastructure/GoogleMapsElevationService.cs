@@ -52,7 +52,11 @@ namespace Altidude.Infrastructure
                 return str;
             }
         }
-      
+        public override string ToString()
+        {
+            return LocationString;
+        }
+
         private static string ToNonScientificString(double d)
         {
 

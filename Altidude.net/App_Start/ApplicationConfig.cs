@@ -105,6 +105,7 @@ namespace Altidude.net
             var domainEntry = new DomainEntry(domainRepository, new ApplicationEventBus(eventHandlers), dateTimeProvider, userService, new InMemoryUserLevelService(), placeFinder, elevationService);
 
             eventHandlers.Add(new UserProgressManager(domainEntry));
+            eventHandlers.Add(new SendGridEmailNotifier(userService));
 
             return new ApplicationInstance(domainEntry, views);
         }

@@ -50,6 +50,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SendGrid, Version=9.0.12.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.9.0.12\lib\net452\SendGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi, Version=1.3.1.0, Culture=neutral, PublicKeyToken=2ae73662c35d80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Serilog">
       <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
     </Reference>
@@ -73,6 +81,10 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -89,6 +101,8 @@
     <Compile Include="CustomSqlServerOrmLiteDialectProvider .cs" />
     <Compile Include="DbUpgrader.cs" />
     <Compile Include="DouglasPeuckerTransformer.cs" />
+    <Compile Include="SendGridEmailNotifier.cs" />
+    <Compile Include="SendGridMailSender.cs" />
     <Compile Include="GoogleMailSender.cs" />
     <Compile Include="GoogleMapsElevationService.cs" />
     <Compile Include="InMemoryChartTypeView.cs" />
@@ -141,6 +155,7 @@
     <EmbeddedResource Include="Scripts\DbUp0008-Add NrOfViews to PlaceEnvelope.sql" />
     <EmbeddedResource Include="Scripts\DbUp0009-Add AcceptEmails to UserView.sql" />
     <EmbeddedResource Include="Scripts\DbUp0010-Update ExperiencePoints on UserView.sql" />
+    <EmbeddedResource Include="Scripts\DbUp0011-Add Kudos to ProfileEnvelope.sql" />
     <Content Include="Scripts\Delete From Tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
