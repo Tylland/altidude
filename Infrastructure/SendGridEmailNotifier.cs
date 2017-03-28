@@ -1,4 +1,5 @@
-﻿using Altidude.Contracts;
+﻿using System.Threading.Tasks;
+using Altidude.Contracts;
 using Altidude.Contracts.Events;
 using Altidude.Views;
 
@@ -14,6 +15,11 @@ namespace Altidude.Infrastructure
         }
 
         public void Handle(KudosGiven evt)
+        {
+            Task.Run(() => SendKudosEmail(evt));
+        }
+
+        private void SendKudosEmail(KudosGiven evt)
         {
             var toUser = _users.GetById(evt.OwnerUserId);
 

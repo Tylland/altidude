@@ -1701,18 +1701,24 @@ module ProfileChart {
             }
         }
 
-        renderStartFinish(paper: Snap.Paper, split: ChartSplit, textAlignment: Alignment, backTransform: PointProcessorPipeLine) {
-            var lineOffset: Vector = new Vector(0, -450);
-            var textOffset: Vector = new Vector(0, -20);
+        renderStartFinish(paper: Snap.Paper, data: ChartData, split: ChartSplit, textAlignment: Alignment, backTransform: PointProcessorPipeLine, iconName: string) {
+            var lineOffset: Vector = new Vector(0, -550);
+            var textOffset: Vector = new Vector(60, -25);
+
+
+            if (textAlignment.horizontal === HorizontalAlignment.Right)
+                textOffset.x = -textOffset.x; 
 
             var basePoint = backTransform.processPoint(split.point);
-            var topPoint = basePoint.offset(lineOffset);
+            var topPoint = backTransform.processPoint(data.transform.processPoint(new Point(split.distance, data.altitudeAxis.min))).offset(lineOffset);
 
 
             this.renderLine(paper, basePoint, topPoint).attr({ fill: "none", stroke: "#515151", strokeWidth: 3 });
 
             var text: Snap.Element = Text.render(paper, split.altitude.toFixed(0) + " - " + split.name.toUpperCase(), topPoint.offset(textOffset), textAlignment, { fontSize: "48px", fill: "#000000", fontFamily: "Arial", fontWeight: "bold" });
             text.transform("r-5 " + topPoint.x + " " + topPoint.y);
+
+            paper.el("use", { "xlink:href": iconName, x: topPoint.x, y: topPoint.y });
         }
 
         renderDistance(paper: Snap.Paper, data: ChartData, split: ChartSplit, frontTransform: PointProcessorPipeLine, bold: boolean) {
@@ -1727,14 +1733,15 @@ module ProfileChart {
 
             var text: Snap.Element = Text.render(paper, data.distanceAxis.format(split.distance, false), textPoint, Alignment.rightBottom, { fontSize: "24px", fill: "#000000", fontFamily: "Arial", fontWeight: fontWeight });
             text.transform("r-90 " + textPoint.x + " " + textPoint.y);
+
         }
 
         renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle, backTransform: PointProcessorPipeLine, frontTransform: PointProcessorPipeLine): void {
 
-            this.renderStartFinish(paper, data.getFirstSplit(), Alignment.leftBottom, backTransform);
+            this.renderStartFinish(paper, data, data.getFirstSplit(), Alignment.leftBottom, backTransform, "#start_icon");
             this.renderDistance(paper, data, data.getFirstSplit(), frontTransform, true);
 
-            this.renderStartFinish(paper, data.getLastSplit(), Alignment.rightBottom, backTransform);
+            this.renderStartFinish(paper, data, data.getLastSplit(), Alignment.rightBottom, backTransform, "#finish_icon");
             this.renderDistance(paper, data, data.getLastSplit(), frontTransform, true);
             
             //var direction: Vector = new Vector(10, -1);
@@ -1797,15 +1804,17 @@ module ProfileChart {
 
             var courseNamePoint: Point = topCenterPoint.offset(new Vector(0, 80));
 
-            var courseNameText: Snap.Element = Text.render(paper, data.courseName, courseNamePoint, Alignment.centerBottom, { fill: "#000000", fontSize: "72px", fontFamily: "Arial" });
-            courseNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
+            Text.renderInside(paper, data.courseName, courseNamePoint, Alignment.centerBottom, 72, headerArea.width, { fill: "#000000", fontSize: "72px", fontFamily: "Arial" });
+
+
+        //    courseNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
 
             //            var bbox: Snap.BBox = courseNameText.getBBox();
 
             //            paper.line(bbox.x, bbox.y + bbox.height, bbox.x + bbox.width, bbox.y + bbox.height).attr({ fill: "none", stroke: "#56C4CC", strokeWidth: 6 });
 
             var athleteNameText: Snap.Element = Text.render(paper, data.athlete.displayName, courseNamePoint, Alignment.centerTop, { fill: "#000000", fontSize: "64px", fontFamily: "Arial" });
-            athleteNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
+            //athleteNameText.transform("r-5 " + courseNamePoint.x + " " + courseNamePoint.y);
         }
 
         render(profile: IProfile, result: IResult, width: number): void {
@@ -1857,12 +1866,12 @@ module ProfileChart {
             //this.renderSunAndClouds(paper);
             this.renderHeader(paper, data, headerArea);
 
-            // paper.circle(100, 200, 3);
-            // paper.el("use", { "xlink:href": "#sun", x: 100, y: 200 });
+            //paper.circle(100, 200, 3);
+            //paper.el("use", { "xlink:href": "#start_icon", x: 100, y: 200 });
             // paper.circle(200, 200, 3);
-            // paper.el("use", { "xlink:href": "#clouds", x: 200, y: 200 });
-            // paper.circle(300, 200, 3);
-            // paper.el("use", { "xlink:href": "#finish_flag", x: 300, y: 200 });
+            // paper.el("use", { "xlink:href": "#finish_icon", x: 200, y: 200 });
+             //paper.circle(300, 200, 3);
+             //paper.el("use", { "xlink:href": "#highest_point", x: 300, y: 200 });
             // paper.circle(400, 200, 3);
             // paper.el("use", { "xlink:href": "#stopwatch", x: 400, y: 200 });
         }

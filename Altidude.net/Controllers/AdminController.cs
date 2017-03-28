@@ -37,6 +37,8 @@ namespace Altidude.net.Controllers
 
         }
 
+        
+
         public ApplicationUserManager UserManager
         {
             get { return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }

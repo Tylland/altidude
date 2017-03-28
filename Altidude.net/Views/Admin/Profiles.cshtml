@@ -10,11 +10,11 @@
 @foreach (var profile in Model.Profiles)
 {
     <li class="list-group-item row">
-        <div class="col-md-3">@profile.CreatedTime</div>
+        <div class="col-md-2">@profile.CreatedTime</div>
         <div class="col-md-6"><strong>@profile.Name</strong></div>
-        <div class="col-md-1"></div>
-        <div class="col-md-1"></div>
+        <div class="col-md-1">@profile.Kudos</div>
         <div class="col-md-1">@profile.NrOfViews</div>
+        <div class="col-md-2"><a href="/api/v1/profiles/@profile.Id/gpx" download="profile-@profile.Id-.gpx">download gpx</a></div>
     </li>
 }
 </ul>

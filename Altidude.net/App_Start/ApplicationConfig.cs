@@ -166,6 +166,32 @@ namespace Altidude.net
 
     public class EventHandlerContainer : IEventHandlerContainer
     {
+        //private class HandlerEntry
+        //{
+        //    public object Handler { get; private set; }
+        //    public bool Synchronized { get; private set; }
+
+        //    public void Handle<T>(T args) where T : class
+        //    {
+        //        var handler = Handler as T;
+
+        //        if (handler != null)
+        //        {
+        //            hand
+        //        }
+        //    }
+
+        //    public HandlerEntry(object handler)
+        //        : this(handler, true)
+        //    {
+        //    }
+        //    public HandlerEntry(object handler, bool synchronized)
+        //    {
+        //        Handler = handler;
+        //        Synchronized = synchronized;
+        //    }
+        //}
+
         private readonly List<object> _handlers = new List<object>();
 
         public T[] ResolveAll<T>() where T : class

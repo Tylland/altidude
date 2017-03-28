@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -240,6 +241,7 @@ namespace Altidude.net.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("api/v1/profiles/gpx")]
         public HttpResponseMessage GetProfilePositionFile()
         {
@@ -268,6 +270,51 @@ namespace Altidude.net.Controllers
             gpx.version = "0.1";
             gpx.wpt = waypoints.ToArray();
 
+
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ObjectContent<gpx11.gpxType>(gpx,
+                          new System.Net.Http.Formatting.XmlMediaTypeFormatter
+                          {
+                              UseXmlSerializer = true
+                          })
+            };
+        }
+
+        private gpx11.wptType CreateWaypoint(TrackPoint point)
+        {
+            return new gpx11.wptType()
+            {
+                lat = (decimal) point.Latitude,
+                lon = (decimal) point.Longitude,
+                ele = (decimal) point.Altitude
+            };
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("api/v1/profiles/{profileId}/gpx")]
+        public HttpResponseMessage GetProfileGpxFile([FromUri]Guid profileId)
+        {
+            var views = ApplicationManager.BuildViews();
+
+            var profile = views.Profiles.GetById(profileId);
+
+            var waypoints = profile.Track.Points.Select(CreateWaypoint).ToArray();
+
+
+            var trkseg = new gpx11.trksegType();
+            trkseg.trkpt = waypoints;
+
+            var trk = new gpx11.trkType();
+            trk.name = profile.Name;
+            trk.trkseg = new[] {trkseg};
+
+            var gpx = new gpx11.gpxType();
+            gpx.creator = "Altidude.net";
+            gpx.version = "0.1";
+            gpx.trk = new gpx11.trkType[] {trk};
 
 
             return new HttpResponseMessage(HttpStatusCode.OK)
