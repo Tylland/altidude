@@ -2,13 +2,15 @@
 using System.Net;
 using SendGrid;
 using System.Net.Mail;
+using Microsoft.AspNet.Identity;
 using SendGrid.Helpers.Mail;
-
+using System.Threading.Tasks;
 
 namespace Altidude.Infrastructure
 {
-    public class SendGridMailSender
+    public class SendGridMailSender: IIdentityMessageService
     {
+        private const string ApiKey = "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";
         //public void Send(MailMessage message)
         //{
         //    SendGridMessage sgMessage = new SendGridMessage();
@@ -35,11 +37,10 @@ namespace Altidude.Infrastructure
         public void Send(MailMessage message)
         {
             //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-            var apiKey = "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";
 
             //var credentials = new NetworkCredential("AltidudeMail", "azure_50caa16cfd38f30917c23017940897d9@azure.com");
 
-            var client = new SendGridClient(apiKey);
+            var client = new SendGridClient(ApiKey);
             var from = new EmailAddress(message.From.Address, message.From.DisplayName);
             var subject = message.Subject;
             var to = new EmailAddress(message.To[0].Address, message.To[0].DisplayName);
@@ -50,18 +51,30 @@ namespace Altidude.Infrastructure
             client.SendEmailAsync(msg).Wait();
         }
 
-        public void SendMessage(string fromAddress, string fromDisplayName, string toAddress, string toDisplayName, string subject, string plainTextContent, string htmlContent)
+        public Task SendAsync(IdentityMessage message)
         {
-            //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-            var apiKey = "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";
+            return Task.Run(() =>
+            {
+                SendMessage("altidude.net@gmail.com", "Altidude", message.Destination, null, message.Subject,
+                    "", message.Body);
+            });
+        }
 
-            var client = new SendGridClient(apiKey);
+        public async Task SendMessageAsync(string fromAddress, string fromDisplayName, string toAddress, string toDisplayName, string subject, string plainTextContent, string htmlContent)
+        {
+            var client = new SendGridClient(ApiKey);
             var from = new EmailAddress(fromAddress, fromDisplayName);
             var to = new EmailAddress(toAddress, toDisplayName);
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            client.SendEmailAsync(msg).Wait();
+            await client.SendEmailAsync(msg);
+        }
+
+        public void SendMessage(string fromAddress, string fromDisplayName, string toAddress, string toDisplayName, string subject, string plainTextContent, string htmlContent)
+        {
+            SendMessageAsync(fromAddress, fromDisplayName, toAddress, toDisplayName, subject, plainTextContent,
+                htmlContent).Wait();
         }
     }
 }

@@ -9,29 +9,45 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Net.Mail;
+using Altidude.Logging;
+using Serilog;
 
 namespace Altidude.net.Controllers
 {
     public class HomeController : BaseController
     {
+        private static ILogger _log = Log.ForContext<HomeController>();
+
         public ActionResult Index()
         {
-            var model = new HomeViewModel();
+            using (_log.StartTiming(false, "HomeController - Load Index Page").WithWarning(10000))
+            {
+                var model = new HomeViewModel();
 
-            var connectionString = ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName].ConnectionString;
+                OrmLiteProfileView view;
+                using (_log.StartTiming(false, "HomeController - Index Create View").WithWarning(5000))
+                {
+                    var connectionString =
+                        ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName]
+                            .ConnectionString;
 
-            var dialect = new CustomSqlServerOrmLiteDialectProvider();
-            OrmLiteConfig.DialectProvider = dialect;
+                    var dialect = new CustomSqlServerOrmLiteDialectProvider();
+                    OrmLiteConfig.DialectProvider = dialect;
 
-            var dbFactory = new OrmLiteConnectionFactory(connectionString, dialect);
+                    var dbFactory = new OrmLiteConnectionFactory(connectionString, dialect);
 
-            var db = dbFactory.Open();
+                    var db = dbFactory.Open();
 
-            var view = new OrmLiteProfileView(db);
+                    view = new OrmLiteProfileView(db);
+                }
 
-            model.Profiles = view.GetLatest(21);
+                using (_log.StartTiming(false, "HomeController - Index View GetLatest").WithWarning(5000))
+                {
+                    model.Profiles = view.GetLatestSummaries(21);
+                }
 
-            return View(model);
+                return View(model);
+            }
         }
 
         public ActionResult About()

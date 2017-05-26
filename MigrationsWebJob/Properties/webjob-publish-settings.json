@@ -1,0 +1,6 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "MigrationsWebJob",
+  "runMode": "OnDemand",
+  "stopping_wait_time": 1800
+}

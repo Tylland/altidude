@@ -1,9 +1,10 @@
 ﻿using Altidude.Contracts.Events;
 using Altidude.Contracts.Types;
 using System;
+using System.Collections.Generic;
 
 namespace Altidude.Domain.Aggregates
-{
+{                                                                               
     public class UserAggregate : AggregateBase
     {
         public string UserName { get; private set; }
@@ -13,11 +14,15 @@ namespace Altidude.Domain.Aggregates
         public int ExperiencePoints { get; private set; }
         public UserLevel Level { get; private set; }
         public bool AcceptsEmails { get; private set; }
+        public List<Guid> FollowingUserIds = new List<Guid>(); 
+
 
         public UserAggregate()
         {
             RegisterTransition<UserCreated>(Apply);
             RegisterTransition<UserGainedExperience>(Apply);
+            RegisterTransition<UserFollowed>(Apply);
+            RegisterTransition<UserUnfollowed>(Apply);
         }
 
         public UserAggregate(Guid id, string userName, string email, string firstName, string lastName, DateTime time)
@@ -46,6 +51,16 @@ namespace Altidude.Domain.Aggregates
         {
             ExperiencePoints = evt.TotalPoints;
         }
+
+        public void Apply(UserFollowed evt)
+        {
+            FollowingUserIds.Add(evt.FollowingUserId);
+        }
+        public void Apply(UserUnfollowed evt)
+        {
+            FollowingUserIds.Remove(evt.FollowingUserId);
+        }
+
         public void Apply(UserSettingsUpdated evt)
         {
             FirstName = evt.FirstName;
@@ -72,5 +87,17 @@ namespace Altidude.Domain.Aggregates
         {
             RaiseEvent(new UserSettingsUpdated(Id, firstName, lastName, acceptsEmails));
         }
+        public void Follow(Guid followingUserId)
+        {
+            if (!FollowingUserIds.Contains(followingUserId))
+                RaiseEvent(new UserFollowed(Id, followingUserId));
+        }
+
+        public void Unfollow(Guid followingUserId)
+        {
+            if (FollowingUserIds.Contains(followingUserId))
+                RaiseEvent(new UserUnfollowed(Id, followingUserId));
+        }
+
     }
 }

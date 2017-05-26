@@ -27,6 +27,7 @@ using Altidude.Contracts.Types;
 //using Altidude.;
 using Newtonsoft.Json.Serialization;
 using System.Configuration;
+using Altidude.Domain.Aggregates.Profile;
 using Serilog;
 using Altidude.Infrastructure;
 

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Altidude.Contracts.Commands;
+using Altidude.Domain.Aggregates.Profile;
 using Altidude.Files;
 using tcx20 = Altidude.Files.Tcx20;
 using gpx11 = Altidude.Files.Gpx11;
@@ -60,10 +61,10 @@ namespace Altidude.net.Controllers
 
             application.ExecuteCommand(new GiveKudos(profileId, userId));
 
-            var profile = application.Views.Profiles.GetById(profileId);
+            var summary = application.Views.Profiles.GetSummaryById(profileId);
 
-            if (profile != null)
-                return Request.CreateResponse(HttpStatusCode.OK, profile.Kudos);
+            if (summary != null)
+                return Request.CreateResponse(HttpStatusCode.OK, summary.Kudos);
 
             return Request.CreateResponse(HttpStatusCode.NotFound);
         }
@@ -85,56 +86,64 @@ namespace Altidude.net.Controllers
         {
             var trackPoints = new List<TrackPoint>();
 
+            var track = new List<tcx20.Trackpoint_t>();
+
             if (database.Activities != null && database.Activities.Activity != null &&
                 database.Activities.Activity.Length > 0)
             {
                 var activity = database.Activities.Activity[0];
 
-                var index = 0;
-                var firstAltitudeIndex = -1;
-                var distance = 0.0;
-                var lapDistance = 0.0;
-                var altitude = -1.0;
-
-                TrackPoint firstPoint = null;
-
                 foreach (var lap in activity.Lap)
-                {
-                    foreach (tcx20.Trackpoint_t point in lap.Track)
-                    {
-                        if (point.AltitudeMetersSpecified)
-                        {
-                            if (firstAltitudeIndex == -1)
-                                firstAltitudeIndex = index;
-
-                            altitude = point.AltitudeMeters;
-                        }
-
-                        if (point.DistanceMetersSpecified)
-                            distance = point.DistanceMeters;
-
-                        if (point.Position != null)
-                        {
-                            var trackpoint = new TrackPoint(point.Position.LatitudeDegrees, point.Position.LongitudeDegrees, altitude, distance, point.Time);
-
-                            if (firstPoint == null)
-                                firstPoint = trackpoint;
-
-                            trackPoints.Add(trackpoint);
-
-                            index++;
-                        }
-
-                    }
-
-                    lapDistance += lap.DistanceMeters;
-                }
-
-
-                for (var i = firstAltitudeIndex; i >= 0; i--)
-                    trackPoints[i].Altitude = trackPoints[firstAltitudeIndex].Altitude;
+                    track.AddRange(lap.Track);
 
             }
+            else if (database.Courses != null && database.Courses.Length > 0 &&
+                     database.Courses[0].Track != null && database.Courses[0].Track.Length > 0)
+            {
+                track.AddRange(database.Courses[0].Track);
+            }
+
+
+            if (track.Count <= 0)
+                return null;
+
+            var index = 0;
+            var firstAltitudeIndex = -1;
+            var distance = 0.0;
+            var altitude = -1.0;
+
+            TrackPoint firstPoint = null;
+
+            foreach (tcx20.Trackpoint_t point in track)
+            {
+                if (point.AltitudeMetersSpecified)
+                {
+                    if (firstAltitudeIndex == -1)
+                        firstAltitudeIndex = index;
+
+                    altitude = point.AltitudeMeters;
+                }
+
+                if (point.DistanceMetersSpecified)
+                    distance = point.DistanceMeters;
+
+                if (point.Position != null)
+                {
+                    var trackpoint = new TrackPoint(point.Position.LatitudeDegrees, point.Position.LongitudeDegrees,
+                        altitude, distance, point.Time);
+
+                    if (firstPoint == null)
+                        firstPoint = trackpoint;
+
+                    trackPoints.Add(trackpoint);
+
+                    index++;
+                }
+
+            }
+
+            for (var i = firstAltitudeIndex; i >= 0; i--)
+                trackPoints[i].Altitude = trackPoints[firstAltitudeIndex].Altitude;
 
             var climbs = new ClimbFinder().Find(trackPoints.ToArray());
 

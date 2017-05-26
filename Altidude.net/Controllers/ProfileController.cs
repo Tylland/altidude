@@ -88,13 +88,16 @@ namespace Altidude.net.Controllers
             var profile = application.Views.Profiles.GetById(id);
             var chartType = application.Views.ChartTypes.GetById(profile.ChartId);
 
+            var chartTypeName = chartType?.Name;
+            var athleteDisplayName = profile.Result?.Athlete?.DisplayName;
+
             application.ExecuteCommand(new RegisterProfileView(profile.Id, referrer));
 
 
             var title = chartType != null ? chartType.GetTitle(profile.Result.Athlete.DisplayName, profile.Name) : string.Empty;
             var description = chartType != null ? chartType.GetDescription(profile.Result.Athlete.DisplayName, profile.Name) : string.Empty;
 
-            return View(new ProfileDetailViewModel(id, userId, title, description, chartImageUrl));
+            return View(new ProfileDetailViewModel(id, userId, title, description, chartTypeName, athleteDisplayName, chartImageUrl));
         }
 
     }

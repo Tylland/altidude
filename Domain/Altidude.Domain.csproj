@@ -44,15 +44,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateBase.cs" />
-    <Compile Include="Aggregates\ProfileAggregate.cs" />
+    <Compile Include="Aggregates\Profile\ProfileAggregate.cs" />
+    <Compile Include="Aggregates\Profile\ClimbFinder.cs" />
     <Compile Include="Aggregates\Profile\IChartTypeService.cs" />
     <Compile Include="Aggregates\Profile\IElevationService.cs" />
+    <Compile Include="Aggregates\Profile\TrackAnalyzer.cs" />
     <Compile Include="Aggregates\User\UserAggregate.cs" />
     <Compile Include="CommandDispatcher.cs" />
     <Compile Include="CommandHandlers\UserCommandHandler.cs" />
     <Compile Include="CommandHandlers\ProfileCommandHandler.cs" />
     <Compile Include="DomainEntry.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
+    <Compile Include="DouglasPeuckerTransformer.cs" />
     <Compile Include="EventHandlers\UserProgressManager.cs" />
     <Compile Include="IAggregate.cs" />
     <Compile Include="IDateTimeProvider.cs" />

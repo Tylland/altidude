@@ -35,6 +35,8 @@ namespace Altidude.Domain
             commandDispatcher.RegisterHandler<CreateUser>(userCommandHandler);
             commandDispatcher.RegisterHandler<RegisterUserExperience>(userCommandHandler);
             commandDispatcher.RegisterHandler<UpdateUserSettings>(userCommandHandler);
+            commandDispatcher.RegisterHandler<FollowUser>(userCommandHandler);
+            commandDispatcher.RegisterHandler<UnfollowUser>(userCommandHandler);
 
             var profileCommandHandler = new ProfileCommandHandler(domainRepository, dateTimeProvider, userService, placeFinder, elevationService);
             commandDispatcher.RegisterHandler<CreateProfile>(profileCommandHandler);

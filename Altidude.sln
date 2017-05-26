@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.Domain", "Domain\Altidude.Domain.csproj", "{86495352-626B-494C-9ED1-7608B6A967CA}"
 EndProject
@@ -22,6 +22,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.Transformation", "Transformation\Altidude.Transformation.csproj", "{CB4D3053-96F9-40E8-990C-D914CD4502A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.Infrastructure.Test", "Infrastructure.Test\Altidude.Infrastructure.Test.csproj", "{6E690FFB-18E3-41F8-813F-4C83878A8609}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.Logging", "Logging\Altidude.Logging.csproj", "{017EDE31-0B7D-4DC7-836E-FCA9C2CFA16B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.FeatureFlags", "FeatureFlags\Altidude.FeatureFlags.csproj", "{37289EDB-AF48-460B-B40D-006C79D67EE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altidude.MigrationsWebJob", "MigrationsWebJob\Altidude.MigrationsWebJob.csproj", "{2A233BA6-F3B1-4CBD-9E4E-404859DB9EEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +75,18 @@ Global
 		{6E690FFB-18E3-41F8-813F-4C83878A8609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E690FFB-18E3-41F8-813F-4C83878A8609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E690FFB-18E3-41F8-813F-4C83878A8609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{017EDE31-0B7D-4DC7-836E-FCA9C2CFA16B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{017EDE31-0B7D-4DC7-836E-FCA9C2CFA16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{017EDE31-0B7D-4DC7-836E-FCA9C2CFA16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{017EDE31-0B7D-4DC7-836E-FCA9C2CFA16B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37289EDB-AF48-460B-B40D-006C79D67EE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37289EDB-AF48-460B-B40D-006C79D67EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37289EDB-AF48-460B-B40D-006C79D67EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37289EDB-AF48-460B-B40D-006C79D67EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A233BA6-F3B1-4CBD-9E4E-404859DB9EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A233BA6-F3B1-4CBD-9E4E-404859DB9EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A233BA6-F3B1-4CBD-9E4E-404859DB9EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A233BA6-F3B1-4CBD-9E4E-404859DB9EEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

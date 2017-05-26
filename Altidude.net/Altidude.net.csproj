@@ -348,6 +348,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="gulpfile.js" />
+    <Content Include="Images\descending.svg" />
+    <Content Include="Images\ascending.svg" />
+    <Content Include="Images\Charts\Giro d%27Italia.png" />
     <Content Include="Images\Charts\Locked.png" />
     <Content Include="Images\Charts\Mountain Silhouette.png" />
     <Content Include="Images\Charts\Connecting dots.png" />
@@ -364,6 +367,9 @@
     <Content Include="Images\Strava\btn_strava_connectwith_light%402x.png" />
     <Content Include="Images\Strava\btn_strava_connectwith_light.png" />
     <Content Include="Images\Strava\btn_strava_connectwith_light.svg" />
+    <Content Include="Images\location.svg" />
+    <Content Include="Images\lowest.svg" />
+    <Content Include="Images\highest.svg" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\altidude.js" />
@@ -460,6 +466,9 @@
     <Content Include="Views\Admin\Profiles.cshtml" />
     <Content Include="Views\Shared\_UserLoginPartial.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Timeline.cshtml" />
+    <Content Include="Views\User\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="App\app.ts" />
@@ -498,6 +507,10 @@
       <Project>{86495352-626b-494c-9ed1-7608b6a967ca}</Project>
       <Name>Altidude.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FeatureFlags\Altidude.FeatureFlags.csproj">
+      <Project>{37289edb-af48-460b-b40d-006c79d67ee5}</Project>
+      <Name>Altidude.FeatureFlags</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Files\Altidude.Files.csproj">
       <Project>{33c052eb-b8aa-41e0-b546-1d386823809b}</Project>
       <Name>Altidude.Files</Name>
@@ -505,6 +518,10 @@
     <ProjectReference Include="..\Infrastructure\Altidude.Infrastructure.csproj">
       <Project>{fa6793d5-3cb8-45b4-a9e9-baf1bfec29c3}</Project>
       <Name>Altidude.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Altidude.Logging.csproj">
+      <Project>{017ede31-0b7d-4dc7-836e-fca9c2cfa16b}</Project>
+      <Name>Altidude.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Transformation\Altidude.Transformation.csproj">
       <Project>{cb4d3053-96f9-40e8-990c-d914cd4502a6}</Project>
@@ -522,7 +539,6 @@
     <Folder Include="App\Components\" />
     <Folder Include="App\ProfileChart\Charts\" />
     <Folder Include="Controllers\Api\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

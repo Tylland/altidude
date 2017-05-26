@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Altidude.Contracts.Types;
 
-namespace Altidude.Infrastructure
+namespace Altidude.Domain.Aggregates.Profile
 {
     public class ClimbFinder
     {
@@ -30,7 +30,7 @@ namespace Altidude.Infrastructure
                     var ascending = trackPoint.Altitude >= lastPoint.Altitude;
 
                     if (ascending)
-                        distance += lastPoint.DistanceTo(trackPoint);
+                        distance +=  trackPoint.Distance - lastPoint.Distance;
                 }
 
                 lastPoint = trackPoint;

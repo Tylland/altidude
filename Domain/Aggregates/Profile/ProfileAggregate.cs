@@ -220,7 +220,9 @@ namespace Altidude.Domain.Aggregates
             var result = CreateResult(user, track, profilePlaces);
             var legs = CreateLegs(track, profilePlaces);
 
-            RaiseEvent(new ProfileCreated(id, user.Id, name, datetime.Now, track, profilePlaces, legs, result));
+            var data = new TrackAnalyzer().Analyze(track);
+
+            RaiseEvent(new ProfileCreated(id, user.Id, Guid.Empty, name, datetime.Now, track, data.Ascending, data.Descending, data.HighestPoint, data.LowestPoint, data.Climbs , profilePlaces, legs, result));
         }
 
         public void Apply(ProfileCreated @event)

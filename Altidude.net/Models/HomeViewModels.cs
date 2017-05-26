@@ -5,7 +5,7 @@ namespace Altidude.net.Models
 {
     public class HomeViewModel
     {
-        public List<Profile> Profiles { get; set; }
+        public List<ProfileSummary> Profiles { get; set; }
     }
 
     public class ContactUsMessageModel

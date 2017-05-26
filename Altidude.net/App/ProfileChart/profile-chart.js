@@ -1130,7 +1130,7 @@ var ProfileChart;
             var even = true;
             var color = "#000000";
             for (var distance = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
-                var distancePoint = transform.processPoint(data.transform.processPoint(new Point(distance, 0)));
+                var distancePoint = transform.processPoint(data.transform.processPoint(new Point(distance, data.altitudeAxis.min)));
                 var distanceMajor = data.distanceAxis.major(distance);
                 if (distanceMajor) {
                     if (lastMajorDistancePoint != undefined) {
@@ -1142,7 +1142,7 @@ var ProfileChart;
                     lastMajorDistancePoint = distancePoint;
                 }
                 if (lastMajorDistancePoint != undefined) {
-                    var endPoint = transform.processPoint(data.transform.processPoint(new Point(data.distanceAxis.max, 0)));
+                    var endPoint = transform.processPoint(data.transform.processPoint(new Point(data.distanceAxis.max, data.altitudeAxis.min)));
                     color = even ? "#000000" : "#FFFFFF";
                     this.renderRulerScaleSegment(paper, lastMajorDistancePoint, endPoint, rulerHeight, color);
                 }
@@ -1249,6 +1249,14 @@ var ProfileChart;
             text.transform("r-5 " + topPoint.x + " " + topPoint.y);
             paper.el("use", { "xlink:href": iconName, x: topPoint.x, y: topPoint.y });
         };
+        GiroItaliaChart.prototype.renderTotalTime = function (paper, data, split, backTransform) {
+            var lineOffset = new Vector(0, -550);
+            var textOffset = new Vector(60, -25);
+            var timePoint = backTransform.processPoint(data.transform.processPoint(new Point(split.distance / 2, data.altitudeAxis.min))).offset(lineOffset);
+            var text = Text.render(paper, split.getTime(), timePoint.offset(textOffset), Alignment.centerBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial", fontWeight: "bold" });
+            text.transform("r-5 " + timePoint.x + " " + timePoint.y);
+            //paper.el("use", { "xlink:href": iconName, x: topPoint.x, y: topPoint.y });
+        };
         GiroItaliaChart.prototype.renderDistance = function (paper, data, split, frontTransform, bold) {
             var topPoint = frontTransform.processPoint(split.point);
             var basePoint = frontTransform.processPoint(data.transform.processPoint(new Point(split.distance, data.altitudeAxis.min))).offset(new Vector(0, 30));
@@ -1263,6 +1271,7 @@ var ProfileChart;
             this.renderDistance(paper, data, data.getFirstSplit(), frontTransform, true);
             this.renderStartFinish(paper, data, data.getLastSplit(), Alignment.rightBottom, backTransform, "#finish_icon");
             this.renderDistance(paper, data, data.getLastSplit(), frontTransform, true);
+            this.renderTotalTime(paper, data, data.getLastSplit(), backTransform);
             //var direction: Vector = new Vector(10, -1);
             //var directionPoint = startTopPoint.offset(direction.scaleToX(1600));
             //this.renderLine(paper, startTopPoint, directionPoint).attr({ fill: "none", stroke: "#000000", strokeWidth: 1 });

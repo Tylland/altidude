@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Altidude.Contracts.Types;
 
-namespace Altidude.Infrastructure
+namespace Altidude.Domain
 {
 
    //   function DouglasPeucker(PointList[], epsilon)

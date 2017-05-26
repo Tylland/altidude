@@ -4,7 +4,7 @@ using System;
 
 namespace Altidude.Domain.CommandHandlers
 {
-    internal class UserCommandHandler : IHandle<CreateUser>, IHandle<RegisterUserExperience>, IHandle<UpdateUserSettings>
+    internal class UserCommandHandler : IHandle<CreateUser>, IHandle<RegisterUserExperience>, IHandle<UpdateUserSettings>, IHandle<FollowUser>, IHandle<UnfollowUser>
     {
         private IDomainRepository _domainRepository;
         private IDateTimeProvider _dateTimeProvider;
@@ -36,6 +36,24 @@ namespace Altidude.Domain.CommandHandlers
             var aggregate = _domainRepository.GetById<UserAggregate>(command.Id);
 
             aggregate.UpdateSettings(command.FirstName, command.LastName, command.AcceptsEmails);
+
+            return aggregate;
+        }
+
+        public IAggregate Handle(FollowUser command)
+        {
+            var aggregate = _domainRepository.GetById<UserAggregate>(command.Id);
+
+            aggregate.Follow(command.FollowingUserId);
+
+            return aggregate;
+        }
+
+        public IAggregate Handle(UnfollowUser command)
+        {
+            var aggregate = _domainRepository.GetById<UserAggregate>(command.Id);
+
+            aggregate.Unfollow(command.FollowingUserId);
 
             return aggregate;
         }

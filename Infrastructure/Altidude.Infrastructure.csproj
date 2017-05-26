@@ -38,6 +38,9 @@
       <HintPath>..\packages\GoogleMapsApi.0.61.0\lib\net45\GoogleMapsApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
@@ -97,10 +100,15 @@
     <Compile Include="AggregateNotFoundException.cs" />
     <Compile Include="AzureBlobChartImageManager.cs" />
     <Compile Include="AzureBlobStorage.cs" />
-    <Compile Include="ClimbFinder.cs" />
     <Compile Include="CustomSqlServerOrmLiteDialectProvider .cs" />
     <Compile Include="DbUpgrader.cs" />
-    <Compile Include="DouglasPeuckerTransformer.cs" />
+    <Compile Include="Migration.cs" />
+    <Compile Include="MigrationManager.cs" />
+    <Compile Include="Migrations\AddUserStatistics.cs" />
+    <Compile Include="Migrations\RebuildProfileView.cs" />
+    <Compile Include="MigrationVersion.cs" />
+    <Compile Include="Migrations\InitialDbUpgrade.cs" />
+    <Compile Include="OrmLiteUserTimelineView.cs" />
     <Compile Include="SendGridEmailNotifier.cs" />
     <Compile Include="SendGridMailSender.cs" />
     <Compile Include="GoogleMailSender.cs" />
@@ -129,6 +137,10 @@
       <Project>{86495352-626b-494c-9ed1-7608b6a967ca}</Project>
       <Name>Altidude.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logging\Altidude.Logging.csproj">
+      <Project>{017ede31-0b7d-4dc7-836e-fca9c2cfa16b}</Project>
+      <Name>Altidude.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Views\Altidude.Views.csproj">
       <Project>{7b85d273-a249-4202-a39f-a2182f3bdb3d}</Project>
       <Name>Altidude.Views</Name>
@@ -153,11 +165,14 @@
     <EmbeddedResource Include="Scripts\DbUp0006-Add UsageLevel to PlaceEnvelope.sql" />
     <EmbeddedResource Include="Scripts\DbUp0007-Add ExperiencePoints and Level to UserView.sql" />
     <EmbeddedResource Include="Scripts\DbUp0008-Add NrOfViews to PlaceEnvelope.sql" />
-    <EmbeddedResource Include="Scripts\DbUp0009-Add AcceptEmails to UserView.sql" />
+    <EmbeddedResource Include="Scripts\DbUp0012-Add Follow to UserView.sql" />
     <EmbeddedResource Include="Scripts\DbUp0010-Update ExperiencePoints on UserView.sql" />
     <EmbeddedResource Include="Scripts\DbUp0011-Add Kudos to ProfileEnvelope.sql" />
+    <EmbeddedResource Include="Scripts\DbUp0009-Add AcceptEmails to UserView.sql" />
+    <EmbeddedResource Include="Scripts\DbUp0013-Add MigrationVersions Table.sql" />
     <Content Include="Scripts\Delete From Tables.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

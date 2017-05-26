@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Transactions;
 using System.Threading.Tasks;
 using Altidude.Contracts;
@@ -59,5 +60,19 @@ namespace Altidude.Infrastructure
 
             return savedEvents;
         }
+
+        public IEnumerable<IEvent> GetAllEvents()
+        {
+            var commits = _store.Advanced.GetFrom();
+
+            foreach (var commit in commits)
+            {
+                foreach (var evt in commit.Events)
+                {
+                    yield return evt.Body as IEvent;
+                }
+            }
+        }
+
     }
 }

@@ -67,16 +67,19 @@
 <div id="detailControllerID" ng-app="altidudeApp" ng-controller="profileDetailController as detailController" ng-init="detailController.init('@Model.ProfileId', '@Model.UserId')">
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            <a class='btn btn-primary' href="#" data-toggle="tooltip" title="Give Altitude (Kudos)" ng-click="detailController.giveKudos()"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;{{detailController.kudos}}</a>
+            <a class='btn btn-primary' href="#" data-toggle="tooltip" title="Give Altitude (Kudos)" ng-click="detailController.giveKudos()"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;{{detailController.kudos}}</a>
             <a class='btn btn-primary' href="/profile/edit/@Model.ProfileId" ng-disabled="!detailController.isOwner"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit</a>
             @*<a class='btn btn-social btn-facebook'>&nbsp;Share on facebook</a>*@
         </div>
-
+        
         <h2>@Model.Title</h2>
-    </div>
+        <a href="/user/index/@Model.UserId"><h3>@Model.AthleteDisplayName</h3></a>
+
+</div>
 
     <div id="chartRoot" class="profile-chart" chart="detailController.chart" profile="detailController.profile" result="detailController.result" style="width: 100%;"></div>
 
+    <h3>@Model.ChartTypeName</h3>
 
     <div class="fb-like"
          data-share="true"

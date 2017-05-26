@@ -45,6 +45,7 @@
     <Compile Include="ITrackBoundaryView.cs" />
     <Compile Include="IProfileView.cs" />
     <Compile Include="IUserLevelView.cs" />
+    <Compile Include="IUserTimelineView.cs" />
     <Compile Include="IUserView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

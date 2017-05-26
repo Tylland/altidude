@@ -1,0 +1,55 @@
+﻿@model Altidude.net.Models.UserProfileViewModel
+@{
+    ViewBag.Title = Model.User.DisplayName;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Progress</h4>
+        <hr />
+        <div class="level-box">
+            <div class="level-box-content">
+                <span class="level-box-text">Level</span>
+                <span class="level-box-number" style="font-size:48pt">@Model.Level.Level</span>
+                <div>
+                    <span class="progress-label">@Model.LevelPoints/@Model.Level.Points XP</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="@Model.LevelProgress" aria-valuemin="0" aria-valuemax="100" style="width:@Model.LevelProgress%">
+                            <span>&nbsp;</span>
+                        </div>
+                    </div>
+                    <span>Total @Model.User.ExperiencePoints XP</span>
+                </div>
+            </div>
+        </div>
+        @*<div class="progress">
+                <div class="input-group">
+                    <span class="input-group-addon">@Model.Level.MinPoints</span>
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Model.LevelProgress" aria-valuemin="0" aria-valuemax="100" style="width:@Model.LevelProgress%">
+                        @Model.ExperiencePoints
+                    </div>
+                    <span class="input-group-addon">@Model.Level.MaxPoints</span>
+                </div>
+                <div class="clearfix"></div>
+            </div>*@
+
+        @*<p class="pull-left media-name">XP</p>*@
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+
+        @using (Html.BeginForm("ToggleFollow", "User", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="userId" value="@Model.User.Id"/>
+            <input type="submit" value="@Model.FollowingText" class="btn btn-default"/>
+        }        
+    </div>
+</div>

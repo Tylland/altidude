@@ -30,7 +30,7 @@ namespace Altidude.Infrastructure
             //Add(new ChartType("28D33FB8-BEFC-41B3-B947-A0B9B6A811EB", "Mountain Silhouette", "{1}", "{2}", 2, NoDate));
             Add(new ChartType("614483F0-5B42-41B3-939E-24C4BD1660F8", "Northern Zodiac", "{1}", "{2}", 1, NoDate));
             Add(new ChartType("507AF72C-5678-4AFC-AB43-AB7DC34D904E", "Southern Zodiac", "{1}", "{2}", 2, NoDate));
-            Add(new ChartType("E6C5D286-BF69-4FD0-A6DE-F46ACC53F011", "Giro d'Italia", "{1}", "{2}", 3, NoDate));
+            Add(new ChartType("E6C5D286-BF69-4FD0-A6DE-F46ACC53F011", "Giro d'Italia", "{1}", "{2}", 3, new DateTime(2017, 05, 31)));
         }
         private void Add(ChartType chartType)
         {

@@ -1540,7 +1540,7 @@ module ProfileChart {
             let color: string = "#000000";
 
             for (var distance: number = data.distanceAxis.min; distance <= data.distanceAxis.max; distance = distance + data.distanceAxis.gridMinor) {
-                var distancePoint: Point = transform.processPoint(data.transform.processPoint(new Point(distance, 0)));
+                var distancePoint: Point = transform.processPoint(data.transform.processPoint(new Point(distance, data.altitudeAxis.min)));
 
                 var distanceMajor: boolean = data.distanceAxis.major(distance);
 
@@ -1561,7 +1561,7 @@ module ProfileChart {
                 }
 
                 if (lastMajorDistancePoint != undefined) {
-                    var endPoint: Point = transform.processPoint(data.transform.processPoint(new Point(data.distanceAxis.max, 0)));
+                    var endPoint: Point = transform.processPoint(data.transform.processPoint(new Point(data.distanceAxis.max, data.altitudeAxis.min)));
 
                     color = even ? "#000000" : "#FFFFFF";
 
@@ -1721,6 +1721,21 @@ module ProfileChart {
             paper.el("use", { "xlink:href": iconName, x: topPoint.x, y: topPoint.y });
         }
 
+        renderTotalTime(paper: Snap.Paper, data: ChartData, split: ChartSplit, backTransform: PointProcessorPipeLine) {
+            var lineOffset: Vector = new Vector(0, -550);
+            var textOffset: Vector = new Vector(60, -25);
+
+
+            var timePoint = backTransform.processPoint(data.transform.processPoint(new Point(split.distance/ 2, data.altitudeAxis.min))).offset(lineOffset);
+
+
+            var text: Snap.Element = Text.render(paper, split.getTime(), timePoint.offset(textOffset), Alignment.centerBottom, { fontSize: "48px", fill: "#000000", fontFamily: "Arial", fontWeight: "bold" });
+            text.transform("r-5 " + timePoint.x + " " + timePoint.y);
+
+            //paper.el("use", { "xlink:href": iconName, x: topPoint.x, y: topPoint.y });
+        }
+
+
         renderDistance(paper: Snap.Paper, data: ChartData, split: ChartSplit, frontTransform: PointProcessorPipeLine, bold: boolean) {
 
             var topPoint = frontTransform.processPoint(split.point);
@@ -1736,6 +1751,7 @@ module ProfileChart {
 
         }
 
+
         renderSplits(paper: Snap.Paper, data: ChartData, chartArea: Rectangle, backTransform: PointProcessorPipeLine, frontTransform: PointProcessorPipeLine): void {
 
             this.renderStartFinish(paper, data, data.getFirstSplit(), Alignment.leftBottom, backTransform, "#start_icon");
@@ -1743,6 +1759,8 @@ module ProfileChart {
 
             this.renderStartFinish(paper, data, data.getLastSplit(), Alignment.rightBottom, backTransform, "#finish_icon");
             this.renderDistance(paper, data, data.getLastSplit(), frontTransform, true);
+
+            this.renderTotalTime(paper, data, data.getLastSplit(), backTransform);
             
             //var direction: Vector = new Vector(10, -1);
             //var directionPoint = startTopPoint.offset(direction.scaleToX(1600));

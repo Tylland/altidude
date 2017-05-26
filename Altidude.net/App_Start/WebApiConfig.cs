@@ -4,8 +4,10 @@ using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.Web.Http;
+using ServiceStack.OrmLite;
 
 namespace Altidude.net
 {
@@ -28,11 +30,10 @@ namespace Altidude.net
 
             Log.Debug("Logging Started!!");
 
-            var connectionString = ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName].ConnectionString;
+            //var connectionString = ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName].ConnectionString;
+            //var result = DbUpgrader.Upgrade(connectionString, true);
 
-            var result = DbUpgrader.Upgrade(connectionString, true);
-
-
+           
             var jsonFormatter = config.Formatters.JsonFormatter;
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             //jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

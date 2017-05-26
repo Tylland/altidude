@@ -22,14 +22,19 @@ namespace Altidude.net.Models
         public Guid UserId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string ChartTypeName { get; set; }
+        public string AthleteDisplayName { get; set; }
         public string ChartImageUrl { get; set; }
 
-        public ProfileDetailViewModel(Guid profileId, Guid userId, string title, string description, string chartImageUrl)
+        public ProfileDetailViewModel(Guid profileId, Guid userId, string title, string description, string chartTypeName, string athleteDisplayName, string chartImageUrl)
         {
             ProfileId = profileId;
             UserId = userId;
             Title = title;
             Description = description;
+            ChartTypeName = chartTypeName;
+            AthleteDisplayName = athleteDisplayName;
+
             ChartImageUrl = chartImageUrl;
         }
         public ProfileDetailViewModel()

@@ -1,0 +1,143 @@
+﻿
+@model Altidude.net.Models.UserDashboardViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+<section class="info-box-container tango-aluminium-1">
+    <div class="row">
+        <div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><i class="glyphicon glyphicon-arrow-right"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Distance</span>
+                        <span class="info-box-number">@Model.ProfileSummary.FormatKm(sum => sum.Distance)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><i class="glyphicon glyphicon-time"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Time</span>
+                        <span class="info-box-number">@Model.ProfileSummary.TimeSeconds</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><i class="glyphicon glyphicon-"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">#Climbs</span>
+                        <span class="info-box-number">@Model.ProfileSummary.NrOfClimbs</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><i class="glyphicon glyphicon-map-marker"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Climb points</span>
+                        <span class="info-box-number">@Model.ProfileSummary.ClimbPoints</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><img src="~/Images/ascending.svg" /></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Ascending</span>
+                        <span class="info-box-number">@Model.ProfileSummary.FormatKm(sum => sum.Ascending)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l"><img src="~/Images/descending.svg" /></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Descending</span>
+                        <span class="info-box-number">@Model.ProfileSummary.FormatKm(sum => sum.Descending)</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l">
+                        <img src="~/Images/highest.svg" /></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Highest</span>
+                        <span class="info-box-number">@Model.ProfileSummary.HighestAltitude</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon tango-skyblue-l">
+                        <img src="~/Images/lowest.svg" /></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Lowest</span>
+                        <span class="info-box-number">@Model.ProfileSummary.LowestAltitude</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<section id="cd-timeline" class="cd-container">
+    
+@if (Model != null)
+{
+    foreach (var profile in Model.Profiles)
+    {
+
+        <div class="cd-timeline-block">
+            <div class="cd-timeline-img cd-picture">
+
+             <img src="~/Images/location.svg" alt="Picture">
+            </div> <!-- cd-timeline-img -->
+
+            <div class="cd-timeline-content">
+                <a href="/profile/detail/@profile.Id">
+                    <img class="img-responsive" src="https://altidude.blob.core.windows.net/chartimages/@(profile.Id).png" alt="@profile.Name">
+                </a>
+                <span class="cd-date"><small>@profile.CreatedTime</small><br/><h4>@profile.Name</h4></span>
+</div> <!-- cd-timeline-content -->
+        </div>
+        <!-- cd-timeline-block -->
+    }
+}
+</section> <!-- cd-timeline -->
+
+@*<div class="row thumbnail-list">
+    @if (Model != null)
+    {
+        foreach (var profile in Model.Profiles)
+        {
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <a class="thumbnail" href="/profile/detail/@profile.Id">
+                    <img class="img-responsive" src="https://altidude.blob.core.windows.net/chartimages/@(profile.Id).png" alt="@profile.Name">
+                </a>
+            </div>
+        }
+    }
+
+</div>*@

@@ -18,6 +18,8 @@ using gpx = Altidude.Files.Gpx11;
 using System.Net.Http;
 using System.Text;
 using System.Net;
+using System.Threading.Tasks;
+using System.Web.Hosting;
 using Altidude.Contracts.Commands;
 
 namespace Altidude.net.Controllers
@@ -62,7 +64,7 @@ namespace Altidude.net.Controllers
             var model = new AdminViewModel();
 
             model.TotalNrOfUsers = views.Users.GetAll().Count;
-            model.TotalNrOfProfiles = views.Profiles.GetAll().Count;
+            model.TotalNrOfProfiles = (int)views.Profiles.Count();
             model.TotalNrOfViews = views.Profiles.GetTotalNrOfViews();
             model.TotalNrOfPlaces = views.Places.GetAll().Count;
             model.Timestamp = DateTime.Now;
@@ -122,7 +124,7 @@ namespace Altidude.net.Controllers
         {
             var model = new DatabaseViewModel
             {
-                CreateScript = GenerateCreateScript(typeof (PlaceEnvelope), typeof(ProfileEnvelope), typeof(TrackBoundaryView), typeof(UserView))
+                CreateScript = GenerateCreateScript(typeof (PlaceEnvelope), typeof(ProfileEnvelope), typeof(TrackBoundaryView), typeof(UserView), typeof(MigrationVersion))
             };
                        
             return View(model);
@@ -131,11 +133,37 @@ namespace Altidude.net.Controllers
         [HttpPost]
         public ActionResult UpgradeDatabase()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName].ConnectionString;
+            //var connectionString = ConfigurationManager.ConnectionStrings[ApplicationManager.DatabaseConnectionStringName].ConnectionString;
 
-            var result = DbUpgrader.Upgrade(connectionString, true);
+            //var result = DbUpgrader.Upgrade(connectionString, true);
+            Server.ScriptTimeout = 600;
+
+            RunMigrations();
+
 
             return View("Index");
+        }
+
+        private static void RunMigrations()
+        {
+            var migrationManager = new MigrationManager(ApplicationManager.OpenConnection());
+            migrationManager.Apply();
+        }
+
+        private void RunMigrationsAsync()
+        {
+            AppDomain domain = AppDomain.CreateDomain("MigrationsDomain");
+
+            domain.DoCallBack(() =>
+            {
+                //var t = new System.Threading.Thread(() =>
+                //{
+                //    var migrationManager = new MigrationManager(ApplicationManager.OpenConnection());
+                //    migrationManager.Apply();
+                //});
+
+                //t.Start();
+            });
         }
 
         [HttpPost]

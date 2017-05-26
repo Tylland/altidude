@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Altidude.FeatureFlags
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -50,6 +51,14 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Start", "index", "home")</li>
+                        
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (Features.UserDashboard.IsAvailable(User))
+                        {
+                            <li>@Html.ActionLink("Dashboard", "dashboard", "user")</li>
+                        }
+                    }
                     <li>@Html.ActionLink("Create", "create", "profile")</li>
                     <li>@Html.ActionLink("Profiles", "index", "profile")</li>
                     <li>@Html.ActionLink("Contact", "contact", "home")</li>

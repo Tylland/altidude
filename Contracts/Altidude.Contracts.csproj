@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddProfilePlace.cs" />
+    <Compile Include="Commands\UnfollowUser.cs" />
+    <Compile Include="Commands\FollowUser.cs" />
     <Compile Include="Commands\GiveKudos.cs" />
     <Compile Include="Commands\ImportElevation.cs" />
     <Compile Include="Commands\DeleteProfile.cs" />
@@ -61,6 +63,8 @@
     <Compile Include="Events\ProfileDeleted.cs" />
     <Compile Include="Events\ProfileCreated.cs" />
     <Compile Include="Events\KudosGiven.cs" />
+    <Compile Include="Events\UserUnfollowed.cs" />
+    <Compile Include="Events\UserFollowed.cs" />
     <Compile Include="Events\UserGainedLevel.cs" />
     <Compile Include="Events\UserSettingsUpdated.cs" />
     <Compile Include="Events\UserGainedExperience.cs" />
@@ -98,7 +102,9 @@
     <Compile Include="Types\TrackSegment.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserChartType.cs" />
+    <Compile Include="Types\UserEvent.cs" />
     <Compile Include="Types\UserLevel.cs" />
+    <Compile Include="Types\UserProfileSummary.cs" />
     <Compile Include="ValueObject.cs" />
   </ItemGroup>
   <ItemGroup>
