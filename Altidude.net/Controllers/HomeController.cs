@@ -64,6 +64,13 @@ namespace Altidude.net.Controllers
             return View();
         }
 
+        public ActionResult ShowMessage(string message)
+        {
+            ViewBag.Message = message;
+
+            return View();
+        }
+
         [HttpPost]
         public ActionResult SendContactMessage(ContactUsMessageModel model)
         {

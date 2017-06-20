@@ -104,6 +104,7 @@
     <Compile Include="DbUpgrader.cs" />
     <Compile Include="Migration.cs" />
     <Compile Include="MigrationManager.cs" />
+    <Compile Include="Migrations\AddNrOfProfilesToUsers.cs" />
     <Compile Include="Migrations\AddUserStatistics.cs" />
     <Compile Include="Migrations\RebuildProfileView.cs" />
     <Compile Include="MigrationVersion.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Altidude.Contracts.Commands;
 using Altidude.Logging;
@@ -7,6 +8,7 @@ using Microsoft.AspNet.Identity;
 
 using Altidude.net.Models;
 using Serilog;
+using ServiceStack.Text;
 
 namespace Altidude.net.Controllers
 {
@@ -41,17 +43,16 @@ namespace Altidude.net.Controllers
         }
 
         [Authorize]
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(Guid? id)
         {
+            var ownerId = id != null && id != Guid.Empty && User.IsInRole("Admin") ? id.Value : UserId;
+
             var views = ApplicationManager.BuildViews();
 
-            var userIds = new List<Guid>();
+            var user = views.Users.GetById(ownerId);
 
-            var user = views.Users.GetById(UserId);
-
-            userIds.Add(user.Id);
+            var userIds = new List<Guid> {user.Id};
             userIds.AddRange(user.FollowingUserIds);
-
 
             var model = new UserDashboardViewModel()
             {
@@ -64,19 +65,36 @@ namespace Altidude.net.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult ToggleFollow(Guid userId)
+        public ActionResult ToggleFollow(Guid otherUserId)
         {
-            var followingUserId = new Guid(User.Identity.GetUserId());
+            var userId = new Guid(User.Identity.GetUserId());
 
             var application = ApplicationManager.BuildApplication();
             var user = application.Views.Users.GetById(userId);
 
-            if(user.IsFollowedBy(followingUserId))
-                application.ExecuteCommand(new UnfollowUser(userId, followingUserId));
+            if(user.IsFollowing(otherUserId))
+                application.ExecuteCommand(new UnfollowUser(userId, otherUserId));
             else
-                application.ExecuteCommand(new FollowUser(userId, followingUserId));
+                application.ExecuteCommand(new FollowUser(userId, otherUserId));
 
-            return RedirectToAction("Index", new { userId = userId });
+            return RedirectToAction("Index", "User", new { id = otherUserId });
+        }
+
+        [Authorize]
+        public ActionResult RegisterAsPreviewUser(Guid? id)
+        {
+            var userId = id != null && id != Guid.Empty && User.IsInRole("Admin") ? id.Value : UserId;
+
+            var user = UserManager.FindById(userId.ToString());
+
+            if (user != null)
+            {
+                var result1 = UserManager.AddToRole(user.Id, "PreviewUser");
+
+                return RedirectToAction("ShowMessage", "Home", result1.Succeeded ? new { message = "You are now registered as a preview user" } : new { message = "Register as a preview user failed!" + result1.Errors.Join(", ") });
+            }
+
+            return RedirectToAction("ShowMessage", "Home", new { message = "Register as a preview user failed!" });
         }
 
         public PartialViewResult UserLoginPartial()

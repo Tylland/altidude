@@ -23,6 +23,7 @@ namespace Altidude.Domain.Aggregates
             RegisterTransition<UserGainedExperience>(Apply);
             RegisterTransition<UserFollowed>(Apply);
             RegisterTransition<UserUnfollowed>(Apply);
+            RegisterTransition<FollowingUsersCleared>(Apply);
         }
 
         public UserAggregate(Guid id, string userName, string email, string firstName, string lastName, DateTime time)
@@ -54,11 +55,15 @@ namespace Altidude.Domain.Aggregates
 
         public void Apply(UserFollowed evt)
         {
-            FollowingUserIds.Add(evt.FollowingUserId);
+            FollowingUserIds.Add(evt.OtherUserId);
         }
         public void Apply(UserUnfollowed evt)
         {
-            FollowingUserIds.Remove(evt.FollowingUserId);
+            FollowingUserIds.Remove(evt.OtherUserId);
+        }
+        public void Apply(FollowingUsersCleared evt)
+        {
+            FollowingUserIds.Clear();
         }
 
         public void Apply(UserSettingsUpdated evt)
@@ -87,16 +92,20 @@ namespace Altidude.Domain.Aggregates
         {
             RaiseEvent(new UserSettingsUpdated(Id, firstName, lastName, acceptsEmails));
         }
-        public void Follow(Guid followingUserId)
+        public void Follow(Guid otherUserId)
         {
-            if (!FollowingUserIds.Contains(followingUserId))
-                RaiseEvent(new UserFollowed(Id, followingUserId));
+            if (!FollowingUserIds.Contains(otherUserId))
+                RaiseEvent(new UserFollowed(Id, otherUserId));
         }
 
-        public void Unfollow(Guid followingUserId)
+        public void Unfollow(Guid otherUserId)
         {
-            if (FollowingUserIds.Contains(followingUserId))
-                RaiseEvent(new UserUnfollowed(Id, followingUserId));
+            if (FollowingUserIds.Contains(otherUserId))
+                RaiseEvent(new UserUnfollowed(Id, otherUserId));
+        }
+        public void ClearFollowingUsers()
+        {
+            RaiseEvent(new FollowingUsersCleared(Id));
         }
 
     }

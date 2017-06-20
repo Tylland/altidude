@@ -97,7 +97,7 @@ namespace Altidude.net.Controllers
             var title = chartType != null ? chartType.GetTitle(profile.Result.Athlete.DisplayName, profile.Name) : string.Empty;
             var description = chartType != null ? chartType.GetDescription(profile.Result.Athlete.DisplayName, profile.Name) : string.Empty;
 
-            return View(new ProfileDetailViewModel(id, userId, title, description, chartTypeName, athleteDisplayName, chartImageUrl));
+            return View(new ProfileDetailViewModel(id, profile.UserId, title, description, chartTypeName, athleteDisplayName, chartImageUrl));
         }
 
     }

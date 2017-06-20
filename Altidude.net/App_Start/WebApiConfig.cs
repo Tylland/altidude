@@ -24,7 +24,9 @@ namespace Altidude.net
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
+#if !DEBUG
                 .WriteTo.AzureTableStorage(cloudStorageAccount, storageTableName: "SerilogTable")
+#endif
                 .CreateLogger();
 
 

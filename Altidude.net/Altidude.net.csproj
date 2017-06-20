@@ -469,6 +469,7 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Timeline.cshtml" />
     <Content Include="Views\User\Dashboard.cshtml" />
+    <Content Include="Views\Home\ShowMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="App\app.ts" />

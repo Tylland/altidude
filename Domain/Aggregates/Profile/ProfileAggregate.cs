@@ -222,7 +222,7 @@ namespace Altidude.Domain.Aggregates
 
             var data = new TrackAnalyzer().Analyze(track);
 
-            RaiseEvent(new ProfileCreated(id, user.Id, Guid.Empty, name, datetime.Now, track, data.Ascending, data.Descending, data.HighestPoint, data.LowestPoint, data.Climbs , profilePlaces, legs, result));
+            RaiseEvent(new ProfileCreated(id, user.Id, Guid.Empty, name, datetime.Now, track, data.Ascending, data.Descending, data.HighestPoint, data.LowestPoint, data.Climbs, profilePlaces, legs, result));
         }
 
         public void Apply(ProfileCreated @event)
@@ -250,7 +250,6 @@ namespace Altidude.Domain.Aggregates
         {
             Deleted = true;
         }
-
         public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService, IElevationService elevationService)
         {
             if (id == Guid.Empty)

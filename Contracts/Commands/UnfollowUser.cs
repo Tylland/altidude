@@ -5,12 +5,12 @@ namespace Altidude.Contracts.Commands
     public class UnfollowUser : ICommand
     {
         public Guid Id { get; set; }
-        public Guid FollowingUserId { get; set; }
+        public Guid OtherUserId { get; set; }
 
-        public UnfollowUser(Guid id, Guid followingUserId)
+        public UnfollowUser(Guid id, Guid otherUserId)
         {
             Id = id;
-            FollowingUserId = followingUserId;
+            OtherUserId = otherUserId;
         }
 
         public UnfollowUser()

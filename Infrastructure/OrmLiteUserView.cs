@@ -17,7 +17,7 @@ using Altidude.Domain.Aggregates.Profile;
 
 namespace Altidude.Infrastructure
 {
-    public class OrmLiteUserView : IUserView, IUserService, IHandleEvent<UserCreated>, IHandleEvent<UserSettingsUpdated>, IHandleEvent<UserGainedExperience>, IHandleEvent<UserGainedLevel>, IHandleEvent<UserFollowed>, IHandleEvent<ProfileCreated>
+    public class OrmLiteUserView : IUserView, IUserService, IHandleEvent<UserCreated>, IHandleEvent<UserSettingsUpdated>, IHandleEvent<UserGainedExperience>, IHandleEvent<UserGainedLevel>, IHandleEvent<UserFollowed>, IHandleEvent<ProfileCreated>, IHandleEvent<FollowingUsersCleared>
     {
         private IDbConnection _db;
 
@@ -84,33 +84,41 @@ namespace Altidude.Infrastructure
         {
             var user = _db.GetById<UserView>(evt.Id);
 
-            if(user.FollowedByUserIds == null)
-                user.FollowedByUserIds = new List<Guid>();
+            if(user.FollowingUserIds == null)
+                user.FollowingUserIds = new List<Guid>();
+
+            user.FollowingUserIds.Add(evt.OtherUserId);
+
+            _db.Update(user);
 
 
-            user.FollowedByUserIds.Add(evt.FollowingUserId);
+            var otherUser = _db.GetById<UserView>(evt.OtherUserId);
 
-            _db.Update<UserView>(user);
+            if (otherUser.FollowedByUserIds == null)
+                otherUser.FollowedByUserIds = new List<Guid>();
 
-            var followingUser = _db.GetById<UserView>(evt.Id);
+            otherUser.FollowedByUserIds.Add(evt.Id);
 
-            if (followingUser.FollowingUserIds == null)
-                followingUser.FollowingUserIds = new List<Guid>();
-
-            followingUser.FollowingUserIds.Add(evt.Id);
-
-            _db.Update<UserView>(followingUser);
+            _db.Update(otherUser);
         }
-
         public void Handle(UserUnfollowed evt)
         {
             var user = _db.GetById<UserView>(evt.Id);
-            user.FollowedByUserIds.Remove(evt.FollowingUserId);
+            user.FollowedByUserIds.Remove(evt.OtherUserId);
             _db.Update<UserView>(user);
 
             var followingUser = _db.GetById<UserView>(evt.Id);
             followingUser.FollowingUserIds.Remove(evt.Id);
             _db.Update<UserView>(followingUser);
+        }
+        public void Handle(FollowingUsersCleared evt)
+        {
+            var user = _db.GetById<UserView>(evt.Id);
+
+            user.FollowingUserIds.Clear();
+            user.FollowedByUserIds.Clear();
+
+            _db.Update<UserView>(user);
         }
 
         public void Handle(ProfileCreated evt)
@@ -201,6 +209,7 @@ namespace Altidude.Infrastructure
         public DateTime CreatedTime { get; set; }
         public List<Guid> FollowingUserIds { get; set; }
         public List<Guid> FollowedByUserIds { get; set; }
+        [Default(typeof(double), "0")]
         public int NrOfProfiles { get; set; }
         [Default(typeof(double), "0")]
         public double Distance { get; set; }

@@ -43,6 +43,41 @@ namespace Altidude.net
                 }
             }
 
+            // In Startup iam creating first Admin Role and creating a default Admin User    
+            if (!roleManager.RoleExists("SuperUser"))
+            {
+                // first we create Admin rool   
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SuperUser";
+                roleManager.Create(role);
+
+
+                var user = UserManager.FindByEmail("andgusta@hotmail.com");
+
+                //Add default User to Role Admin   
+                if (user != null)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "SuperUser");
+                }
+            }
+
+            if (!roleManager.RoleExists("PreviewUser"))
+            {
+                // first we create Admin rool   
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "PreviewUser";
+                roleManager.Create(role);
+
+
+                var user = UserManager.FindByEmail("andgusta@hotmail.com");
+
+                //Add default User to Role Admin   
+                if (user != null)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "PreviewUser");
+                }
+            }
+
         }
     }
 }

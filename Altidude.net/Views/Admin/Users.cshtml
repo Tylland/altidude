@@ -11,10 +11,11 @@
 {
     <li class="list-group-item row">
         <div class="col-md-3">@user.Email</div>
-        <div class="col-md-6"><strong>@user.DisplayName</strong></div>
+        <div class="col-md-4"><strong>@Html.ActionLink(user.DisplayName, "dashboard", "user", new {id = user.Id}, null)</strong></div>
         <div class="col-md-1">@user.ExperiencePoints</div>
         <div class="col-md-1">@user.Level</div>
         <div class="col-md-1">@user.AcceptsEmails</div>
+        <div class="col-md-2">@Html.ActionLink("Make Preview User", "registeraspreviewuser", "user", new { id = user.Id }, null)</div>
     </li>
 }
 </ul>

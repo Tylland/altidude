@@ -9,7 +9,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>From file (tcx)</h3>
+            <h3>From file (tcx, gpx)</h3>
         </div>
         <div class="panel-body">
             <div class="btn btn-default" ngf-select="" ng-model="importController.trackFile" name="file" ngf-pattern="'.tcx,.gpx'" required="">
@@ -33,9 +33,11 @@
 
             <ul class="list-group">
                 <li class="list-group-item row" ng-repeat="activity in importController.activities">
-                    <div class="col-md-6"><strong>{{activity.name}}</strong></div>
+                    <div class="col-md-5"><strong>{{activity.name}}</strong></div>
                     <div class="col-md-2">{{importController.convertDate(activity.startDate) | date: 'medium'}}</div>
-                    <div class="col-md-1">{{activity.type}}</div>
+                    @*<div class="col-md-1">{{activity.type}}</div>*@
+                    <div class="col-md-1">{{activity.distance}}</div>
+                    <div class="col-md-1">{{activity.elapsedTime}}</div>
                     <div class="col-md-2"><a target="strava" style="color:#FC4C02" href="https://www.strava.com/activities/{{activity.id}}">View on Strava</a></div>
                     <div class="col-md-1">
                         <button ng-hide="activity.creating" class="btn btn-primary" ng-click="importController.createFromActivity(activity)">Create</button>

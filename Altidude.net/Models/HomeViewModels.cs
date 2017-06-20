@@ -14,6 +14,10 @@ namespace Altidude.net.Models
         public string Email { get; set; }
         public string Message { get; set; }
     }
+    public class ShowMessageModel
+    {
+        public string Message { get; set; }
+    }
 
 
 }

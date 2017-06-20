@@ -194,7 +194,7 @@ namespace Altidude.net.Controllers
         {
             try
             {
-                return new StravaActivitySummary(activity.Id, activity.Type.ToString(), activity.Name, activity.StartDate);
+                return new StravaActivitySummary(activity.Id, activity.Type.ToString(), activity.Name, activity.StartDate, activity.ElapsedTime.ToString(), activity.Distance);
             }
             catch (Exception exception)
             {

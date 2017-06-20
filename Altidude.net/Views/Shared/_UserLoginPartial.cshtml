@@ -18,7 +18,7 @@
                     <li class="dropdown-header"><strong>Level @Model.User.Level (@Model.User.ExperiencePoints XP)</strong></li>
                     <li class="divider navbar-login-session-bg"></li>
                     <li> <a href="@Url.Action("Index", "Manage")">Account</a></li>
-                    <li> <a href="@Url.Action("Index", "User",  new { userId = @Model.User.Id })">Profile</a></li>
+                    <li> <a href="@Url.Action("Index", "User",  new { id = @Model.User.Id })">Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
                 </ul>

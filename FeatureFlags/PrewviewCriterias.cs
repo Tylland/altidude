@@ -8,10 +8,15 @@ namespace Altidude.FeatureFlags
         private static readonly List<string> PowerUsers = new List<string> {"andgusta@hotmail.com"};
         public static bool IsPowerUser(PreviewCriteriaContext context)
         {
-            //if (string.IsNullOrEmpty(context.User.Identity.Name))
-            //    return false;
-
             return PowerUsers.Contains(context.User.Identity.Name);
+        }
+        public static bool IsSuperUser(PreviewCriteriaContext context)
+        {
+            return context.User.IsInRole("SuperUser");
+        }
+        public static bool IsPreviewUser(PreviewCriteriaContext context)
+        {
+            return context.User.IsInRole("PreviewUser");
         }
     }
 }

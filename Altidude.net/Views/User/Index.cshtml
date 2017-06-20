@@ -48,7 +48,7 @@
         @using (Html.BeginForm("ToggleFollow", "User", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
         {
             @Html.AntiForgeryToken()
-            <input type="hidden" name="userId" value="@Model.User.Id"/>
+            <input type="hidden" name="otherUserId" value="@Model.User.Id"/>
             <input type="submit" value="@Model.FollowingText" class="btn btn-default"/>
         }        
     </div>

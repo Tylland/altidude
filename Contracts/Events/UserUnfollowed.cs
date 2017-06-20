@@ -6,12 +6,11 @@ namespace Altidude.Contracts.Events
     public class UserUnfollowed: IEvent
     {
         public Guid Id { get; set; }
-        public Guid FollowingUserId { get; set; }
-
-        public UserUnfollowed(Guid id, Guid followingUserId)
+        public Guid OtherUserId { get; set; }
+        public UserUnfollowed(Guid id, Guid otherUserId)
         {
             Id = id;
-            FollowingUserId = followingUserId;
+            OtherUserId = otherUserId;
         }
         public UserUnfollowed()
         {

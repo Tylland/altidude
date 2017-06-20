@@ -26,6 +26,17 @@ namespace Altidude.Contracts.Types
 
             return Math.Round(value, decimals) + " km";
         }
+
+        public string FormatTime(Func<UserProfileSummary, int> valueFunc)
+        {
+            return FormatTime(valueFunc(this));
+        }
+
+        public string FormatTime(int seconds)
+        {
+            return TimeSpan.FromSeconds(seconds).ToString();
+        }
+
         public string FormatClimbPoints(Func<UserProfileSummary, double> valueFunc)
         {
             return FormatClimbPoints(valueFunc(this));

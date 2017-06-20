@@ -25,7 +25,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Time</span>
-                        <span class="info-box-number">@Model.ProfileSummary.TimeSeconds</span>
+                        <span class="info-box-number">@Model.ProfileSummary.FormatTime(sum => sum.TimeSeconds)</span>
                     </div>
 
                 </div>

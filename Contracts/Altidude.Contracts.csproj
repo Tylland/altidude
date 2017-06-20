@@ -55,6 +55,7 @@
     <Compile Include="Commands\RegisterProfileView.cs" />
     <Compile Include="Commands\ChangeChart.cs" />
     <Compile Include="Commands\CreateUser.cs" />
+    <Compile Include="Commands\ClearFollowingUsers.cs" />
     <Compile Include="Equatable.cs" />
     <Compile Include="Events\EventBase.cs" />
     <Compile Include="Commands\CreateProfile.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Events\ProfileDeleted.cs" />
     <Compile Include="Events\ProfileCreated.cs" />
     <Compile Include="Events\KudosGiven.cs" />
+    <Compile Include="Events\UserResetFollowing.cs" />
     <Compile Include="Events\UserUnfollowed.cs" />
     <Compile Include="Events\UserFollowed.cs" />
     <Compile Include="Events\UserGainedLevel.cs" />

@@ -192,6 +192,18 @@ namespace Altidude.net.Controllers
             return View("Index");
         }
 
+        [HttpPost]
+        public ActionResult ClearFollowingUsers()
+        {
+            var application = ApplicationManager.BuildApplication();
+
+            var users = application.Views.Users.GetAll();
+
+            foreach (var user in users)
+                application.ExecuteCommand(new ClearFollowingUsers(user.Id));
+
+            return View("Index");
+        }
 
 
         //[HttpGet]

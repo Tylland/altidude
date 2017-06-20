@@ -60,8 +60,8 @@ namespace Altidude.Infrastructure
             });
         }
 
-        public async Task SendMessageAsync(string fromAddress, string fromDisplayName, string toAddress, string toDisplayName, string subject, string plainTextContent, string htmlContent)
-        {
+            public async Task SendMessageAsync(string fromAddress, string fromDisplayName, string toAddress, string toDisplayName, string subject, string plainTextContent, string htmlContent)
+            {
             var client = new SendGridClient(ApiKey);
             var from = new EmailAddress(fromAddress, fromDisplayName);
             var to = new EmailAddress(toAddress, toDisplayName);
