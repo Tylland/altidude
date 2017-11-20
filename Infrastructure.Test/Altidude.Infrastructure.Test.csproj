@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="KeyGeneratorTest.cs" />
     <Compile Include="TrackPointReducertTest.cs" />
     <Compile Include="UserLevelServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

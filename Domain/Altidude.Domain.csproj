@@ -56,8 +56,11 @@
     <Compile Include="DomainEntry.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="DouglasPeuckerTransformer.cs" />
+    <Compile Include="EventDispatcher.cs" />
     <Compile Include="EventHandlers\UserProgressManager.cs" />
     <Compile Include="IAggregate.cs" />
+    <Compile Include="ICheckpointStorage.cs" />
+    <Compile Include="ISettingsManager.cs" />
     <Compile Include="IDateTimeProvider.cs" />
     <Compile Include="IDomainRepository.cs" />
     <Compile Include="IEventBus.cs" />

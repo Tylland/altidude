@@ -24,7 +24,7 @@ namespace Altidude.Infrastructure
                 new InitialDbUpgrade(),
                 new RebuildProfileView(),
                 new AddUserStatistics(),
-                new AddNrOfProfilesToUsers(),
+                new AddCheckpointTable()
             };
         }
 

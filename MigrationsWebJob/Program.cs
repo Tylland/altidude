@@ -3,12 +3,12 @@ using System.Configuration;
 using System.Data;
 using Altidude.Infrastructure;
 using Altidude.Infrastructure.SqlServerOrmLite;
-using ServiceStack.OrmLite;
-using Serilog;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
+using Serilog;
+using ServiceStack.OrmLite;
 
-namespace MigrationsWebJob
+namespace Altidude.MigrationsWebJob
 {
     // To learn more about Microsoft Azure WebJobs SDK, please see https://go.microsoft.com/fwlink/?LinkID=320976
     class Program

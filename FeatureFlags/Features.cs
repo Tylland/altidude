@@ -8,6 +8,7 @@ namespace Altidude.FeatureFlags
         public static Feature UserProfile;
         public static Feature FollowUser;
         public static Feature UserDashboard;
+        public static Feature InviteFBFriends;
 
         static Features()
         {
@@ -15,6 +16,7 @@ namespace Altidude.FeatureFlags
             UserProfile = new Feature(FeatureState.Preview, PreviewCriterias.IsPowerUser, UserNameInProfileDetailPage);
             FollowUser = new Feature(FeatureState.Preview, PreviewCriterias.IsPowerUser, UserProfile);
             UserDashboard = new Feature(FeatureState.Preview, PreviewCriterias.IsPreviewUser);
+            InviteFBFriends = new Feature(FeatureState.Preview, PreviewCriterias.IsPreviewUser);
         }
 
         //public static void Configure(Action configureAction)

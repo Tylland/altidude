@@ -76,5 +76,9 @@ namespace Altidude.Infrastructure
                 _eventStore.Add(eventsForAggregate.Key, eventsForAggregate.Value.Select(Serialize).ToList());
             }
         }
+
+        public override void ProcessEvents(IEventBus eventBus, ICheckpointStorage checkpointStorage)
+        {
+        }
     }
 }

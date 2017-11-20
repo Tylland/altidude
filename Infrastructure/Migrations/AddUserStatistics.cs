@@ -22,6 +22,7 @@ namespace Altidude.Infrastructure.Migrations
 
             var events = eventStore.GetAllEvents();
 
+
             foreach (var evt in events)
             {
                 

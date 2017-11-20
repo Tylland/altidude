@@ -54,6 +54,10 @@
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JWT, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.2.4.2\lib\net35\JWT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -115,9 +119,9 @@
       <HintPath>..\packages\NEventStore.5.2.0\lib\net40\NEventStore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
@@ -285,8 +289,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\ApplicationConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -298,6 +302,7 @@
     <Compile Include="Controllers\ApiProfileController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ApiDispatcherController.cs" />
     <Compile Include="Controllers\FacebookController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -334,10 +339,6 @@
     <Content Include="App\ProfileChart\Templates\connecting_dots.svg" />
     <Content Include="App\ProfileChart\Templates\loading.svg" />
     <Content Include="App\ProfileChart\Templates\test.svg" />
-    <Content Include="App_Data\Altidude.mdf" />
-    <Content Include="App_Data\Altidude_log.ldf">
-      <DependentUpon>Altidude.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -360,6 +361,7 @@
     <Content Include="Images\Charts\The Forest.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\logo_test.png" />
+    <Content Include="Images\profile_example.png" />
     <Content Include="Images\Strava\api_logo_cptblWith_strava_horiz_gray.png" />
     <Content Include="Images\Strava\api_logo_cptblWith_strava_horiz_gray.svg" />
     <Content Include="Images\Strava\api_logo_cptblWith_strava_stack_gray.png" />
@@ -470,6 +472,7 @@
     <Content Include="Views\User\Timeline.cshtml" />
     <Content Include="Views\User\Dashboard.cshtml" />
     <Content Include="Views\Home\ShowMessage.cshtml" />
+    <Content Include="Views\Admin\KeyGenerator.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="App\app.ts" />
@@ -500,6 +503,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Application\Altidude.Application.csproj">
+      <Project>{31c80ad0-a295-4c88-b853-f62abf214f58}</Project>
+      <Name>Altidude.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Contracts\Altidude.Contracts.csproj">
       <Project>{634347dc-c5a4-4b10-bd7c-757c9bbb0843}</Project>
       <Name>Altidude.Contracts</Name>
@@ -539,6 +546,7 @@
   <ItemGroup>
     <Folder Include="App\Components\" />
     <Folder Include="App\ProfileChart\Charts\" />
+    <Folder Include="App_Data\" />
     <Folder Include="Controllers\Api\" />
   </ItemGroup>
   <ItemGroup>
