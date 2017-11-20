@@ -12,5 +12,6 @@ namespace Altidude.Domain
         void Register<T>(Action<T> callback) where T : IEvent;
         void ClearCallbacks();
         void Raise<T>(T args) where T : IEvent;
+        void Raise(IEvent evt);
     }
 }

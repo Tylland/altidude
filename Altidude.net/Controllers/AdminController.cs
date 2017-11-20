@@ -21,6 +21,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using Altidude.Contracts.Commands;
+using Altidude.Application;
+
 
 namespace Altidude.net.Controllers
 {
@@ -203,6 +205,11 @@ namespace Altidude.net.Controllers
                 application.ExecuteCommand(new ClearFollowingUsers(user.Id));
 
             return View("Index");
+        }
+
+        public ActionResult KeyGenerator()
+        {
+            return View();
         }
 
 

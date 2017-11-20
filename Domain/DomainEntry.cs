@@ -13,6 +13,7 @@ namespace Altidude.Domain
     public class DomainEntry
     {
         private readonly CommandDispatcher _commandDispatcher;
+        private readonly EventDispatcher _eventDispatcher;
 
         public DomainEntry(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IElevationService elevationService, IEnumerable<Action<ICommand>> preExecutionPipe = null, IEnumerable<Action<object>> postExecutionPipe = null)
         {
@@ -20,11 +21,17 @@ namespace Altidude.Domain
             postExecutionPipe = CreatePostExecutionPipe(postExecutionPipe);
 
             _commandDispatcher = CreateCommandDispatcher(domainRepository, eventBus, dateTimeProvider, userService, levelService, placeFinder, elevationService, preExecutionPipe, postExecutionPipe);
+            _eventDispatcher = new EventDispatcher(domainRepository, eventBus);
         }
 
         public void ExecuteCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             _commandDispatcher.ExecuteCommand(command);
+        }
+
+        public void ProcessEvents(ICheckpointStorage checkpointStorage)
+        {
+            _eventDispatcher.ProcessEvents(checkpointStorage);
         }
 
         private CommandDispatcher CreateCommandDispatcher(IDomainRepository domainRepository, IEventBus eventBus, IDateTimeProvider dateTimeProvider, IUserService userService, IUserLevelService levelService, IPlaceFinder placeFinder, IElevationService elevationService, IEnumerable<Action<ICommand>> preExecutionPipe, IEnumerable<Action<object>> postExecutionPipe)

@@ -8,5 +8,6 @@ namespace Altidude.Domain
     {
         TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
         IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
+        void ProcessEvents(IEventBus eventBus, ICheckpointStorage checkpointStorage);
     }
 }

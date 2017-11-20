@@ -1,4 +1,5 @@
 ﻿using System;
+using Altidude.Application;
 using Altidude.Contracts;
 using Altidude.Contracts.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

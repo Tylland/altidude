@@ -12,6 +12,7 @@ namespace Altidude.Domain
     {
         public abstract IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
         public abstract TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
+        public abstract void ProcessEvents(IEventBus eventBus, ICheckpointStorage checkpointStorage);
 
         protected int CalculateExpectedVersion(IAggregate aggregate, List<IEvent> events)
         {
@@ -28,5 +29,6 @@ namespace Altidude.Domain
             }
             return result;
         }
+
     }
 }

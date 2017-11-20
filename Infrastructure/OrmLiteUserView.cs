@@ -28,6 +28,9 @@ namespace Altidude.Infrastructure
 
         private User CreateUser(UserView view)
         {
+            if (view == null)
+                return null;
+
             var profileSummary = new UserProfileSummary(view.Distance, view.Ascending, view.Descending, view.HighestAltitude, view.LowestAltitude, view.NrOfClimbs, view.ClimbPoints, view.TimeSeconds);
 
             return new User(view.Id, view.UserName, view.Email, view.FirstName, view.LastName, view.AcceptsEmails, view.ExperiencePoints, view.Level, view.FollowingUserIds, view.FollowedByUserIds, profileSummary);
@@ -35,7 +38,7 @@ namespace Altidude.Infrastructure
 
         public User GetById(Guid id)
         {
-            var view = _db.GetById<UserView>(id);
+            var view = _db.GetByIdOrDefault<UserView>(id);
             Debug.WriteLine(_db.GetLastSql());
 
             return CreateUser(view);

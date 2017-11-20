@@ -1,11 +1,56 @@
-﻿
+﻿@using Altidude.FeatureFlags
+
 @model Altidude.net.Models.UserDashboardViewModel
 
 @{
     ViewBag.Title = "Dashboard";
 }
 
-<h2>Dashboard</h2>
+<style>
+    .fb-send .pluginButtonLabel {
+        display: inline-block;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        text-align: center;
+        padding: 12px 16px;
+        margin: 0;
+        background-color: #0084ff;
+        border: 0;
+        cursor: pointer;
+        outline: none;
+}
+    
+</style>
+
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    //FB.ui({
+    //    method: 'send',
+    //    name: 'Invite your friends',
+    //    link: 'http://www.altidude.net',
+    //});
+
+</script>
+
+@if (Features.InviteFBFriends.IsAvailable(User))
+{
+    <a href="http://www.facebook.com/dialog/send?app_id=700488523437920&link=http://www.altidude.net&redirect_uri=http://www.altidude.net">Invite</a>
+    <div class="fb-send"
+         data-href="http://www.altidude.net"
+         data-layout="button_count">Invite your friends</div>
+}
+                            <h2>Dashboard</h2>
 <section class="info-box-container tango-aluminium-1">
     <div class="row">
         <div>
@@ -103,7 +148,7 @@
 </section>
 
 <section id="cd-timeline" class="cd-container">
-    
+
 @if (Model != null)
 {
     foreach (var profile in Model.Profiles)

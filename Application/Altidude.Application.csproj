@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{31C80AD0-A295-4C88-B853-F62ABF214F58}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Altidude.Application</RootNamespace>
+    <AssemblyName>Altidude.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationConfig.cs" />
+    <Compile Include="ApplicationInstance.cs" />
+    <Compile Include="ApplicationViews.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Altidude.Contracts.csproj">
+      <Project>{634347dc-c5a4-4b10-bd7c-757c9bbb0843}</Project>
+      <Name>Altidude.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Altidude.Domain.csproj">
+      <Project>{86495352-626b-494c-9ed1-7608b6a967ca}</Project>
+      <Name>Altidude.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FeatureFlags\Altidude.FeatureFlags.csproj">
+      <Project>{37289edb-af48-460b-b40d-006c79d67ee5}</Project>
+      <Name>Altidude.FeatureFlags</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Altidude.Infrastructure.csproj">
+      <Project>{fa6793d5-3cb8-45b4-a9e9-baf1bfec29c3}</Project>
+      <Name>Altidude.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Altidude.Logging.csproj">
+      <Project>{017ede31-0b7d-4dc7-836e-fca9c2cfa16b}</Project>
+      <Name>Altidude.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Views\Altidude.Views.csproj">
+      <Project>{7b85d273-a249-4202-a39f-a2182f3bdb3d}</Project>
+      <Name>Altidude.Views</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
