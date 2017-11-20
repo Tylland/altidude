@@ -2554,7 +2554,7 @@ module ProfileChart {
     }
 
     class ChartAxis {
-        calcGridBigFactor(gridFactor: number): number {
+        static calcGridBigFactor(gridFactor: number): number {
 
             if (gridFactor <= 1) {
                 return 2;
@@ -2571,7 +2571,7 @@ module ProfileChart {
             return 10;
         }
 
-        calcGridFactor(remainderMax: number): number {
+        static calcGridFactor(remainderMax: number): number {
 
             if (remainderMax > 5) {
                 return 5;
@@ -2642,10 +2642,10 @@ module ProfileChart {
 
             var log10Values = log10Max - log10Unit - 2;
 
-            var gridFactor = super.calcGridFactor(remainderMax);
+            var gridFactor = ChartAxis.calcGridFactor(remainderMax);
 
             var gridMinor = Math.pow(10, Math.max(log10Max - 1, 0)) * gridFactor;
-            var gridMajor = Math.pow(10, Math.max(log10Max - 1, 0)) * super.calcGridBigFactor(gridFactor);
+            var gridMajor = Math.pow(10, Math.max(log10Max - 1, 0)) * ChartAxis.calcGridBigFactor(gridFactor);
 
             super(min, max, gridMinor, gridMajor);
 
@@ -2741,10 +2741,10 @@ module ProfileChart {
             var log10Values = log10Max - log10Unit - 2;
             var log10Grid = Math.max(log10Max - 1, 0);
 
-            var gridFactor = super.calcGridFactor(remainderMax);
+            var gridFactor = ChartAxis.calcGridFactor(remainderMax);
 
             var gridMinor = Math.pow(10, log10Grid) * gridFactor;
-            var gridMajor = Math.pow(10, log10Grid) * super.calcGridBigFactor(gridFactor);
+            var gridMajor = Math.pow(10, log10Grid) * ChartAxis.calcGridBigFactor(gridFactor);
 
             var min = AltitudeAxis.calcMin(minAltitude, maxAltitude, gridMinor, gridMajor);
             var max = AltitudeAxis.calcMax(minAltitude, maxAltitude, gridMinor, gridMajor);
