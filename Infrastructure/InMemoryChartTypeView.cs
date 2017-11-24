@@ -37,9 +37,14 @@ namespace Altidude.Infrastructure
             _chartTypes.Add(chartType.Id, chartType);
         }
 
-        public UserChartType[] GetUserChartTypes(int level, DateTime now)
+        public UserChartType[] GetForUser(int level, DateTime now)
         {
             return _chartTypes.Values.Select(chartType => new UserChartType(chartType, chartType.GetIsUnlocked(level, now))).ToArray();
+        }
+
+        public List<ChartType> GetAll()
+        {
+            return _chartTypes.Values.ToList();
         }
     }
 }

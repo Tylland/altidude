@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Altidude.Contracts.Types;
 
@@ -11,13 +8,15 @@ namespace Altidude.Contracts.Commands
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public Guid ChartId { get; set; }
         public string Name { get; set; }
         public Track Track { get; set; }
 
-        public CreateProfile(Guid id, Guid userId, string name, Track track)
+        public CreateProfile(Guid id, Guid userId, Guid chartId, string name, Track track)
         {
             Id = id;
             UserId = userId;
+            ChartId = chartId;
             Name = name;
             Track = track;
         }

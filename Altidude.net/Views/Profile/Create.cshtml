@@ -1,8 +1,9 @@
-﻿
+﻿@model Altidude.net.Models.ProfileCreateViewModel
+
 @{
     ViewBag.Title = "Create Profile";
 }
-<div ng-app="altidudeApp" ng-controller="profileImportController as importController" ng-init="importController.init('', '')">
+<div ng-app="altidudeApp" ng-controller="profileImportController as importController" ng-init="importController.init('@Model.ChartId', '@Model.UserId')">
     <div class="page-header">
         <h2>Create Profile</h2>
     </div>

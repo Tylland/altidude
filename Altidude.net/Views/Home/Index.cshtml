@@ -31,7 +31,23 @@
     <p>TIP: Fastest way to earn XP is to share your profile on Facebook or Twitter</p>
 </div>
 
-<h2>Latest Profiles</h2>
+<h2>Pick a chart</h2>
+<div class="row thumbnail-list">
+    @if (Model != null)
+    {
+        foreach (var chartType in Model.ChartTypes)
+        {
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <a class="thumbnail" href="/profile/create/@chartType.Id">
+                    <img class="img-responsive" src="~/Images/Charts/@(chartType.Name).png" alt="{{chartType.name}}">
+                </a>
+            </div>
+        }
+    }
+
+</div>
+
+@*<h2>Latest Profiles</h2>
 <div class="row thumbnail-list">
     @if (Model != null)
     {
@@ -45,4 +61,4 @@
         }
     }
 
-</div>
+</div>*@

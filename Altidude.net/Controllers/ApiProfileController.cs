@@ -200,8 +200,8 @@ namespace Altidude.net.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("api/v1/profiles/upload/trackfile")]
-        public async System.Threading.Tasks.Task<Profile> UploadTrackfile()
+        [Route("api/v1/profiles/upload/trackfile/chart/{chartd}")]
+        public async System.Threading.Tasks.Task<Profile> UploadTrackfile([FromUri]Guid chartId)
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -239,7 +239,7 @@ namespace Altidude.net.Controllers
 
                     var application = ApplicationManager.BuildApplication();
 
-                    application.ExecuteCommand(new CreateProfile(id, UserId, name, track));
+                    application.ExecuteCommand(new CreateProfile(id, UserId, chartId, name, track));
 
                     return application.Views.Profiles.GetById(id);
                 }

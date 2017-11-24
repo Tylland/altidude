@@ -46,6 +46,10 @@ namespace Altidude.net.Controllers
                     model.Profiles = view.GetLatestSummaries(21);
                 }
 
+                var views = ApplicationManager.BuildViews();
+
+                model.ChartTypes = views.ChartTypes.GetAll();
+
                 return View(model);
             }
         }

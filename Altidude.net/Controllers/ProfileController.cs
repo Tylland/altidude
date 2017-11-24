@@ -27,9 +27,9 @@ namespace Altidude.net.Controllers
         }
 
         [Authorize]
-        public ActionResult Create()
+        public ActionResult Create(Guid? id)
         {
-            return View();
+            return View(new ProfileCreateViewModel {ChartId = id ?? Guid.Empty});
         }
 
         private static readonly Guid AdminId = new Guid("d582220a-f65f-42c0-99c6-4c67e64ab9c8");
@@ -37,7 +37,7 @@ namespace Altidude.net.Controllers
         [Authorize]
         public ActionResult Edit(Guid id)
         {
-            _log.Debug("Edir profile {id}", id);
+            _log.Debug("Edit profile {id}", id);
 
             var userId = new Guid(User.Identity.GetUserId());
             var views = ApplicationManager.BuildViews();

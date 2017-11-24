@@ -45,4 +45,22 @@ namespace Altidude.net.Models
     }
 
 
+    public class ProfileCreateViewModel
+    {
+        public Guid ChartId { get; set; }
+        public Guid UserId { get; set; }
+
+        public ProfileCreateViewModel(Guid chartId, Guid userId)
+        {
+            ChartId = chartId;
+            UserId = userId;
+        }
+        public ProfileCreateViewModel()
+        {
+
+        }
+
+    }
+
+
 }

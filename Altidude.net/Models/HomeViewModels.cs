@@ -6,6 +6,7 @@ namespace Altidude.net.Models
     public class HomeViewModel
     {
         public List<ProfileSummary> Profiles { get; set; }
+        public List<ChartType> ChartTypes { get; set; }
     }
 
     public class ContactUsMessageModel

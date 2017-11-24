@@ -14,7 +14,7 @@ var Controllers;
             this.isCreating = false;
             this.importFromActivity = function (activityId) {
                 var _this = this;
-                this.stravaService.importFromActivity(activityId).then(function (response) {
+                this.stravaService.importFromActivity(activityId, this.chartId).then(function (response) {
                     _this.importedProfile = response.data;
                     _this.$window.location.href = "/profile/edit/" + _this.importedProfile.id;
                 });
@@ -24,7 +24,7 @@ var Controllers;
                 if (!this.isCreating) {
                     this.isCreating = true;
                     activity.creating = true;
-                    this.stravaService.importFromActivity(activity.id).then(function (response) {
+                    this.stravaService.importFromActivity(activity.id, this.chartId).then(function (response) {
                         _this.importedProfile = response.data;
                         _this.$window.location.href = "/profile/edit/" + _this.importedProfile.id;
                     });
@@ -34,6 +34,7 @@ var Controllers;
         }
         ProfileImportController.prototype.init = function (chartId, userId) {
             var _this = this;
+            this.chartId = chartId;
             this.$scope.$watch(function () { return _this.trackFile; }, function (newValue, oldValue) {
                 if (newValue !== oldValue) {
                     _this.importFromFile(_this.trackFile);
@@ -48,7 +49,7 @@ var Controllers;
         ProfileImportController.prototype.importFromFile = function (file) {
             var _this = this;
             this.Upload.upload({
-                url: '/api/v1/profiles/upload/trackfile',
+                url: '/api/v1/profiles/upload/trackfile/chart/' + this.chartId,
                 method: 'POST',
                 data: { file: file }
             }).then(function (response) {

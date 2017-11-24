@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Altidude.Contracts.Types;
 
 namespace Altidude.Views
@@ -6,6 +7,7 @@ namespace Altidude.Views
     public interface  IChartTypeView
     {
         ChartType GetById(Guid id);
-        UserChartType[] GetUserChartTypes(int level, DateTime now);
+        UserChartType[] GetForUser(int level, DateTime now);
+        List<ChartType> GetAll();
     }
 }

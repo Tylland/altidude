@@ -210,7 +210,7 @@ namespace Altidude.Domain.Aggregates
             return legs.ToArray();
         }
 
-        public ProfileAggregate(Guid id, User user, string name, Track track, IDateTimeProvider datetime, IPlaceFinder placeFinder, IElevationService elevationService)
+        public ProfileAggregate(Guid id, User user, Guid chartId, string name, Track track, IDateTimeProvider datetime, IPlaceFinder placeFinder, IElevationService elevationService)
             : this()
         {
             if (!track.HasElevation())
@@ -222,7 +222,7 @@ namespace Altidude.Domain.Aggregates
 
             var data = new TrackAnalyzer().Analyze(track);
 
-            RaiseEvent(new ProfileCreated(id, user.Id, Guid.Empty, name, datetime.Now, track, data.Ascending, data.Descending, data.HighestPoint, data.LowestPoint, data.Climbs, profilePlaces, legs, result));
+            RaiseEvent(new ProfileCreated(id, user.Id, chartId, name, datetime.Now, track, data.Ascending, data.Descending, data.HighestPoint, data.LowestPoint, data.Climbs, profilePlaces, legs, result));
         }
 
         public void Apply(ProfileCreated @event)
@@ -231,6 +231,7 @@ namespace Altidude.Domain.Aggregates
             UserId = @event.UserId;
             Name = @event.Name;
             Track = @event.Track;
+            ChartId = @event.ChartId;
             Places = @event.Places;
         }
 
@@ -250,7 +251,7 @@ namespace Altidude.Domain.Aggregates
         {
             Deleted = true;
         }
-        public static IAggregate Create(Guid id, User user, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService, IElevationService elevationService)
+        public static IAggregate Create(Guid id, User user, Guid chartId, string name, Track track, IDateTimeProvider dateTimeProvider, IPlaceFinder placeService, IElevationService elevationService)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("id  can't be empty", "id");
@@ -262,7 +263,7 @@ namespace Altidude.Domain.Aggregates
                 throw new ArgumentException("track.Id can't be empty", "track.Id");
 
 
-            return new ProfileAggregate(id, user, name, track, dateTimeProvider, placeService, elevationService);
+            return new ProfileAggregate(id, user, chartId, name, track, dateTimeProvider, placeService, elevationService);
         }
 
         public void AddPlace(string name, double distance, double size, bool split)

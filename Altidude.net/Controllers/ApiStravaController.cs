@@ -33,9 +33,9 @@ using Altidude.Infrastructure;
 
 namespace Altidude.net.Controllers
 {
-    public class StravaController : BaseApiController
+    public class ApiStravaController : BaseApiController
     {
-        private static ILogger _log = Log.ForContext<StravaController>();
+        private static ILogger _log = Log.ForContext<ApiStravaController>();
 
         private const string NoToken = "";
         private const int ClientId = 10139;
@@ -44,12 +44,12 @@ namespace Altidude.net.Controllers
 
         private readonly string _exchangeUri;
         private ApplicationUserManager _userManager;
-        public StravaController(ApplicationUserManager userManager)
+        public ApiStravaController(ApplicationUserManager userManager)
         {
             _userManager = userManager;
         }
 
-        public StravaController()
+        public ApiStravaController()
         {
             _exchangeUri = ConfigurationManager.AppSettings["StravaExchangeUri"];
         }
@@ -252,10 +252,10 @@ namespace Altidude.net.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("api/v1/strava/activities/{activityId}/profile/import")]
-        public Profile ImportProfile([FromUri]string activityId)
+        [Route("api/v1/strava/activities/{activityId}/profile/import/chart/{chartId}")]
+        public Profile ImportProfile([FromUri]string activityId, [FromUri]Guid chartId)
         {
-            _log.Debug("Creating profile from strave activity {activityId}", activityId);
+            _log.Debug("Creating profile from strava activity {activityId} med chart {chartId}", activityId, chartId);
 
             StaticAuthentication auth = new StaticAuthentication(GetClaimedToken());
             StravaClient client = new StravaClient(auth);
@@ -271,7 +271,7 @@ namespace Altidude.net.Controllers
             
             var application = ApplicationManager.BuildApplication();
 
-            application.ExecuteCommand(new CreateProfile(id, UserId, activity.Name, track));
+            application.ExecuteCommand(new CreateProfile(id, UserId, chartId, activity.Name, track));
 
             return application.Views.Profiles.GetById(id);
         }

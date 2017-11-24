@@ -28,8 +28,8 @@ var Services;
             return this.$http.get(url);
         };
         ;
-        StravaService.prototype.importFromActivity = function (activityId) {
-            var url = this.serviceConfig.altidudeApiBaseUri + this.stravaUrlBase + 'activities/' + activityId + '/profile/import';
+        StravaService.prototype.importFromActivity = function (activityId, chartId) {
+            var url = this.serviceConfig.altidudeApiBaseUri + this.stravaUrlBase + 'activities/' + activityId + '/profile/import/chart/' + chartId;
             return this.$http.get(url);
         };
         ;

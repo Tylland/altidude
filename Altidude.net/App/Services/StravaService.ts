@@ -39,9 +39,9 @@
             return this.$http.get(url);
         };
 
-        public importFromActivity(activityId: string) {
+        public importFromActivity(activityId: string, chartId: string) {
 
-            var url = this.serviceConfig.altidudeApiBaseUri + this.stravaUrlBase + 'activities/' + activityId + '/profile/import';
+            var url = this.serviceConfig.altidudeApiBaseUri + this.stravaUrlBase + 'activities/' + activityId + '/profile/import/chart/' + chartId;
 
             return this.$http.get(url);
         };

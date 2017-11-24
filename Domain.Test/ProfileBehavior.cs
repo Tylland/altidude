@@ -28,7 +28,7 @@ namespace Domain.Test
 
             var legs = new Leg[] { new Leg(trackPoint, trackPoint, 0.0, 0.0) };
 
-            When(new CreateProfile(id, userId, "First", track));
+            When(new CreateProfile(id, userId, Guid.Empty, "First", track));
             Then(new ProfileCreated(id, userId, Guid.Empty, "First", DateTimeProvider.Now, track, 0.0, 0.0, trackPoint, trackPoint, null, new ProfilePlace[0], legs, result));
         }
 
@@ -52,7 +52,7 @@ namespace Domain.Test
             var startProfilePlace = new ProfilePlace(place, trackPoint, true, true);
             var finishProfilePlace = new ProfilePlace(place, trackPoint, true, true);
 
-            When(new CreateProfile(id, userId, "First", track));
+            When(new CreateProfile(id, userId, Guid.Empty, "First", track));
             Then(new ProfileCreated(id, userId, Guid.Empty, "First", DateTimeProvider.Now, track, 0.0, 0.0, trackPoint, trackPoint, null, new ProfilePlace[] { startProfilePlace , finishProfilePlace }, legs, result));
         }
 
@@ -81,7 +81,7 @@ namespace Domain.Test
 
             PlaceRepository.Add(place);
 
-            When(new CreateProfile(id, userId, "First", track));
+            When(new CreateProfile(id, userId, Guid.Empty, "First", track));
             Then(new ProfileCreated(id, userId, Guid.Empty, "First", DateTimeProvider.Now, track, 1.5, 1.5, trackPoint2, trackPoint1, null, new ProfilePlace[] { new ProfilePlace(place, trackPoint1, true, true), new ProfilePlace(place, trackPoint3, true, true) }, legs, result));
         }
 
@@ -107,7 +107,7 @@ namespace Domain.Test
             var startProfilePlace = new ProfilePlace(place, trackPoint, true, true, new ProfilePlaceAttribute(coffeeAttribute.Type, coffeeAttribute.DefaultValue));
             var finishProfilePlace = new ProfilePlace(place, trackPoint, true, true, new ProfilePlaceAttribute(coffeeAttribute.Type, coffeeAttribute.DefaultValue));
 
-            When(new CreateProfile(id, userId, "First", track));
+            When(new CreateProfile(id, userId, Guid.Empty, "First", track));
             Then(new ProfileCreated(id, userId, Guid.Empty, "First", DateTimeProvider.Now, track, 0.0, 0.0, trackPoint, trackPoint, null, new ProfilePlace[] { startProfilePlace, finishProfilePlace }, legs, result));
         }
 
@@ -139,7 +139,7 @@ namespace Domain.Test
 
             PlaceRepository.Add(place);
 
-            When(new CreateProfile(id, userId, "First", track));
+            When(new CreateProfile(id, userId, Guid.Empty, "First", track));
             Then(new ProfileCreated(id, userId, Guid.Empty, "First", DateTimeProvider.Now, track, 0.0, 0.0, trackPoint2, trackPoint1, null, new ProfilePlace[] { new ProfilePlace(place, trackPoint2, true, true) }, legs, result));
         }
     }

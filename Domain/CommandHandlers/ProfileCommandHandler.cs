@@ -26,7 +26,7 @@ namespace Altidude.Domain.CommandHandlers
         {
             var user = _userService.GetById(command.UserId);
 
-            return ProfileAggregate.Create(command.Id, user, command.Name, command.Track, _dateTimeProvider, _placeFinder, _elevationService);
+            return ProfileAggregate.Create(command.Id, user, command.ChartId, command.Name, command.Track, _dateTimeProvider, _placeFinder, _elevationService);
         }
 
         public IAggregate Handle(ChangeChart command)

@@ -13,7 +13,9 @@
         constructor(private $scope: ng.IScope, private $window: any, private Upload: any, private stravaService: Services.StravaService) {
         }
 
-        public init(chartId: any, userId: any): void {
+        public init(chartId: string, userId: any): void {
+
+            this.chartId = chartId;
 
             this.$scope.$watch(() => { return this.trackFile; }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
@@ -32,7 +34,7 @@
 
         public importFromFile(file) {
             this.Upload.upload({
-                url: '/api/v1/profiles/upload/trackfile',
+                url: '/api/v1/profiles/upload/trackfile/chart/' + this.chartId,
                 method: 'POST',
                 data: { file: file }
             }).then(response => {
@@ -60,19 +62,19 @@
         };
 
         public importFromActivity = function (activityId: string) {
-            this.stravaService.importFromActivity(activityId).then(response => {
+            this.stravaService.importFromActivity(activityId, this.chartId).then(response => {
                 this.importedProfile = response.data;
 
                 this.$window.location.href = "/profile/edit/" + this.importedProfile.id;
             });
         };
-
+        
         public createFromActivity = function (activity: any) {
 
             if (!this.isCreating) {
                 this.isCreating = true;
                 activity.creating = true;
-                this.stravaService.importFromActivity(activity.id).then(response => {
+                this.stravaService.importFromActivity(activity.id, this.chartId).then(response => {
                     this.importedProfile = response.data;
 
                     this.$window.location.href = "/profile/edit/" + this.importedProfile.id;

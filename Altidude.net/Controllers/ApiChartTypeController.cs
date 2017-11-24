@@ -25,7 +25,7 @@ namespace Altidude.net.Controllers
 
             var user = views.Users.GetById(UserId);
 
-            return views.ChartTypes.GetUserChartTypes(user.Level, DateTime.Now);
+            return views.ChartTypes.GetForUser(user.Level, DateTime.Now);
         }
 
     }
