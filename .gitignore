@@ -77,3 +77,4 @@ node_modules/**/*
 
 WebApp/node_modules/
 node_modules/
+.vs/Altidude/v15/sqlite3/storage.ide
